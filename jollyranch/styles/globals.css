@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Jangkuy';
+  src: local('Jangkuy'), url('../public/fonts/jangkuy.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: local('Montserrat'), url('../public/fonts/mont.ttf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Scratchy';
+  src: local('Scratchy'), url('../public/fonts/Scratchy.ttf') format('opentype');
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
