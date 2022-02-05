@@ -538,56 +538,96 @@ const Home: NextPage = () => {
           <div id="breeder" className="modal">
             <div className="modal-box">
               <p style={{ fontFamily: "Montserrat" }}>Choose Items:</p>
-              <div className="grid grid-cols-2">
-                <div>
-                  <div className="m-2 card bordered">
-                    <div className="form-control">
-                      <label className="cursor-pointer label p-6">
-                        <span className="label-text">Fresh Haircut</span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                        />
-                      </label>
+              {isBreed ? (
+                <div className="grid grid-cols-2">
+                  <div>
+                    <div className="m-2 card bordered">
+                      <div className="form-control">
+                        <label className="cursor-pointer label p-6">
+                          <span className="label-text">Fresh Haircut</span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <div className="m-2 card bordered">
+                      <div className="form-control">
+                        <label className="cursor-pointer label p-6">
+                          <span className="label-text">Bow Tie</span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                          />
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  <div className="m-2 card bordered">
-                    <div className="form-control">
-                      <label className="cursor-pointer label p-6">
-                        <span className="label-text">Bow Tie</span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                        />
-                      </label>
+                  <div>
+                    <div className="m-2 card bordered">
+                      <div className="form-control">
+                        <label className="cursor-pointer label p-6">
+                          <span className="label-text">Jewelry</span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <div className="m-2 card bordered">
+                      <div className="form-control">
+                        <label className="cursor-pointer label p-6">
+                          <span className="label-text">King's Crown</span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                          />
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div>
-                  <div className="m-2 card bordered">
-                    <div className="form-control">
-                      <label className="cursor-pointer label p-6">
-                        <span className="label-text">Jewelry</span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                        />
-                      </label>
+              ) : (
+                <div className="grid grid-cols-1">
+                  <div>
+                    <div className="m-2 card bordered">
+                      <div className="form-control">
+                        <label className="cursor-pointer label p-6">
+                          <span className="label-text">Bait</span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                          />
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                  <div className="m-2 card bordered">
-                    <div className="form-control">
-                      <label className="cursor-pointer label p-6">
-                        <span className="label-text">King's Crown</span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                        />
-                      </label>
+                    <div className="m-2 card bordered">
+                      <div className="form-control">
+                        <label className="cursor-pointer label p-6">
+                          <span className="label-text">Hook</span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                          />
+                        </label>
+                      </div>
+                    </div>
+                    <div className="m-2 card bordered">
+                      <div className="form-control">
+                        <label className="cursor-pointer label p-6">
+                          <span className="label-text">Poseidon whistle</span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary"
+                          />
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
               <div className="grid grid-cols-2 gap-2">
                 <a
                   href="#"
@@ -597,14 +637,25 @@ const Home: NextPage = () => {
                 >
                   cancel
                 </a>
-                <a
-                  href="#"
-                  style={{ fontFamily: "Montserrat" }}
-                  className="btn"
-                  ref={modalRef}
-                >
-                  Breed
-                </a>
+                {isBreed ? (
+                  <a
+                    href="#"
+                    style={{ fontFamily: "Montserrat" }}
+                    className="btn"
+                    ref={modalRef}
+                  >
+                    Breed
+                  </a>
+                ) : (
+                  <a
+                    href="#"
+                    style={{ fontFamily: "Montserrat" }}
+                    className="btn"
+                    ref={modalRef}
+                  >
+                    Tame
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -673,6 +724,10 @@ const Home: NextPage = () => {
                       fontSize: "1.3rem",
                       color: "#ffffff",
                       borderColor: "#3DB489",
+                    }}
+                    onClick={() => {
+                      setIsBreed(false);
+                      breederRef.current.click();
                     }}
                   >
                     <p>TAME PET</p>
