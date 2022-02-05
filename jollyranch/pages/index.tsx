@@ -48,7 +48,9 @@ const Home: NextPage = () => {
   const [stakingRewards, setStakingRewards] = useState({});
   const [refreshStateCounter, setRefreshStateCounter] = useState(0);
   const [totalRatsStaked, setTotaRatsStaked] = useState(0);
+  const [isBreed, setIsBreed] = useState(true);
 
+  const breederRef = useRef(null);
   const loaderRef = useRef(null);
   const modalRef = useRef(null);
   const [loader, setLoader] = useState(0);
@@ -525,6 +527,88 @@ const Home: NextPage = () => {
           }}
           className="grid grid-cols-1 min-h-screen bg-neutral-focus text-neutral-content p-16 bg-center"
         >
+          {/* Breeding Modal */}
+          <a
+            href="#breeder"
+            className="btn btn-primary hidden"
+            ref={breederRef}
+          >
+            open breeder
+          </a>
+          <div id="breeder" className="modal">
+            <div className="modal-box">
+              <p style={{ fontFamily: "Montserrat" }}>Choose Items:</p>
+              <div className="grid grid-cols-2">
+                <div>
+                  <div className="m-2 card bordered">
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span className="label-text">Fresh Haircut</span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="m-2 card bordered">
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span className="label-text">Bow Tie</span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="m-2 card bordered">
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span className="label-text">Jewelry</span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="m-2 card bordered">
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span className="label-text">King's Crown</span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href="#"
+                  style={{ fontFamily: "Montserrat" }}
+                  className="btn"
+                  ref={modalRef}
+                >
+                  cancel
+                </a>
+                <a
+                  href="#"
+                  style={{ fontFamily: "Montserrat" }}
+                  className="btn"
+                  ref={modalRef}
+                >
+                  Breed
+                </a>
+              </div>
+            </div>
+          </div>
+
           {/* Loading Modal */}
           <a href="#loader" className="btn btn-primary hidden" ref={loaderRef}>
             open loader
@@ -749,7 +833,7 @@ const Home: NextPage = () => {
                           color: "#D5D3D2",
                         }}
                       >
-                        You don't have any Pets attempting to breed
+                        You don't have any Pets breeding or taming
                       </p>
                     )}
                 </div>
@@ -810,8 +894,10 @@ const Home: NextPage = () => {
                             //   cheese,
                             //   lockup
                             // );
-                            await stakeNFT(nft.mint);
-                            await refresh();
+                            setIsBreed(true);
+                            breederRef.current.click();
+                            // await stakeNFT(nft.mint);
+                            // await refresh();
                           }}
                         />
                       );

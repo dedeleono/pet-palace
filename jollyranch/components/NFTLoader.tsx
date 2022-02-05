@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useRef, useEffect } from "react";
 
 interface NFTLoaderProps {
   nft: NFT;
