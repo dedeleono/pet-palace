@@ -1,7 +1,13 @@
 
 .anchor
 .DS_Store
-target
+target/bpfel-unknown-unknown
+target/deploy
+target/release
+target/rls
+target/.rustc_info.json
+target/CACHEDIR.TAG
+target/types
 **/*.rs.bk
 node_modules
 /lib/TRTNuj8GgjnBSSohYgyJhxF4gkhSscxJ4kDELy9Hdh8.json

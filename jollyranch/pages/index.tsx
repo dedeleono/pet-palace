@@ -15,13 +15,11 @@ import axios from "axios";
 
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
-import idl_type from "../lib/nft_staker.json";
+import idl_type from "../../target/idl/nft_staker.json";
 import { getNftsForOwner } from "../lib/mint-one-token";
 import { programs } from "@metaplex/js";
 import NFTLoader from "../components/NFTLoader";
-import { url } from "inspector";
 import Bg from "../public/images/out.png";
-import { readBuilderProgram } from "typescript";
 
 const {
   metadata: { Metadata },
@@ -508,10 +506,10 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Shill City Capital</title>
+        <title>Pet Palace</title>
         <meta
           name="description"
-          content="An nft staking platform for Sea Shanties"
+          content="An nft staking platform for Sea Shanties Pets"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -563,27 +561,38 @@ const Home: NextPage = () => {
                     className="text-lg font-bold"
                     style={{ fontFamily: "Jangkuy" }}
                   >
-                    Shill City Capital
+                    Pet Palace
                   </span>
                 </div>
                 <div className="hidden px-2 mx-2 navbar-center sm:flex">
-                  <div className="flex items-stretch">
+                  {/* <div className="flex items-stretch">
                     {wallet.publicKey && (
                       <div className="w-full mt-2 border stats border-base-100 m-2.5">
                         <div className="stat bg-base-100">
                           <div className="stat-value text-white">
-                            {totalRatsStaked.toLocaleString("en-US")}/3,333
+                            {totalRatsStaked.toLocaleString("en-US")}/1000
                           </div>
                           <div
                             className="stat-title text-white"
                             style={{ fontFamily: "Montserrat" }}
                           >
-                            Shanties Staked
+                            Pets Staked
                           </div>
                         </div>
                       </div>
                     )}
-                  </div>
+                  </div> */}
+                  <button
+                    className="btn btn-secondary badge-outline w-64"
+                    style={{
+                      fontFamily: "Scratchy",
+                      fontSize: "1.3rem",
+                      color: "#ffffff",
+                      borderColor: "#3DB489",
+                    }}
+                  >
+                    <p>TAME PET</p>
+                  </button>
                 </div>
                 <div className="navbar-end">
                   <div
@@ -669,11 +678,84 @@ const Home: NextPage = () => {
                           color: "#D5D3D2",
                         }}
                       >
-                        You don't have any shanties staked
+                        You don't have any Pets staked
                       </p>
                     )}
                 </div>
               </div>
+
+              {/* Pet Trainer */}
+
+              <div className="border mockup-window border-base-200 mb-8">
+                {/* begin app windows */}
+                <div className="flex justify-center px-2 py-4 border-t border-base-200">
+                  {loadingStakes && wallet.connected && (
+                    <h1
+                      className="text-lg font-400 animate-pulse"
+                      style={{
+                        fontFamily: "Scratchy",
+                        fontSize: "2.5rem",
+                        color: "#D5D3D2",
+                      }}
+                    >
+                      Loading your Breeding NFT&apos;s, please wait...
+                    </h1>
+                  )}
+                  {!wallet.connected && (
+                    <p
+                      style={{
+                        fontFamily: "Scratchy",
+                        fontSize: "2.5rem",
+                        color: "#D5D3D2",
+                      }}
+                    >
+                      Please connect your wallet above
+                    </p>
+                  )}
+                  {stakedMints.length > 0 && !loadingStakes && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      {stakedMints.map((nft, i) => {
+                        // console.log("mint nft", nft);
+                        return (
+                          <NFTLoader
+                            key={i}
+                            isStaked={true}
+                            nft={nft}
+                            stakingRewards={stakingRewards}
+                            onRedeem={async () => {
+                              await redeemRewards(nft.nft_account.publicKey);
+                              await refresh();
+                            }}
+                            unStake={async () => {
+                              await redeemNFT(
+                                nft.nft_account.publicKey,
+                                nft.nft_account.account.mint
+                              );
+                              await refresh();
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+                  {stakedMints.length == 0 &&
+                    !loadingStakes &&
+                    wallet.publicKey && (
+                      <p
+                        className="text-lg font-400"
+                        style={{
+                          fontFamily: "Scratchy",
+                          fontSize: "2.5rem",
+                          color: "#D5D3D2",
+                        }}
+                      >
+                        You don't have any Pets attempting to breed
+                      </p>
+                    )}
+                </div>
+              </div>
+
+              {/* Wallet nfts */}
 
               <div className="border mockup-window border-base-200 mb-8">
                 <div className="flex justify-center px-2 py-4 border-t border-base-200">
@@ -710,7 +792,7 @@ const Home: NextPage = () => {
                           color: "#D5D3D2",
                         }}
                       >
-                        You don't have any shanties in your wallet
+                        You don't have any Pets in your wallet
                       </h1>
                     )}
                   </div>

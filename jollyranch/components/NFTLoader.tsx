@@ -111,18 +111,32 @@ const NFTLoader: FC<NFTLoaderProps> = ({
           >
             {nft.name}
           </h2>
-          <button
-            className="btn btn-secondary badge-outline mt-4"
-            onClick={onStake}
-            style={{
-              fontFamily: "Scratchy",
-              fontSize: "1.3rem",
-              color: "#ffffff",
-              borderColor: "#3DB489",
-            }}
-          >
-            Stake
-          </button>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              className="btn btn-secondary badge-outline mt-4"
+              onClick={onStake}
+              style={{
+                fontFamily: "Scratchy",
+                fontSize: "1.3rem",
+                color: "#ffffff",
+                borderColor: "#3DB489",
+              }}
+            >
+              Stake
+            </button>
+            <button
+              className="btn btn-secondary badge-outline mt-4"
+              onClick={onStake}
+              style={{
+                fontFamily: "Scratchy",
+                fontSize: "1.3rem",
+                color: "#ffffff",
+                borderColor: "#3DB489",
+              }}
+            >
+              Breed
+            </button>
+          </div>
         </div>
       </div>
     );

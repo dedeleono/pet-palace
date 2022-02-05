@@ -348,8 +348,5 @@
       "name": "OutOfFunds",
       "msg": "The staking contract is out of funds."
     }
-  ],
-  "metadata": {
-    "address": "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
-  }
+  ]
 }

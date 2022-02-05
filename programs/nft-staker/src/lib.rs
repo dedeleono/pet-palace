@@ -43,10 +43,6 @@ pub mod nft_staker {
             ctx.accounts.sender_spl_account.owner
         );
         msg!(
-            "Staker nft ref: {:?}",
-            ctx.accounts.sender_spl_account.as_ref()
-        );
-        msg!(
             "Staker nft key: {:?}",
             ctx.accounts.sender_spl_account.key()
         );
@@ -59,6 +55,7 @@ pub mod nft_staker {
         stake.spl_bump = spl_bump;
         stake.amount_owed = 0;
         stake.amount_redeemed = 0;
+        stake.nft_count = stake.nft_count + 1;
 
         Ok(())
     }
@@ -77,12 +74,10 @@ pub mod nft_staker {
 
         let mint = stake.mint.to_string();
         let mint_list: Vec<_> = vec![
-            "9Gd3CpPFgK5PbfRnEuhF2JmDSUFEyWkHPkB7GA4SfSdA",
-            "APA8t9faSRNdZvB1opJvB5DQ8h3aeCFyNxZiaCMSArTZ",
-            "FrLGhta8fHTcyFTqiTDUwiDiG59L5xnvnqJwS2ssVXu7",
-            "662zoahSfHgZYjQ9bzcS8MzqRfsF2H1h549uZUebC4e6",
-            "Fs9SpcHN8J7PN8gjmp7Xvhae8EA4Zwifa79eNCQHJNgW",
-            "4j99GW37LGL1Er7otAsqRdWgNDt9srZguim9n4rFCoDj",
+            "8jDN1VYpCtk6gYxuRrEww8vnjbaKiaZexy145CVNyEoM",
+            "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
+            "54KFLjw4ywGWzNeh6o8LrHEP8mTjiBRX4DrNjWGiMUhT",
+            "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
         ]
         .into_iter()
         .map(String::from)
@@ -141,12 +136,10 @@ pub mod nft_staker {
 
         let mint = stake.mint.to_string();
         let mint_list: Vec<_> = vec![
-            "9Gd3CpPFgK5PbfRnEuhF2JmDSUFEyWkHPkB7GA4SfSdA",
-            "APA8t9faSRNdZvB1opJvB5DQ8h3aeCFyNxZiaCMSArTZ",
-            "FrLGhta8fHTcyFTqiTDUwiDiG59L5xnvnqJwS2ssVXu7",
-            "662zoahSfHgZYjQ9bzcS8MzqRfsF2H1h549uZUebC4e6",
-            "Fs9SpcHN8J7PN8gjmp7Xvhae8EA4Zwifa79eNCQHJNgW",
-            "4j99GW37LGL1Er7otAsqRdWgNDt9srZguim9n4rFCoDj",
+            "8jDN1VYpCtk6gYxuRrEww8vnjbaKiaZexy145CVNyEoM",
+            "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
+            "54KFLjw4ywGWzNeh6o8LrHEP8mTjiBRX4DrNjWGiMUhT",
+            "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
         ]
         .into_iter()
         .map(String::from)
@@ -273,11 +266,11 @@ impl<'info> FundRanch<'info> {
 pub struct StakeNFT<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
-    #[account(init, payer = authority, space = Stake::LEN)]
+    #[account(init_if_needed, payer = authority, space = Stake::LEN)]
     pub stake: Account<'info, Stake>,
     #[account(mut)]
     pub sender_spl_account: Account<'info, TokenAccount>,
-    #[account(init, seeds = [stake.key().as_ref()], bump = spl_bump, token::mint = mint, token::authority = reciever_spl_account, payer = authority)]
+    #[account(init_if_needed, seeds = [stake.key().as_ref()], bump = spl_bump, token::mint = mint, token::authority = reciever_spl_account, payer = authority)]
     pub reciever_spl_account: Account<'info, TokenAccount>,
     pub mint: Account<'info, Mint>,
     pub system_program: Program<'info, System>,
@@ -373,10 +366,12 @@ impl JollyRanch {
 }
 
 #[account]
+#[derive(Default)]
 pub struct Stake {
     pub authority: Pubkey,
     pub mint: Pubkey,
     pub spl_bump: u8,
+    pub nft_count: u8,
     pub start_date: i64,
     pub end_date: i64,
     pub amount_redeemed: u64,
@@ -388,6 +383,7 @@ impl Stake {
     const LEN: usize = DISCRIMINATOR_LENGTH
         + AUTHORITY_LENGTH
         + AUTHORITY_LENGTH
+        + BUMP_LENGTH
         + BUMP_LENGTH
         + START_DATE_LENGTH
         + END_DATE_LENGTH
