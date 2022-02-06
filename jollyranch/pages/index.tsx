@@ -690,7 +690,7 @@ const Home: NextPage = () => {
           <div className="text-center col-span-1">
             <div className="grid-cols-3">
               {/* Navbar Section */}
-              <div className="navbar mb-8 shadow-lg text-neutral-content rounded-box bg-[#264880]/90">
+              <div className="navbar mb-8 shadow-[10px_1px_15px_0px_#000000] text-neutral-content rounded-box bg-[#264880]">
                 <div className="px-2 mx-2 navbar-start">
                   <span
                     className="text-xl font-bold"
