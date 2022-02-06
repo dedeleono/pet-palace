@@ -520,7 +520,8 @@ const Home: NextPage = () => {
         <div
           style={{
             backgroundImage: `url(${Bg.src})`,
-            backgroundSize: '100% 100%',
+            
+            objectFit: 'contain',
             backgroundRepeat: "no-repeat",
             zIndex: "10",
           }}
