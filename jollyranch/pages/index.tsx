@@ -19,7 +19,7 @@ import idl_type from "../../target/idl/nft_staker.json";
 import { getNftsForOwner } from "../lib/mint-one-token";
 import { programs } from "@metaplex/js";
 import NFTLoader from "../components/NFTLoader";
-import Bg from "../public/images/out.png";
+import Bg from "../public/images/out.jpeg";
 
 const {
   metadata: { Metadata },
@@ -520,9 +520,8 @@ const Home: NextPage = () => {
         <div
           style={{
             backgroundImage: `url(${Bg.src})`,
-            objectFit: "contain",
+            backgroundSize: '100% 100%',
             backgroundRepeat: "no-repeat",
-            backgroundAttachment: "fixed",
             zIndex: "10",
           }}
           className="grid grid-cols-1 min-h-screen bg-neutral-focus text-neutral-content p-16 bg-center"
@@ -536,8 +535,8 @@ const Home: NextPage = () => {
             open breeder
           </a>
           <div id="breeder" className="modal">
-            <div className="modal-box">
-              <p style={{ fontFamily: "Montserrat" }}>Choose Items:</p>
+            <div className="modal-box bg-primary">
+              <p style={{ fontFamily: "Montserrat", fontSize: '0.8rem' }}>Choose Items:</p>
               {isBreed ? (
                 <div className="grid grid-cols-2">
                   <div>
@@ -592,10 +591,10 @@ const Home: NextPage = () => {
               ) : (
                 <div className="grid grid-cols-1">
                   <div>
-                    <div className="m-2 card bordered">
+                    <div className="m-2 card bordered" style={{borderColor: '#fd7cf6'}}>
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
-                          <span className="label-text">Bait</span>
+                          <span className="label-text font-[Jangkuy]" style={{color: 'white'}}>Bait</span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -603,10 +602,10 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div className="m-2 card bordered">
+                    <div className="m-2 card bordered" style={{borderColor: '#fd7cf6'}}>
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
-                          <span className="label-text">Hook</span>
+                          <span className="label-text font-[Jangkuy]" style={{color: 'white'}}>Hook</span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -614,10 +613,10 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div className="m-2 card bordered">
+                    <div className="m-2 card bordered" style={{borderColor: '#fd7cf6'}}>
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
-                          <span className="label-text">Poseidon whistle</span>
+                          <span className="label-text font-[Jangkuy]" style={{color: 'white'}}>Poseidon whistle</span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -632,7 +631,7 @@ const Home: NextPage = () => {
                 <a
                   href="#"
                   style={{ fontFamily: "Montserrat" }}
-                  className="btn"
+                  className="btn mt-6"
                   ref={modalRef}
                 >
                   cancel
@@ -641,7 +640,7 @@ const Home: NextPage = () => {
                   <a
                     href="#"
                     style={{ fontFamily: "Montserrat" }}
-                    className="btn"
+                    className="btn mt-6"
                     ref={modalRef}
                   >
                     Breed
@@ -650,7 +649,7 @@ const Home: NextPage = () => {
                   <a
                     href="#"
                     style={{ fontFamily: "Montserrat" }}
-                    className="btn"
+                    className="btn mt-6"
                     ref={modalRef}
                   >
                     Tame
@@ -690,11 +689,11 @@ const Home: NextPage = () => {
           <div className="text-center col-span-1">
             <div className="grid-cols-3">
               {/* Navbar Section */}
-              <div className="navbar mb-8 shadow-lg bg-neutral text-neutral-content rounded-box">
+              <div className="navbar mb-8 shadow-lg text-neutral-content rounded-box bg-[#264880]/90">
                 <div className="px-2 mx-2 navbar-start">
                   <span
-                    className="text-lg font-bold"
-                    style={{ fontFamily: "Jangkuy" }}
+                    className="text-xl font-bold"
+                    style={{ fontFamily: "Jangkuy", color: '#52dbf7' }}
                   >
                     Pet Palace
                   </span>
@@ -723,7 +722,7 @@ const Home: NextPage = () => {
                       fontFamily: "Scratchy",
                       fontSize: "1.3rem",
                       color: "#ffffff",
-                      borderColor: "#3DB489",
+                      borderColor: "#fd7cf6",
                     }}
                     onClick={() => {
                       setIsBreed(false);
