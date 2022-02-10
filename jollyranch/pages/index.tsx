@@ -145,12 +145,12 @@ const Home: NextPage = () => {
     );
 
     const provider = new Provider(connection, wallet, opts.preflightCommitment);
-    const shillCityCapital = new anchor.web3.PublicKey(
+    const petPalace = new anchor.web3.PublicKey(
       "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
     );
-    // console.log("shillCityCapital", shillCityCapital);
-    // console.log("shillCityCapital", shillCityCapital.toString());
-    const program = new Program(idl, shillCityCapital.toString(), provider);
+    // console.log("petPalace", petPalace);
+    // console.log("petPalace", petPalace.toString());
+    const program = new Program(idl, petPalace.toString(), provider);
     // console.log("program got ran", program);
     // default behavior new jollyranch each test
 
@@ -520,8 +520,8 @@ const Home: NextPage = () => {
         <div
           style={{
             backgroundImage: `url(${Bg.src})`,
-            
-            objectFit: 'contain',
+
+            objectFit: "contain",
             backgroundRepeat: "no-repeat",
             zIndex: "10",
           }}
@@ -537,7 +537,9 @@ const Home: NextPage = () => {
           </a>
           <div id="breeder" className="modal">
             <div className="modal-box bg-primary">
-              <p style={{ fontFamily: "Montserrat", fontSize: '0.8rem' }}>Choose Items:</p>
+              <p style={{ fontFamily: "Montserrat", fontSize: "0.8rem" }}>
+                Choose Items:
+              </p>
               {isBreed ? (
                 <div className="grid grid-cols-2">
                   <div>
@@ -592,10 +594,18 @@ const Home: NextPage = () => {
               ) : (
                 <div className="grid grid-cols-1">
                   <div>
-                    <div className="m-2 card bordered" style={{borderColor: '#fd7cf6'}}>
+                    <div
+                      className="m-2 card bordered"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
-                          <span className="label-text font-[Jangkuy]" style={{color: 'white'}}>Bait</span>
+                          <span
+                            className="label-text font-[Jangkuy]"
+                            style={{ color: "white" }}
+                          >
+                            Bait
+                          </span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -603,10 +613,18 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div className="m-2 card bordered" style={{borderColor: '#fd7cf6'}}>
+                    <div
+                      className="m-2 card bordered"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
-                          <span className="label-text font-[Jangkuy]" style={{color: 'white'}}>Hook</span>
+                          <span
+                            className="label-text font-[Jangkuy]"
+                            style={{ color: "white" }}
+                          >
+                            Hook
+                          </span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -614,10 +632,18 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div className="m-2 card bordered" style={{borderColor: '#fd7cf6'}}>
+                    <div
+                      className="m-2 card bordered"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
-                          <span className="label-text font-[Jangkuy]" style={{color: 'white'}}>Poseidon whistle</span>
+                          <span
+                            className="label-text font-[Jangkuy]"
+                            style={{ color: "white" }}
+                          >
+                            Poseidon whistle
+                          </span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -694,7 +720,7 @@ const Home: NextPage = () => {
                 <div className="px-2 mx-2 navbar-start">
                   <span
                     className="text-xl font-bold"
-                    style={{ fontFamily: "Jangkuy", color: '#52dbf7' }}
+                    style={{ fontFamily: "Jangkuy", color: "#52dbf7" }}
                   >
                     Pet Palace
                   </span>

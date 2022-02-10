@@ -1,18 +1,18 @@
 [programs.localnet]
-nft_staker = "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
+nft_staker = "Gfpip7T6hdF2BZZNXA5xQNrwGLPd9KCa2GgnJRZB1woE"
 
 [programs.devnet]
-nft_staker = "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
+nft_staker = "Gfpip7T6hdF2BZZNXA5xQNrwGLPd9KCa2GgnJRZB1woE"
 
 [programs.mainnet]
-nft_staker = "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
+nft_staker = "Gfpip7T6hdF2BZZNXA5xQNrwGLPd9KCa2GgnJRZB1woE"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "devnet"
-wallet = "./lib/SEA1xkZzPCUJBb5mcNb6ts9VExNr2kYMit3T5poqr94.json"
+cluster = "mainnet"
+wallet = "./lib/6r7aWsBVkS78CerWgYTQweCniigZwWwRuqGr4zivr6nJ.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"

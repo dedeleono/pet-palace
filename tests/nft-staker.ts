@@ -10,6 +10,14 @@ import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 
+export interface RandoPDA {
+  nonce: number;
+  numericResult: number;
+  requestReference: PublicKey;
+  oracleResults: Array<number>;
+  result: Array<number>;
+}
+
 describe("nft-staker", async () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.Provider.env());
@@ -59,36 +67,202 @@ describe("nft-staker", async () => {
 
   let jollyAccount;
 
-  it("JollyRanch Created!", async () => {
-    // only run this if it's the first time you're running the test
-    await program.rpc.initialize(jollyBump, splBump, {
-      accounts: {
-        jollyranch: jollyranch,
-        authority: program.provider.wallet.publicKey,
-        recieverSplAccount: recieverSplAccount,
-        mint: spl_token,
-        systemProgram: anchor.web3.SystemProgram.programId,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      },
-    });
-    jollyAccount = await program.account.jollyRanch.fetch(jollyranch);
-    console.log("jollyAccount", jollyAccount);
-    console.log("jollyAccount.amount", jollyAccount.amount.toString());
-    console.log(
-      "jollyAccount.amountRedeemed",
-      jollyAccount.amountRedeemed.toString()
+  // it("JollyRanch Created!", async () => {
+  //   // only run this if it's the first time you're running the test
+  //   await program.rpc.initialize(jollyBump, splBump, {
+  //     accounts: {
+  //       jollyranch: jollyranch,
+  //       authority: program.provider.wallet.publicKey,
+  //       recieverSplAccount: recieverSplAccount,
+  //       mint: spl_token,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //       tokenProgram: TOKEN_PROGRAM_ID,
+  //       rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+  //     },
+  //   });
+  //   jollyAccount = await program.account.jollyRanch.fetch(jollyranch);
+  //   console.log("jollyAccount", jollyAccount);
+  //   console.log("jollyAccount.amount", jollyAccount.amount.toString());
+  //   console.log(
+  //     "jollyAccount.amountRedeemed",
+  //     jollyAccount.amountRedeemed.toString()
+  //   );
+  //   assert.equal(
+  //     jollyAccount.authority.toBase58(),
+  //     program.provider.wallet.publicKey.toBase58()
+  //   );
+  //   // assert.equal(jollyAccount.amount.toString(), new anchor.BN(0).toString());
+  //   // assert.equal(
+  //   //   jollyAccount.amountRedeemed.toString(),
+  //   //   new anchor.BN(0).toString()
+  //   // );
+  // });
+
+  it("Oracle Booted Up", async () => {
+    const a = anchor.Provider.env().connection.onProgramAccountChange(
+      program.programId,
+      async (programAccount) => {
+        console.log("");
+        console.log(
+          "programAccount accountId",
+          programAccount.accountId.toString()
+        );
+        let breed = await program.account.breed.fetch(programAccount.accountId);
+      }
     );
-    assert.equal(
-      jollyAccount.authority.toBase58(),
-      program.provider.wallet.publicKey.toBase58()
-    );
-    // assert.equal(jollyAccount.amount.toString(), new anchor.BN(0).toString());
-    // assert.equal(
-    //   jollyAccount.amountRedeemed.toString(),
-    //   new anchor.BN(0).toString()
-    // );
   });
+
+  // test randomness
+
+  // it("Fetch Random Number", async () => {
+  //   let accountId = "9iT8NfV1H61kh9F4NxopbtYVGd82XKyZsGZgXNBbsEoC";
+  //   const randoProgram = await anchor.Program.at(
+  //     "CFVk3Q9pN3W7qJaZbkmR5Jeb6TXsh51oSLvgEn3Szjd9",
+  //     anchor.Provider.env()
+  //   );
+  //   let randoResult = (await randoProgram.account.randoResult.fetch(
+  //     accountId
+  //   )) as RandoPDA;
+  //   console.log("randoResult", randoResult);
+  // });
+
+  // it("Generating Random Number", async () => {
+  //   // const ref = new anchor.web3.Keypair();
+  //   const ref = new anchor.web3.Keypair();
+  //   const randoProgram = await anchor.Program.at(
+  //     "CFVk3Q9pN3W7qJaZbkmR5Jeb6TXsh51oSLvgEn3Szjd9",
+  //     anchor.Provider.env()
+  //   );
+  //   // console.log(ref.publicKey.toString(), vaultSigner.toString());
+  //   const a = anchor.Provider.env().connection.onProgramAccountChange(
+  //     randoProgram.programId,
+  //     async (p) => {
+  //       console.log("");
+  //       console.log("p accountId", p.accountId.toString());
+  //       let randoResult = (await randoProgram.account.randoResult.fetch(
+  //         p.accountId
+  //       )) as RandoPDA;
+  //       // console.log("randoResult", randoResult);
+  //       // if (
+  //       //   randoResult.requestReference.toString() === ref.publicKey.toString()
+  //       // ) {
+  //       //   console.log("resltJson:", randoResult);
+  //       // } else {
+  //       // console.log("resltJson:", JSON.stringify(randoResult));
+  //       console.log("nonce", randoResult.nonce.toString());
+  //       console.log(
+  //         "requestReference",
+  //         randoResult.requestReference.toString()
+  //       );
+
+  //       // console.log(
+  //       //   "Seed:",
+  //       //   JSON.stringify(
+  //       //     Array.from(
+  //       //       Uint8Array.from(randoResult?.requestReference.toBuffer())
+  //       //     )
+  //       //   )
+  //       // );
+  //       // console.log("Seed2:", randoResult?.requestReference.toString());
+  //       // console.log(
+  //       //   "Signer1 Pubkey",
+  //       //   JSON.stringify(
+  //       //     Array.from(
+  //       //       Uint8Array.from(
+  //       //         new anchor.web3.PublicKey(
+  //       //           "7xTBX131GqCe9BSuzATaerbJbzvGPzGkcYAtmfxmsKm2"
+  //       //         ).toBuffer()
+  //       //       )
+  //       //     )
+  //       //   )
+  //       // );
+  //       // const s1 = new anchor.web3.PublicKey(
+  //       //   randoResult.oracleResults.slice(0, 64)
+  //       // );
+  //       // console.log("s1", s1.toString());
+  //       // console.log(
+  //       //   "Signer1 Results",
+  //       //   JSON.stringify(randoResult.oracleResults.slice(0, 64))
+  //       // );
+  //       // console.log(
+  //       //   "Signer2 Pubkey",
+  //       //   JSON.stringify(
+  //       //     Array.from(
+  //       //       Uint8Array.from(
+  //       //         new anchor.web3.PublicKey(
+  //       //           "ChQyts7m59zHwsyRxVPaGiiHifC1Mpd9Eqc3mHSCiLyR"
+  //       //         ).toBuffer()
+  //       //       )
+  //       //     )
+  //       //   )
+  //       // );
+  //       // console.log(
+  //       //   "Signer2 Results",
+  //       //   JSON.stringify(randoResult.oracleResults.slice(64, 128))
+  //       // );
+  //       // const s2 = new anchor.web3.PublicKey(
+  //       //   randoResult.oracleResults.slice(64, 128)
+  //       // );
+  //       // console.log("s2", s2.toString());
+  //       // console.log(
+  //       //   "Aggregated Array Result",
+  //       //   JSON.stringify(Array.from(Uint8Array.from(randoResult.result)))
+  //       // );
+  //       console.log(
+  //         "Random number result",
+  //         new anchor.BN(
+  //           Array.from(Uint8Array.from(randoResult.result))
+  //         ).toString()
+  //       );
+  //       console.log(
+  //         "Random number modded",
+  //         parseInt(
+  //           new anchor.BN(
+  //             Array.from(Uint8Array.from(randoResult.result))
+  //           ).toString()
+  //         ) % 100
+  //       );
+  //     }
+  //     // }
+  //   );
+  //   // console.log("randoProgram", JSON.stringify(randoProgram.idl));
+  //   let vaultPub = new anchor.web3.PublicKey(
+  //     "HynzMdt7y2NEtvhWzwjkqJNjuKoycLxQeK8HBfpGw8D8"
+  //   );
+  //   let vaultStolen = new anchor.web3.PublicKey(
+  //     "8hVwUGfkz6GboXaPLWdWhf7x2zgpYULcLercfKzThNVR"
+  //   );
+  //   let [vaultSigner, nonce] = await anchor.web3.PublicKey.findProgramAddress(
+  //     [
+  //       Buffer.from(anchor.utils.bytes.utf8.encode("request-reference-seed")),
+  //       ref.publicKey.toBuffer(),
+  //     ],
+  //     randoProgram.programId
+  //   );
+  //   console.log("ref", ref.publicKey.toString());
+  //   console.log("vaultSigner", vaultSigner.toString());
+  //   console.log("nonce", nonce);
+  //   let tx = await randoProgram.rpc.request(nonce, {
+  //     accounts: {
+  //       requester: program.provider.wallet.publicKey,
+  //       requestReference: ref.publicKey,
+  //       vault: vaultSigner,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //       rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+  //     },
+  //   });
+  //   console.log("tx", tx);
+  // });
+
+  // it("Get Random", async () => {
+  //   let tx = await program.rpc.getRandom({
+  //     accounts: {
+  //       signer: program.provider.wallet.publicKey,
+  //       slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY,
+  //     },
+  //   });
+  //   console.log("tx", tx);
+  // });
 
   // fund the ranch
   // it("JollyRanch Funded", async () => {

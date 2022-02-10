@@ -53,6 +53,255 @@
       ]
     },
     {
+      "name": "oracle",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "breed",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "seed",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "fundPet",
+      "accounts": [
+        {
+          "name": "jollyranch",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "pet",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "senderSplAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverSplAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "bump",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "redeemPet",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "breed",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pet",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "senderNftAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "breedPet",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "breed",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "stake",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "jollyranch",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "trtnAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authTrtnAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "slotHashes",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "trtn",
+          "type": {
+            "defined": "f64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "trainPet",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "breed",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "jollyranch",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "trtnAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authTrtnAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "slotHashes",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "trtn",
+          "type": {
+            "defined": "f64"
+          }
+        }
+      ]
+    },
+    {
       "name": "fundRanch",
       "accounts": [
         {
@@ -107,17 +356,62 @@
           "isSigner": true
         },
         {
-          "name": "senderSplAccount",
+          "name": "senderSplAccount0",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "recieverSplAccount",
+          "name": "senderSplAccount1",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "mint",
+          "name": "senderSplAccount2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "senderSplAccount3",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverSplAccount0",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverSplAccount1",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverSplAccount2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverSplAccount3",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint0",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint1",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint2",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "mint3",
           "isMut": false,
           "isSigner": false
         },
@@ -139,8 +433,13 @@
       ],
       "args": [
         {
-          "name": "splBump",
-          "type": "u8"
+          "name": "splBumps",
+          "type": {
+            "array": [
+              "u8",
+              4
+            ]
+          }
         }
       ]
     },
@@ -219,12 +518,42 @@
           "isSigner": true
         },
         {
-          "name": "senderSplAccount",
+          "name": "senderNftAccount0",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "recieverSplAccount",
+          "name": "recieverNftAccount0",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "senderNftAccount1",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount1",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "senderNftAccount2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "senderNftAccount3",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount3",
           "isMut": true,
           "isSigner": false
         },
@@ -244,7 +573,22 @@
           "isSigner": false
         },
         {
-          "name": "nft",
+          "name": "nft0",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft1",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft2",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft3",
           "isMut": false,
           "isSigner": false
         },
@@ -311,11 +655,25 @@
             "type": "publicKey"
           },
           {
-            "name": "mint",
-            "type": "publicKey"
+            "name": "mints",
+            "type": {
+              "array": [
+                "publicKey",
+                4
+              ]
+            }
           },
           {
-            "name": "splBump",
+            "name": "splBumps",
+            "type": {
+              "array": [
+                "u8",
+                4
+              ]
+            }
+          },
+          {
+            "name": "stakeAmount",
             "type": "u8"
           },
           {
@@ -340,13 +698,161 @@
           }
         ]
       }
+    },
+    {
+      "name": "Pet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "withdrawn",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Breed",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "seed",
+            "type": "u64"
+          },
+          {
+            "name": "chance",
+            "type": "u8"
+          },
+          {
+            "name": "result",
+            "type": "u8"
+          },
+          {
+            "name": "withdrawn",
+            "type": "bool"
+          },
+          {
+            "name": "oracle",
+            "type": "bool"
+          },
+          {
+            "name": "items",
+            "type": {
+              "defined": "Items"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Items",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "freshHaircut",
+            "type": "bool"
+          },
+          {
+            "name": "bowTie",
+            "type": "bool"
+          },
+          {
+            "name": "jewlrey",
+            "type": "bool"
+          },
+          {
+            "name": "kingsCrown",
+            "type": "bool"
+          },
+          {
+            "name": "bait",
+            "type": "bool"
+          },
+          {
+            "name": "hook",
+            "type": "bool"
+          },
+          {
+            "name": "poseidonWhistle",
+            "type": "bool"
+          }
+        ]
+      }
     }
   ],
   "errors": [
     {
       "code": 6000,
       "name": "OutOfFunds",
-      "msg": "The staking contract is out of funds."
+      "msg": "the staking contract is out of funds"
+    },
+    {
+      "code": 6001,
+      "name": "IncorrectSlotHashesPubkey",
+      "msg": "ah ah ah, no passing in fake sysvar accounts"
+    },
+    {
+      "code": 6002,
+      "name": "NotEnoughTriton",
+      "msg": "not enough triton was sent"
+    },
+    {
+      "code": 6003,
+      "name": "TooMuchTriton",
+      "msg": "too much triton was sent"
+    },
+    {
+      "code": 6004,
+      "name": "FailedToParseItems",
+      "msg": "couldn't parse breed items"
+    },
+    {
+      "code": 6005,
+      "name": "PetAlreadyRedeemed",
+      "msg": "pet already redeemed"
+    },
+    {
+      "code": 6006,
+      "name": "BreedAlreadyWithdrawn",
+      "msg": "breed or train attempt already over"
+    },
+    {
+      "code": 6007,
+      "name": "OracleHasNotSpoken",
+      "msg": "the oracle still needs to seed your roll"
+    },
+    {
+      "code": 6008,
+      "name": "OnlyOracleCanUpdate",
+      "msg": "only the oracle can provide seeds"
     }
   ]
 }
