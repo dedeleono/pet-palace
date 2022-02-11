@@ -70,6 +70,10 @@ const Home: NextPage = () => {
 
   const txTimeout = 10000;
 
+  const test = new anchor.web3.Keypair();
+
+  // console.log("test", test.publicKey.toString());
+
   const refresh = async () => {
     setLoader(0);
     loaderRef.current.click();

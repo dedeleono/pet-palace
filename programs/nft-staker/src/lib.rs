@@ -3,7 +3,7 @@ use anchor_spl::associated_token::AssociatedToken;
 use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
 use arrayref::array_ref;
 
-declare_id!("Gfpip7T6hdF2BZZNXA5xQNrwGLPd9KCa2GgnJRZB1woE");
+declare_id!("4QpuL3VX1nak2NcpMxLTdowGR2cAf4oKZPa3WoHTNuz1");
 
 // Data Logics
 
@@ -72,6 +72,11 @@ pub mod nft_staker {
         if breed.oracle == false {
             return Err(ErrorCode::OracleHasNotSpoken.into());
         }
+        msg!("breed id: {}", breed.id);
+        msg!("breed timestamp: {}", breed.timestamp);
+        msg!("breed seed: {}", breed.seed);
+        msg!("breed chance: {}", breed.chance);
+        msg!("breed result: {}", breed.result);
         if breed.chance >= breed.result {
             msg!("Congratulations! YOU WON A PET");
             // transfer back nft
