@@ -163,7 +163,7 @@ const Home: NextPage = () => {
 
     const provider = new Provider(connection, wallet, opts.preflightCommitment);
     const petPalace = new anchor.web3.PublicKey(
-      "Gfpip7T6hdF2BZZNXA5xQNrwGLPd9KCa2GgnJRZB1woE"
+      "4QpuL3VX1nak2NcpMxLTdowGR2cAf4oKZPa3WoHTNuz1"
     );
     // console.log("petPalace", petPalace);
     // console.log("petPalace", petPalace.toString());
@@ -663,6 +663,16 @@ const Home: NextPage = () => {
           jollyState.connection,
           wallet.publicKey
         );
+        const redeemablePets = await jollyState.program.account.pet.all([
+          {
+            memcmp: {
+              offset: 8 + 32 + 32 + 1, // Discriminator
+              // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+              bytes: bs58.encode(new Buffer(0)),
+            },
+          },
+        ]);
+        console.log("redeemablePets", redeemablePets);
         // console.log("nftsforowner", nftsForOwner);
         setBreeds(parsedBreeds as any);
         setNfts(nftsForOwner as any);
@@ -704,17 +714,16 @@ const Home: NextPage = () => {
       </Head>
 
       <main
-      style={{
-        backgroundImage: `url(${Bg.src})`,
-        backgroundAttachment: "fixed",
-        objectFit: 'contain',
-        backgroundRepeat: "no-repeat",
-        zIndex: "10",
-        display: "absolute"
-      }}>
-        <div
-          className="grid grid-cols-1 min-h-screen text-neutral-content p-16 bg-center"
-        >
+        style={{
+          backgroundImage: `url(${Bg.src})`,
+          backgroundAttachment: "fixed",
+          objectFit: "contain",
+          backgroundRepeat: "no-repeat",
+          zIndex: "10",
+          display: "absolute",
+        }}
+      >
+        <div className="grid grid-cols-1 min-h-screen text-neutral-content p-16 bg-center">
           {/* Breeding Modal */}
           <a
             href="#breeder"
@@ -725,152 +734,170 @@ const Home: NextPage = () => {
           </a>
           <div id="breeder" className="modal">
             <div className="modal-box bg-primary">
-            <p className="font-[Jangkuy] text-center" style={{ fontSize: '1.4rem' }}>Choose Items</p>
+              <p
+                className="font-[Jangkuy] text-center"
+                style={{ fontSize: "1.4rem" }}
+              >
+                Choose Items
+              </p>
               {isBreed ? (
                 <div className="flex flex-wrap gap-x-14">
-                  
                   <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/haircut.jpg')] item-box">
-                      <div className="form-control">
-                        <label className="cursor-pointer label">
-                          <span className="label-text font-[Jangkuy]">Fresh Haircut</span>
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-primary"
-                            onClick={() => {
-                              setTritonAmount((tritonAmount) => ({
-                                ...tritonAmount,
-                                freshHaircut: !tritonAmount.freshHaircut,
-                              }));
-                            }}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                    <div className="m-2 card bordered bg-cover bg-center bg-cover bg-center bg-[url('../items/bowtie.jpg')] item-box">
-                      <div className="form-control">
-                        <label className="cursor-pointer label">
-                          <span className="label-text font-[Jangkuy]">Bow Tie</span>
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-primary"
-                            onClick={() => {
-                              setTritonAmount((tritonAmount) => ({
-                                ...tritonAmount,
-                                bowTie: !tritonAmount.bowTie,
-                              }));
-                            }}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                  
-                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/jewel.jpg')] item-box">
-                      <div className="form-control">
-                        <label className="cursor-pointer label">
-                          <span className="label-text font-[Jangkuy]">Jewelry</span>
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-primary"
-                            onClick={() => {
-                              setTritonAmount((tritonAmount) => ({
-                                ...tritonAmount,
-                                jewelry: !tritonAmount.jewelry,
-                              }));
-                            }}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/crown.jpg')] item-box">
-                      <div className="form-control">
-                        <label className="cursor-pointer label p-6">
-                          <span className="label-text font-[Jangkuy]">King's Crown</span>
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-primary"
-                            onClick={() => {
-                              setTritonAmount((tritonAmount) => ({
-                                ...tritonAmount,
-                                kingsCrown: !tritonAmount.kingsCrown,
-                              }));
-                            }}
-                          />
-                        </label>
-                      </div>
+                    <div className="form-control">
+                      <label className="cursor-pointer label">
+                        <span className="label-text font-[Jangkuy]">
+                          Fresh Haircut
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onClick={() => {
+                            setTritonAmount((tritonAmount) => ({
+                              ...tritonAmount,
+                              freshHaircut: !tritonAmount.freshHaircut,
+                            }));
+                          }}
+                        />
+                      </label>
                     </div>
                   </div>
+                  <div className="m-2 card bordered bg-cover bg-center bg-cover bg-center bg-[url('../items/bowtie.jpg')] item-box">
+                    <div className="form-control">
+                      <label className="cursor-pointer label">
+                        <span className="label-text font-[Jangkuy]">
+                          Bow Tie
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onClick={() => {
+                            setTritonAmount((tritonAmount) => ({
+                              ...tritonAmount,
+                              bowTie: !tritonAmount.bowTie,
+                            }));
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/jewel.jpg')] item-box">
+                    <div className="form-control">
+                      <label className="cursor-pointer label">
+                        <span className="label-text font-[Jangkuy]">
+                          Jewelry
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onClick={() => {
+                            setTritonAmount((tritonAmount) => ({
+                              ...tritonAmount,
+                              jewelry: !tritonAmount.jewelry,
+                            }));
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/crown.jpg')] item-box">
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span className="label-text font-[Jangkuy]">
+                          King's Crown
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onClick={() => {
+                            setTritonAmount((tritonAmount) => ({
+                              ...tritonAmount,
+                              kingsCrown: !tritonAmount.kingsCrown,
+                            }));
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <div className="flex flex-wrap">
-        
-                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/bait.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
-
-                      <div className="form-control">
-                        <label className="cursor-pointer label p-6">
-                          <span
-                            className="label-text font-[Jangkuy]"
-                            style={{ color: "white" }}
-                          >
-                            Bait
-                          </span>
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-primary"
-                            onClick={() => {
-                              setTritonAmount((tritonAmount) => ({
-                                ...tritonAmount,
-                                bait: !tritonAmount.bait,
-                              }));
-                            }}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/hook.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
-
-                      <div className="form-control">
-                        <label className="cursor-pointer label p-6">
-                          <span
-                            className="label-text font-[Jangkuy]"
-                            style={{ color: "white" }}
-                          >
-                            Hook
-                          </span>
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-primary"
-                            onClick={() => {
-                              setTritonAmount((tritonAmount) => ({
-                                ...tritonAmount,
-                                hook: !tritonAmount.hook,
-                              }));
-                            }}
-                          />
-                        </label>
-                      </div>
-                    </div>
-                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/pw.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
-                      <div className="form-control">
-                        <label className="cursor-pointer label p-6">
-                          <span
-                            className="label-text font-[Jangkuy]"
-                            style={{ color: "white" }}
-                          >
-                            Poseidon Whistle
-                          </span>
-                          <input
-                            type="checkbox"
-                            className="checkbox checkbox-primary"
-                            onClick={() => {
-                              setTritonAmount((tritonAmount) => ({
-                                ...tritonAmount,
-                                poseidonWhistle: !tritonAmount.poseidonWhistle,
-                              }));
-                            }}
-                          />
-                        </label>
-                      </div>
+                  <div
+                    className="m-2 card bordered bg-cover bg-center bg-[url('../items/bait.jpg')] item-box"
+                    style={{ borderColor: "#fd7cf6" }}
+                  >
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span
+                          className="label-text font-[Jangkuy]"
+                          style={{ color: "white" }}
+                        >
+                          Bait
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onClick={() => {
+                            setTritonAmount((tritonAmount) => ({
+                              ...tritonAmount,
+                              bait: !tritonAmount.bait,
+                            }));
+                          }}
+                        />
+                      </label>
                     </div>
                   </div>
+                  <div
+                    className="m-2 card bordered bg-cover bg-center bg-[url('../items/hook.jpg')] item-box"
+                    style={{ borderColor: "#fd7cf6" }}
+                  >
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span
+                          className="label-text font-[Jangkuy]"
+                          style={{ color: "white" }}
+                        >
+                          Hook
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onClick={() => {
+                            setTritonAmount((tritonAmount) => ({
+                              ...tritonAmount,
+                              hook: !tritonAmount.hook,
+                            }));
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    className="m-2 card bordered bg-cover bg-center bg-[url('../items/pw.jpg')] item-box"
+                    style={{ borderColor: "#fd7cf6" }}
+                  >
+                    <div className="form-control">
+                      <label className="cursor-pointer label p-6">
+                        <span
+                          className="label-text font-[Jangkuy]"
+                          style={{ color: "white" }}
+                        >
+                          Poseidon Whistle
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-primary"
+                          onClick={() => {
+                            setTritonAmount((tritonAmount) => ({
+                              ...tritonAmount,
+                              poseidonWhistle: !tritonAmount.poseidonWhistle,
+                            }));
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
               )}
               <div className="grid grid-cols-2 gap-2">
                 <a
@@ -996,7 +1023,7 @@ const Home: NextPage = () => {
                   >
                     Pet Palace
                   </span>
-                </div>  
+                </div>
                 <div className="navbar-end">
                   <div
                     className="btn btn-primary z-50"

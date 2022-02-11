@@ -12,9 +12,9 @@ url = "https://anchor.projectserum.com"
 
 [provider]
 cluster = "mainnet"
-# wallet = "./lib/6r7aWsBVkS78CerWgYTQweCniigZwWwRuqGr4zivr6nJ.json"
+wallet = "./lib/6r7aWsBVkS78CerWgYTQweCniigZwWwRuqGr4zivr6nJ.json"
 # wallet = "./lib/TRTNuj8GgjnBSSohYgyJhxF4gkhSscxJ4kDELy9Hdh8.json"
-wallet = "./lib/SEA1xkZzPCUJBb5mcNb6ts9VExNr2kYMit3T5poqr94.json"
+# wallet = "./lib/SEA1xkZzPCUJBb5mcNb6ts9VExNr2kYMit3T5poqr94.json"
 
 [scripts]
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
