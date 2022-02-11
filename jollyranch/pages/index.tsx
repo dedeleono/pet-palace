@@ -703,16 +703,17 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main
+      style={{
+        backgroundImage: `url(${Bg.src})`,
+        backgroundAttachment: "fixed",
+        objectFit: 'contain',
+        backgroundRepeat: "no-repeat",
+        zIndex: "10",
+        display: "absolute"
+      }}>
         <div
-          style={{
-            backgroundImage: `url(${Bg.src})`,
-
-            objectFit: "contain",
-            backgroundRepeat: "no-repeat",
-            zIndex: "10",
-          }}
-          className="grid grid-cols-1 min-h-screen bg-neutral-focus text-neutral-content p-16 bg-center"
+          className="grid grid-cols-1 min-h-screen text-neutral-content p-16 bg-center"
         >
           {/* Breeding Modal */}
           <a
@@ -724,16 +725,14 @@ const Home: NextPage = () => {
           </a>
           <div id="breeder" className="modal">
             <div className="modal-box bg-primary">
-              <p style={{ fontFamily: "Montserrat", fontSize: "0.8rem" }}>
-                Choose Items:
-              </p>
+            <p className="font-[Jangkuy] text-center" style={{ fontSize: '1.4rem' }}>Choose Items</p>
               {isBreed ? (
-                <div className="grid grid-cols-2">
-                  <div>
-                    <div className="m-2 card bordered">
+                <div className="flex flex-wrap gap-x-14">
+                  
+                  <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/haircut.jpg')] item-box">
                       <div className="form-control">
-                        <label className="cursor-pointer label p-6">
-                          <span className="label-text">Fresh Haircut</span>
+                        <label className="cursor-pointer label">
+                          <span className="label-text font-[Jangkuy]">Fresh Haircut</span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -747,10 +746,10 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div className="m-2 card bordered">
+                    <div className="m-2 card bordered bg-cover bg-center bg-cover bg-center bg-[url('../items/bowtie.jpg')] item-box">
                       <div className="form-control">
-                        <label className="cursor-pointer label p-6">
-                          <span className="label-text">Bow Tie</span>
+                        <label className="cursor-pointer label">
+                          <span className="label-text font-[Jangkuy]">Bow Tie</span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -764,12 +763,11 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    <div className="m-2 card bordered">
+                  
+                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/jewel.jpg')] item-box">
                       <div className="form-control">
-                        <label className="cursor-pointer label p-6">
-                          <span className="label-text">Jewelry</span>
+                        <label className="cursor-pointer label">
+                          <span className="label-text font-[Jangkuy]">Jewelry</span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -783,10 +781,10 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div className="m-2 card bordered">
+                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/crown.jpg')] item-box">
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
-                          <span className="label-text">King's Crown</span>
+                          <span className="label-text font-[Jangkuy]">King's Crown</span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
@@ -801,14 +799,11 @@ const Home: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
               ) : (
-                <div className="grid grid-cols-1">
-                  <div>
-                    <div
-                      className="m-2 card bordered"
-                      style={{ borderColor: "#fd7cf6" }}
-                    >
+                <div className="flex flex-wrap">
+        
+                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/bait.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
+
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
                           <span
@@ -830,10 +825,8 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div
-                      className="m-2 card bordered"
-                      style={{ borderColor: "#fd7cf6" }}
-                    >
+                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/hook.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
+
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
                           <span
@@ -855,10 +848,7 @@ const Home: NextPage = () => {
                         </label>
                       </div>
                     </div>
-                    <div
-                      className="m-2 card bordered"
-                      style={{ borderColor: "#fd7cf6" }}
-                    >
+                    <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/pw.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
                       <div className="form-control">
                         <label className="cursor-pointer label p-6">
                           <span
@@ -881,7 +871,6 @@ const Home: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                </div>
               )}
               <div className="grid grid-cols-2 gap-2">
                 <a
@@ -958,15 +947,7 @@ const Home: NextPage = () => {
             <div className="grid-cols-3">
               {/* Navbar Section */}
               <div className="navbar mb-8 shadow-[10px_1px_15px_0px_#000000] text-neutral-content rounded-box bg-[#264880]">
-                <div className="px-2 mx-2 navbar-start">
-                  <span
-                    className="text-xl font-bold"
-                    style={{ fontFamily: "Jangkuy", color: "#52dbf7" }}
-                  >
-                    Pet Palace
-                  </span>
-                </div>
-                <div className="hidden px-2 mx-2 navbar-center sm:flex">
+                <div className="hidden px-2 mx-2 navbar-start sm:flex">
                   {/* <div className="flex items-stretch">
                     {wallet.publicKey && (
                       <div className="w-full mt-2 border stats border-base-100 m-2.5">
@@ -985,10 +966,10 @@ const Home: NextPage = () => {
                     )}
                   </div> */}
                   <button
-                    className="btn btn-secondary badge-outline w-64"
+                    className="btn btn-secondary badge-outline w-32 h-20"
                     style={{
-                      fontFamily: "Scratchy",
-                      fontSize: "1.3rem",
+                      fontFamily: "Jangkuy",
+                      fontSize: "1rem",
                       color: "#ffffff",
                       borderColor: "#fd7cf6",
                     }}
@@ -1005,9 +986,17 @@ const Home: NextPage = () => {
                       breederRef.current.click();
                     }}
                   >
-                    <p>TAME PET</p>
+                    <p>CATCH A PET</p>
                   </button>
                 </div>
+                <div className="px-2 mx-2 navbar-center">
+                  <span
+                    className="text-5xl font-bold"
+                    style={{ fontFamily: "Jangkuy", color: "#52dbf7" }}
+                  >
+                    Pet Palace
+                  </span>
+                </div>  
                 <div className="navbar-end">
                   <div
                     className="btn btn-primary z-50"

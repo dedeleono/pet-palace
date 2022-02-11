@@ -33,3 +33,21 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.item-box {
+  width: 150px;
+  height: 150px;
+  margin: 3rem auto 0;
+}
+
+.item-label {
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  margin-top: 2px;
+}
+
+.modal-box {
+  max-height: calc(100vh - 3em);
+  max-width: 540px;
+}
