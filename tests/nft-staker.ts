@@ -102,31 +102,31 @@ describe("nft-staker", async () => {
     // );
   });
 
-  // it("Oracle Booted Up", async () => {
-  //   const a = anchor.Provider.env().connection.onProgramAccountChange(
-  //     program.programId,
-  //     async (programAccount) => {
-  //       // console.log("programAccount", programAccount);
-  //       // console.log(
-  //       //   "programAccount accountId",
-  //       //   programAccount.accountId.toString()
-  //       // );
-  //       let breed = await program.account.breed.fetch(programAccount.accountId);
-  //       // console.log("breed", breed);
-  //       // console.log("breed", breed.oracle);
-  //       if (!breed.oracle) {
-  //         console.log("parsing breed:", breed.id.toString());
-  //         let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
-  //         await program.rpc.oracle(seed, {
-  //           accounts: {
-  //             authority: program.provider.wallet.publicKey,
-  //             breed: breed[0].publicKey,
-  //           },
-  //         });
-  //       }
-  //     }
-  //   );
-  // });
+  it("Oracle Booted Up", async () => {
+    const a = anchor.Provider.env().connection.onProgramAccountChange(
+      program.programId,
+      async (programAccount) => {
+        // console.log("programAccount", programAccount);
+        // console.log(
+        //   "programAccount accountId",
+        //   programAccount.accountId.toString()
+        // );
+        let breed = await program.account.breed.fetch(programAccount.accountId);
+        // console.log("breed", breed);
+        // console.log("breed", breed.oracle);
+        if (!breed.oracle) {
+          console.log("parsing breed:", breed.id.toString());
+          let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+          await program.rpc.oracle(seed, {
+            accounts: {
+              authority: program.provider.wallet.publicKey,
+              breed: breed[0].publicKey,
+            },
+          });
+        }
+      }
+    );
+  });
 
   // function to run if the server has errors
   // it("Oracle Missed Accounts", async () => {
@@ -308,45 +308,45 @@ describe("nft-staker", async () => {
   // });
 
   // fund the ranch
-  it("JollyRanch Funded", async () => {
-    console.log(
-      "sender token starting balance: ",
-      await program.provider.connection.getTokenAccountBalance(
-        wallet_token_account
-      )
-    );
-    console.log(
-      "receiver token balance: ",
-      await program.provider.connection.getTokenAccountBalance(
-        recieverSplAccount
-      )
-    );
+  // it("JollyRanch Funded", async () => {
+  //   console.log(
+  //     "sender token starting balance: ",
+  //     await program.provider.connection.getTokenAccountBalance(
+  //       wallet_token_account
+  //     )
+  //   );
+  //   console.log(
+  //     "receiver token balance: ",
+  //     await program.provider.connection.getTokenAccountBalance(
+  //       recieverSplAccount
+  //     )
+  //   );
 
-    let amount = new anchor.BN(300000 * 1e6);
-    console.log("amount", amount.toString());
-    await program.rpc.fundRanch(amount, {
-      accounts: {
-        jollyranch: jollyranch,
-        authority: program.provider.wallet.publicKey,
-        senderSplAccount: wallet_token_account,
-        recieverSplAccount: recieverSplAccount,
-        tokenProgram: TOKEN_PROGRAM_ID,
-        systemProgram: anchor.web3.SystemProgram.programId,
-      },
-    });
-    console.log(
-      "sender token ending balance: ",
-      await program.provider.connection.getTokenAccountBalance(
-        wallet_token_account
-      )
-    );
-    console.log(
-      "receiver token balance: ",
-      await program.provider.connection.getTokenAccountBalance(
-        recieverSplAccount
-      )
-    );
-  });
+  //   let amount = new anchor.BN(300000 * 1e6);
+  //   console.log("amount", amount.toString());
+  //   await program.rpc.fundRanch(amount, {
+  //     accounts: {
+  //       jollyranch: jollyranch,
+  //       authority: program.provider.wallet.publicKey,
+  //       senderSplAccount: wallet_token_account,
+  //       recieverSplAccount: recieverSplAccount,
+  //       tokenProgram: TOKEN_PROGRAM_ID,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //     },
+  //   });
+  //   console.log(
+  //     "sender token ending balance: ",
+  //     await program.provider.connection.getTokenAccountBalance(
+  //       wallet_token_account
+  //     )
+  //   );
+  //   console.log(
+  //     "receiver token balance: ",
+  //     await program.provider.connection.getTokenAccountBalance(
+  //       recieverSplAccount
+  //     )
+  //   );
+  // });
 
   // fund Pet
 
