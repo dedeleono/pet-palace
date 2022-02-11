@@ -1083,34 +1083,34 @@ describe("nft-staker", async () => {
 
   let jollyAccount;
 
-  const a = anchor.Provider.env().connection.onProgramAccountChange(
-    program.programId,
-    async (programAccount) => {
-      // console.log("programAccount", programAccount);
-      // console.log(
-      //   "programAccount accountId",
-      //   programAccount.accountId.toString()
-      // );
-      let breed = await program.account.breed.fetch(programAccount.accountId);
-      // console.log("breed", breed);
-      // console.log("breed", breed.oracle);
-      if (!breed.oracle) {
-        console.log("trying to parse breed:", breed.id.toString());
-        let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
-        try {
-          await program.rpc.oracle(seed, {
-            accounts: {
-              authority: program.provider.wallet.publicKey,
-              breed: breed[0].publicKey,
-            },
-          });
-          console.log("breed succesfully parsed");
-        } catch {
-          console.log("parsing breed failed run the failsafe");
-        }
-      }
-    }
-  );
+  // const a = anchor.Provider.env().connection.onProgramAccountChange(
+  //   program.programId,
+  //   async (programAccount) => {
+  //     // console.log("programAccount", programAccount);
+  //     // console.log(
+  //     //   "programAccount accountId",
+  //     //   programAccount.accountId.toString()
+  //     // );
+  //     let breed = await program.account.breed.fetch(programAccount.accountId);
+  //     // console.log("breed", breed);
+  //     // console.log("breed", breed.oracle);
+  //     if (!breed.oracle) {
+  //       console.log("trying to parse breed:", breed.id.toString());
+  //       let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+  //       try {
+  //         await program.rpc.oracle(seed, {
+  //           accounts: {
+  //             authority: program.provider.wallet.publicKey,
+  //             breed: breed[0].publicKey,
+  //           },
+  //         });
+  //         console.log("breed succesfully parsed");
+  //       } catch {
+  //         console.log("parsing breed failed run the failsafe");
+  //       }
+  //     }
+  //   }
+  // );
 
   it("JollyRanch Created!", async () => {
     // only run this if it's the first time you're running the test
