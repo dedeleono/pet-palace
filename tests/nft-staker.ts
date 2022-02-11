@@ -40,6 +40,10 @@ describe("nft-staker", async () => {
   console.log("jollyBump", jollyBump);
 
   // use your own token here ex TRTN
+  // devnet trition: 7RDibaGCRPSNBecU34AQPDioVYtgz1adYzPVaF4uryd9
+  // const spl_token = new PublicKey(
+  //   "7RDibaGCRPSNBecU34AQPDioVYtgz1adYzPVaF4uryd9"
+  // );
   const spl_token = new PublicKey(
     "8rDACnycUMGFvndX74ZM9sxjEbR3gUpVHDjDbL4qW6Zf"
   );
@@ -67,49 +71,88 @@ describe("nft-staker", async () => {
 
   let jollyAccount;
 
-  // it("JollyRanch Created!", async () => {
-  //   // only run this if it's the first time you're running the test
-  //   await program.rpc.initialize(jollyBump, splBump, {
-  //     accounts: {
-  //       jollyranch: jollyranch,
-  //       authority: program.provider.wallet.publicKey,
-  //       recieverSplAccount: recieverSplAccount,
-  //       mint: spl_token,
-  //       systemProgram: anchor.web3.SystemProgram.programId,
-  //       tokenProgram: TOKEN_PROGRAM_ID,
-  //       rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-  //     },
-  //   });
-  //   jollyAccount = await program.account.jollyRanch.fetch(jollyranch);
-  //   console.log("jollyAccount", jollyAccount);
-  //   console.log("jollyAccount.amount", jollyAccount.amount.toString());
-  //   console.log(
-  //     "jollyAccount.amountRedeemed",
-  //     jollyAccount.amountRedeemed.toString()
-  //   );
-  //   assert.equal(
-  //     jollyAccount.authority.toBase58(),
-  //     program.provider.wallet.publicKey.toBase58()
-  //   );
-  //   // assert.equal(jollyAccount.amount.toString(), new anchor.BN(0).toString());
-  //   // assert.equal(
-  //   //   jollyAccount.amountRedeemed.toString(),
-  //   //   new anchor.BN(0).toString()
-  //   // );
-  // });
+  it("JollyRanch Created!", async () => {
+    // only run this if it's the first time you're running the test
+    await program.rpc.initialize(jollyBump, splBump, {
+      accounts: {
+        jollyranch: jollyranch,
+        authority: program.provider.wallet.publicKey,
+        recieverSplAccount: recieverSplAccount,
+        mint: spl_token,
+        systemProgram: anchor.web3.SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+      },
+    });
+    jollyAccount = await program.account.jollyRanch.fetch(jollyranch);
+    console.log("jollyAccount", jollyAccount);
+    console.log("jollyAccount.amount", jollyAccount.amount.toString());
+    console.log(
+      "jollyAccount.amountRedeemed",
+      jollyAccount.amountRedeemed.toString()
+    );
+    assert.equal(
+      jollyAccount.authority.toBase58(),
+      program.provider.wallet.publicKey.toBase58()
+    );
+    // assert.equal(jollyAccount.amount.toString(), new anchor.BN(0).toString());
+    // assert.equal(
+    //   jollyAccount.amountRedeemed.toString(),
+    //   new anchor.BN(0).toString()
+    // );
+  });
 
   it("Oracle Booted Up", async () => {
     const a = anchor.Provider.env().connection.onProgramAccountChange(
       program.programId,
       async (programAccount) => {
-        console.log("");
-        console.log(
-          "programAccount accountId",
-          programAccount.accountId.toString()
-        );
+        // console.log("programAccount", programAccount);
+        // console.log(
+        //   "programAccount accountId",
+        //   programAccount.accountId.toString()
+        // );
         let breed = await program.account.breed.fetch(programAccount.accountId);
+        // console.log("breed", breed);
+        // console.log("breed", breed.oracle);
+        if (!breed.oracle) {
+          console.log("parsing breed:", breed.id.toString());
+          let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+          await program.rpc.oracle(seed, {
+            accounts: {
+              authority: program.provider.wallet.publicKey,
+              breed: breed[0].publicKey,
+            },
+          });
+        }
       }
     );
+  });
+
+  // function to run if the server has errors
+  it("Oracle Missed Accounts", async () => {
+    const missedBreeds = await program.account.breed.all([
+      {
+        memcmp: {
+          offset: 8 + 32 + 8 + 8 + 8 + 1 + 1,
+          // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+          bytes: bs58.encode(new Uint8Array([0])),
+        },
+      },
+    ]);
+    console.log("missedBreeds", missedBreeds);
+    for (let i = 0; i < missedBreeds.length; i++) {
+      const breed = missedBreeds[i];
+      if (!breed.account.oracle) {
+        console.log("parsing missedbreed:", breed.account.id.toString());
+        let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+        await program.rpc.oracle(seed, {
+          accounts: {
+            authority: program.provider.wallet.publicKey,
+            breed: breed.publicKey,
+          },
+        });
+      }
+    }
   });
 
   // test randomness
@@ -265,44 +308,77 @@ describe("nft-staker", async () => {
   // });
 
   // fund the ranch
-  // it("JollyRanch Funded", async () => {
-  //   console.log(
-  //     "sender token starting balance: ",
-  //     await program.provider.connection.getTokenAccountBalance(
-  //       wallet_token_account
-  //     )
-  //   );
-  //   // console.log(
-  //   //   "receiver token balance: ",
-  //   //   await program.provider.connection.getTokenAccountBalance(
-  //   //     recieverSplAccount
-  //   //   )
-  //   // );
+  it("JollyRanch Funded", async () => {
+    console.log(
+      "sender token starting balance: ",
+      await program.provider.connection.getTokenAccountBalance(
+        wallet_token_account
+      )
+    );
+    console.log(
+      "receiver token balance: ",
+      await program.provider.connection.getTokenAccountBalance(
+        recieverSplAccount
+      )
+    );
 
-  //   // let amount = new anchor.BN(1000000 * 1e6);
-  //   // console.log("amount", amount.toString());
-  //   // await program.rpc.fundRanch(amount, {
-  //   //   accounts: {
-  //   //     jollyranch: jollyranch,
-  //   //     authority: program.provider.wallet.publicKey,
-  //   //     senderSplAccount: wallet_token_account,
-  //   //     recieverSplAccount: recieverSplAccount,
-  //   //     tokenProgram: TOKEN_PROGRAM_ID,
-  //   //     systemProgram: anchor.web3.SystemProgram.programId,
-  //   //   },
-  //   // });
-  //   console.log(
-  //     "sender token ending balance: ",
-  //     await program.provider.connection.getTokenAccountBalance(
-  //       wallet_token_account
-  //     )
+    let amount = new anchor.BN(300000 * 1e6);
+    console.log("amount", amount.toString());
+    await program.rpc.fundRanch(amount, {
+      accounts: {
+        jollyranch: jollyranch,
+        authority: program.provider.wallet.publicKey,
+        senderSplAccount: wallet_token_account,
+        recieverSplAccount: recieverSplAccount,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      },
+    });
+    console.log(
+      "sender token ending balance: ",
+      await program.provider.connection.getTokenAccountBalance(
+        wallet_token_account
+      )
+    );
+    console.log(
+      "receiver token balance: ",
+      await program.provider.connection.getTokenAccountBalance(
+        recieverSplAccount
+      )
+    );
+  });
+
+  // fund Pet
+
+  // it("Funding with pets", async () => {
+  //   // use your own NFT here ex Sea Shanty
+  //   const nft = new PublicKey("EZeQooiusTDvmGpHuMNkxEqxSouag6rvYgvth9wbnmZ");
+  //   const pet = anchor.web3.Keypair.generate();
+  //   let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
+  //     [pet.publicKey.toBuffer()],
+  //     program.programId
   //   );
-  //   console.log(
-  //     "receiver token balance: ",
-  //     await program.provider.connection.getTokenAccountBalance(
-  //       recieverSplAccount
-  //     )
+  //   console.log("pet_spl", pet_spl.toString());
+  //   let wallet_nft_account = await Token.getAssociatedTokenAddress(
+  //     ASSOCIATED_TOKEN_PROGRAM_ID,
+  //     TOKEN_PROGRAM_ID,
+  //     nft,
+  //     program.provider.wallet.publicKey
   //   );
+  //   console.log("wallet_nft_account", wallet_nft_account.toString());
+  //   await program.rpc.fundPet(petBump, {
+  //     accounts: {
+  //       authority: program.provider.wallet.publicKey,
+  //       pet: pet.publicKey,
+  //       senderSplAccount: wallet_nft_account,
+  //       recieverSplAccount: pet_spl,
+  //       mint: nft,
+  //       systemProgram: anchor.web3.SystemProgram.programId,
+  //       tokenProgram: TOKEN_PROGRAM_ID,
+  //       rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+  //     },
+  //     signers: [pet],
+  //   });
   // });
 
   // it("Unix time tests", async () => {

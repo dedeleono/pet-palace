@@ -23,14 +23,16 @@ pub mod nft_staker {
         Ok(())
     }
 
-    pub fn oracle(ctx: Context<Oracle>, seed: u64) -> ProgramResult {
+    pub fn oracle(ctx: Context<Oracle>, seed: u32) -> ProgramResult {
         let signer = &ctx.accounts.authority.key();
-        if signer.to_string() != "TRTNuj8GgjnBSSohYgyJhxF4gkhSscxJ4kDELy9Hdh8" {
+        if signer.to_string() != "SEA1xkZzPCUJBb5mcNb6ts9VExNr2kYMit3T5poqr94" {
             return Err(ErrorCode::OnlyOracleCanUpdate.into());
         }
-
         let breed = &mut ctx.accounts.breed;
-        breed.seed = seed;
+        if breed.oracle {
+            return Err(ErrorCode::OracleHasAlreadySpoken.into());
+        }
+        breed.seed = seed as u64;
 
         let result = ((breed.id + (breed.timestamp as u64) + breed.seed) % 100) + 1;
         breed.result = result as u8;
@@ -39,9 +41,9 @@ pub mod nft_staker {
         Ok(())
     }
 
-    pub fn fund_pet(ctx: Context<FundPet>, bump: u8) -> ProgramResult {
+    pub fn fund_pet(ctx: Context<FundPet>, pet_bump: u8) -> ProgramResult {
         let pet = &mut ctx.accounts.pet;
-        pet.bump = bump;
+        pet.bump = pet_bump;
         pet.mint = ctx.accounts.mint.key();
         anchor_spl::token::transfer(
             CpiContext::new(
@@ -49,7 +51,7 @@ pub mod nft_staker {
                 anchor_spl::token::Transfer {
                     from: ctx.accounts.sender_spl_account.to_account_info(),
                     to: ctx.accounts.reciever_spl_account.to_account_info(),
-                    authority: ctx.accounts.sender_spl_account.to_account_info(),
+                    authority: ctx.accounts.authority.to_account_info(),
                 },
             ),
             1,
@@ -104,12 +106,12 @@ pub mod nft_staker {
         Ok(())
     }
 
-    pub fn breed_pet(ctx: Context<BreedPet>, trtn: f64) -> ProgramResult {
+    pub fn breed_pet(ctx: Context<BreedPet>, trtn: u64) -> ProgramResult {
         let mut total = trtn as i64;
-        if total < 40 {
+        if total < 120 {
             return Err(ErrorCode::NotEnoughTriton.into());
         }
-        if total > 394 {
+        if total > 1642 {
             return Err(ErrorCode::TooMuchTriton.into());
         }
         let breed = &mut ctx.accounts.breed;
@@ -134,32 +136,32 @@ pub mod nft_staker {
         breed.timestamp = clock.unix_timestamp;
         breed.withdrawn = false;
         breed.chance += 10;
-        total -= 40;
-        if total - 180 >= 0 {
+        total -= 120;
+        if total - 1000 >= 0 {
             breed.items.kings_crown = true;
-            total = total - 180;
+            total = total - 1000;
             breed.chance += 50;
         }
-        if total - 90 >= 0 {
+        if total - 270 >= 0 {
             breed.items.jewlrey = true;
-            total = total - 90;
+            total = total - 270;
             breed.chance += 20;
         }
-        if total - 70 >= 0 {
+        if total - 210 >= 0 {
             breed.items.jewlrey = true;
-            total = total - 70;
+            total = total - 210;
             breed.chance += 15;
         }
-        if total - 14 >= 0 {
+        if total - 42 >= 0 {
             breed.items.jewlrey = true;
-            total = total - 14;
+            total = total - 42;
             breed.chance += 3;
         }
         if total != 0 {
             return Err(ErrorCode::FailedToParseItems.into());
         }
         msg!("Breed Chance: {}", breed.chance);
-        let trtn_parsed = (trtn * 1e6) as u64;
+        let trtn_parsed = ((trtn as f64) * 1e6) as u64;
         anchor_spl::token::transfer(
             CpiContext::new(
                 ctx.accounts.token_program.to_account_info(),
@@ -173,12 +175,12 @@ pub mod nft_staker {
         )?;
         Ok(())
     }
-    pub fn train_pet(ctx: Context<TrainPet>, trtn: f64) -> ProgramResult {
+    pub fn train_pet(ctx: Context<TrainPet>, trtn: u64) -> ProgramResult {
         let mut total = trtn as i64;
-        if total < 50 {
+        if total < 150 {
             return Err(ErrorCode::NotEnoughTriton.into());
         }
-        if total > 425 {
+        if total > 1675 {
             return Err(ErrorCode::TooMuchTriton.into());
         }
         let breed = &mut ctx.accounts.breed;
@@ -202,28 +204,28 @@ pub mod nft_staker {
         breed.id = id;
         breed.timestamp = clock.unix_timestamp;
         breed.withdrawn = false;
-        total -= 50;
+        total -= 150;
         breed.chance += 10;
-        if total - 200 >= 0 {
+        if total - 1000 >= 0 {
             breed.items.poseidon_whistle = true;
-            total = total - 200;
+            total = total - 1000;
             breed.chance += 50;
         }
-        if total - 100 >= 0 {
+        if total - 300 >= 0 {
             breed.items.hook = true;
-            total = total - 100;
+            total = total - 300;
             breed.chance += 20;
         }
-        if total - 75 >= 0 {
+        if total - 225 >= 0 {
             breed.items.bait = true;
-            total = total - 75;
+            total = total - 225;
             breed.chance += 15;
         }
         if total != 0 {
             return Err(ErrorCode::FailedToParseItems.into());
         }
         msg!("Breed Chance: {}", breed.chance);
-        let trtn_parsed = (trtn * 1e6) as u64;
+        let trtn_parsed = ((trtn as f64) * 1e6) as u64;
         anchor_spl::token::transfer(
             CpiContext::new(
                 ctx.accounts.token_program.to_account_info(),
@@ -612,15 +614,14 @@ pub struct Oracle<'info> {
 pub struct RedeemPet<'info> {
     pub authority: Signer<'info>,
     #[account(mut, has_one = authority)]
-    pub breed: Account<'info, Breed>,
+    pub breed: Box<Account<'info, Breed>>,
     #[account(mut)]
-    pub pet: Account<'info, Pet>,
+    pub pet: Box<Account<'info, Pet>>,
     #[account(mut, seeds = [pet.key().as_ref()], bump = pet.bump)]
-    pub sender_nft_account: Account<'info, TokenAccount>,
+    pub sender_nft_account: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft, associated_token::authority = authority)]
-    pub reciever_nft_account: Account<'info, TokenAccount>,
-    pub mint: Account<'info, Mint>,
-    pub nft: Account<'info, Mint>,
+    pub reciever_nft_account: Box<Account<'info, TokenAccount>>,
+    pub nft: Box<Account<'info, Mint>>,
     pub token_program: Program<'info, Token>,
     pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
@@ -636,7 +637,7 @@ pub struct BreedPet<'info> {
     pub stake: Account<'info, Stake>,
     pub jollyranch: Account<'info, JollyRanch>,
     #[account(mut, seeds = [jollyranch.key().as_ref()], bump = jollyranch.spl_bump)]
-    pub trtn_account: Box<Account<'info, TokenAccount>>,
+    pub trtn_account: Account<'info, TokenAccount>,
     #[account(mut)]
     pub auth_trtn_account: Account<'info, TokenAccount>,
     pub slot_hashes: UncheckedAccount<'info>,
@@ -651,7 +652,7 @@ pub struct TrainPet<'info> {
     pub breed: Account<'info, Breed>,
     pub jollyranch: Account<'info, JollyRanch>,
     #[account(mut, seeds = [jollyranch.key().as_ref()], bump = jollyranch.spl_bump)]
-    pub trtn_account: Box<Account<'info, TokenAccount>>,
+    pub trtn_account: Account<'info, TokenAccount>,
     #[account(mut)]
     pub auth_trtn_account: Account<'info, TokenAccount>,
     pub slot_hashes: UncheckedAccount<'info>,
@@ -687,16 +688,14 @@ impl<'info> FundRanch<'info> {
 }
 
 #[derive(Accounts)]
-#[instruction(bump: u8)]
+#[instruction(pet_bump: u8)]
 pub struct FundPet<'info> {
-    #[account(mut, has_one = authority, seeds = [b"jolly_account".as_ref()], bump = jollyranch.bump)]
-    pub jollyranch: Account<'info, JollyRanch>,
     pub authority: Signer<'info>,
     #[account(init_if_needed, payer = authority)]
     pub pet: Account<'info, Pet>,
     #[account(mut)]
-    pub sender_spl_account: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [pet.key().as_ref()], bump = bump, token::mint = mint, token::authority = reciever_spl_account, payer = authority)]
+    pub sender_spl_account: Account<'info, TokenAccount>,
+    #[account(init_if_needed, seeds = [pet.key().as_ref()], bump = pet_bump, token::mint = mint, token::authority = reciever_spl_account, payer = authority)]
     pub reciever_spl_account: Account<'info, TokenAccount>,
     pub mint: Account<'info, Mint>,
     pub system_program: Program<'info, System>,
@@ -903,6 +902,8 @@ pub enum ErrorCode {
     PetAlreadyRedeemed,
     #[msg("breed or train attempt already over")]
     BreedAlreadyWithdrawn,
+    #[msg("the oracle already rolled")]
+    OracleHasAlreadySpoken,
     #[msg("the oracle still needs to seed your roll")]
     OracleHasNotSpoken,
     #[msg("only the oracle can provide seeds")]

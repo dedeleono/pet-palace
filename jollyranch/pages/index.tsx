@@ -1,6 +1,6 @@
 import * as anchor from "@project-serum/anchor";
 import { Program, Provider, BN } from "@project-serum/anchor";
-import { ConfirmOptions } from "@solana/web3.js";
+import { ConfirmOptions, PublicKey } from "@solana/web3.js";
 import * as bs58 from "bs58";
 import {
   Token,
@@ -40,15 +40,28 @@ type jollyProgramState = {
 const Home: NextPage = () => {
   const wallet = useWallet();
   const [jollyState, setJollyState] = useState({} as jollyProgramState);
+  const [breeds, setBreeds] = useState([]);
   const [stakedNFTs, setStakedNFTs] = useState([]);
   const [stakedMints, setStakedMints] = useState([]);
   const [nfts, setNfts] = useState([]);
   const [loadingNfts, setLoadingNfts] = useState(true);
   const [loadingStakes, setLoadingStakes] = useState(true);
+  const [loadingBreeds, setLoadingBreeds] = useState(true);
   const [stakingRewards, setStakingRewards] = useState({});
   const [refreshStateCounter, setRefreshStateCounter] = useState(0);
   const [totalRatsStaked, setTotaRatsStaked] = useState(0);
   const [isBreed, setIsBreed] = useState(true);
+  const [tritonAmount, setTritonAmount] = useState({
+    breed: false,
+    tame: false,
+    freshHaircut: false,
+    bowTie: false,
+    jewelry: false,
+    kingsCrown: false,
+    bait: false,
+    hook: false,
+    poseidonWhistle: false,
+  });
 
   const breederRef = useRef(null);
   const loaderRef = useRef(null);
@@ -146,7 +159,7 @@ const Home: NextPage = () => {
 
     const provider = new Provider(connection, wallet, opts.preflightCommitment);
     const petPalace = new anchor.web3.PublicKey(
-      "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
+      "Gfpip7T6hdF2BZZNXA5xQNrwGLPd9KCa2GgnJRZB1woE"
     );
     // console.log("petPalace", petPalace);
     // console.log("petPalace", petPalace.toString());
@@ -172,6 +185,10 @@ const Home: NextPage = () => {
     // console.log("jollyBump", jollyBump);
 
     // use your own token here ex CHEESE
+    // devnet triton: 7RDibaGCRPSNBecU34AQPDioVYtgz1adYzPVaF4uryd9
+    // const spl_token = new anchor.web3.PublicKey(
+    //   "7RDibaGCRPSNBecU34AQPDioVYtgz1adYzPVaF4uryd9"
+    // );
     const spl_token = new anchor.web3.PublicKey(
       "8rDACnycUMGFvndX74ZM9sxjEbR3gUpVHDjDbL4qW6Zf"
     );
@@ -454,6 +471,123 @@ const Home: NextPage = () => {
     setTotaRatsStaked(totalStillStaked);
   };
 
+  const tamePet = async (stake?) => {
+    console.log("tritonAmount", tritonAmount);
+    const breed = new anchor.web3.Keypair();
+    let triton = 0;
+    if (tritonAmount.breed) {
+      console.log("Pet Breeding Ran");
+      triton += 120;
+      if (tritonAmount.freshHaircut) {
+        triton += 42;
+      }
+      if (tritonAmount.bowTie) {
+        triton += 210;
+      }
+      if (tritonAmount.jewelry) {
+        triton += 270;
+      }
+      if (tritonAmount.kingsCrown) {
+        triton += 1000;
+      }
+      await jollyState.program.breedPet(new BN(triton), {
+        accounts: {
+          authority: wallet.publicKey.toString(),
+          breed: breed.publicKey.toString(),
+          stake: stake.publicKey.toString(),
+          jollyranch: jollyState.jollyranch.toString(),
+          trtn_account: jollyState.recieverSplAccount.toString(),
+          auth_trtn_account: jollyState.wallet_token_account.toString(),
+          slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY.toString(),
+          tokenProgram: TOKEN_PROGRAM_ID.toString(),
+          systemProgram: anchor.web3.SystemProgram.programId.toString(),
+        },
+        signers: [breed],
+      });
+    }
+    if (tritonAmount.tame) {
+      triton += 150;
+      console.log("Pet Training Ran");
+      if (tritonAmount.bait) {
+        triton += 225;
+      }
+      if (tritonAmount.hook) {
+        triton += 300;
+      }
+      if (tritonAmount.poseidonWhistle) {
+        triton += 1000;
+      }
+      await jollyState.program.rpc.trainPet(new BN(triton), {
+        accounts: {
+          authority: wallet.publicKey.toString(),
+          breed: breed.publicKey.toString(),
+          jollyranch: jollyState.jollyranch.toString(),
+          trtnAccount: jollyState.recieverSplAccount.toString(),
+          authTrtnAccount: jollyState.wallet_token_account.toString(),
+          slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY.toString(),
+          tokenProgram: TOKEN_PROGRAM_ID.toString(),
+          systemProgram: anchor.web3.SystemProgram.programId.toString(),
+        },
+        signers: [breed],
+      });
+    }
+    setTritonAmount({
+      breed: false,
+      tame: false,
+      freshHaircut: false,
+      bowTie: false,
+      jewelry: false,
+      kingsCrown: false,
+      bait: false,
+      hook: false,
+      poseidonWhistle: false,
+    });
+  };
+
+  const redeemPet = async (breed) => {
+    const redeemablePets = await jollyState.program.account.pet.all([
+      {
+        memcmp: {
+          offset: 8 + 32 + 32 + 1, // Discriminator
+          // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+          bytes: bs58.encode(new Buffer(0)),
+        },
+      },
+    ]);
+    console.log("redeemablePets", redeemablePets);
+    const selectedPet =
+      redeemablePets[Math.floor(Math.random() * redeemablePets.length)];
+
+    const nft = new PublicKey(selectedPet.account.mint.toString());
+    let wallet_nft_account = await Token.getAssociatedTokenAddress(
+      ASSOCIATED_TOKEN_PROGRAM_ID,
+      TOKEN_PROGRAM_ID,
+      nft,
+      jollyState.program.provider.wallet.publicKey
+    );
+
+    let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
+      [selectedPet.publicKey.toBuffer()],
+      jollyState.program.programId
+    );
+    console.log("pet_spl", pet_spl.toString());
+
+    await jollyState.program.rpc.redeemPet({
+      accounts: {
+        authority: wallet.publicKey.toString(),
+        breed: breed.publicKey.toString(),
+        pet: selectedPet.publicKey.toString(),
+        senderNftAccount: pet_spl.toString(),
+        recieverNftAccount: wallet_nft_account.toString(),
+        nft: nft.toString(),
+        tokenProgram: TOKEN_PROGRAM_ID.toString(),
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+        systemProgram: anchor.web3.SystemProgram.programId.toString(),
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
+      },
+    });
+  };
+
   useEffect(() => {
     // console.log("state refreshed");
     (async () => {
@@ -474,13 +608,62 @@ const Home: NextPage = () => {
     if (jollyState["program"] && wallet.publicKey) {
       (async () => {
         setLoadingNfts(true);
+        setLoadingBreeds(true);
+        const breedsforOwner = await await jollyState.program.account.breed.all(
+          [
+            {
+              memcmp: {
+                offset: 8,
+                bytes: bs58.encode(wallet.publicKey.toBuffer()),
+                // bytes: bs58.encode(new Buffer(0)),
+              },
+            },
+          ]
+        );
+        const missedBreeds = await jollyState.program.account.breed.all([
+          {
+            memcmp: {
+              offset: 8 + 32 + 8 + 8 + 8 + 1 + 1,
+              // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+              bytes: bs58.encode(new Uint8Array([1])),
+            },
+          },
+        ]);
+        // console.log("missedBreeds", missedBreeds);
+        missedBreeds.map((breed) => {
+          breed = breed.account;
+          console.log("breed.id", breed.id.toString());
+          console.log("breed.timestamp", breed.timestamp.toString());
+          console.log("breed.seed", breed.seed.toString());
+          console.log("breed.chance", breed.chance.toString());
+          console.log("breed.result", breed.result.toString());
+          if (
+            parseInt(breed.chance.toString()) >=
+            parseInt(breed.result.toString())
+          ) {
+            console.log("This breed won");
+          } else {
+            console.log("This breed lost");
+          }
+          const a = breed.id.add(breed.timestamp).add(breed.seed);
+          const b = a.mod(new BN(100)).add(new BN(1)).toString();
+          console.log("VRF: ((id + timestamp + seed) % 100) +1:", b);
+        });
+        const parsedBreeds = [];
+        breedsforOwner.map((breed) => {
+          if (!breed.account.withdrawn) {
+            parsedBreeds.push(breed);
+          }
+        });
         const nftsForOwner = await getNftsForOwner(
           jollyState.connection,
           wallet.publicKey
         );
         // console.log("nftsforowner", nftsForOwner);
+        setBreeds(parsedBreeds as any);
         setNfts(nftsForOwner as any);
         setLoadingNfts(false);
+        setLoadingBreeds(false);
       })();
       (async () => {
         await getTotalStakedRats();
@@ -550,6 +733,12 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                freshHaircut: !tritonAmount.freshHaircut,
+                              }));
+                            }}
                           />
                         </label>
                       </div>
@@ -561,6 +750,12 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                bowTie: !tritonAmount.bowTie,
+                              }));
+                            }}
                           />
                         </label>
                       </div>
@@ -574,6 +769,12 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                jewelry: !tritonAmount.jewelry,
+                              }));
+                            }}
                           />
                         </label>
                       </div>
@@ -585,6 +786,12 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                kingsCrown: !tritonAmount.kingsCrown,
+                              }));
+                            }}
                           />
                         </label>
                       </div>
@@ -609,6 +816,12 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                bait: !tritonAmount.bait,
+                              }));
+                            }}
                           />
                         </label>
                       </div>
@@ -628,6 +841,12 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                hook: !tritonAmount.hook,
+                              }));
+                            }}
                           />
                         </label>
                       </div>
@@ -642,11 +861,17 @@ const Home: NextPage = () => {
                             className="label-text font-[Jangkuy]"
                             style={{ color: "white" }}
                           >
-                            Poseidon whistle
+                            Poseidon Whistle
                           </span>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                poseidonWhistle: !tritonAmount.poseidonWhistle,
+                              }));
+                            }}
                           />
                         </label>
                       </div>
@@ -669,6 +894,14 @@ const Home: NextPage = () => {
                     style={{ fontFamily: "Montserrat" }}
                     className="btn mt-6"
                     ref={modalRef}
+                    onClick={async () => {
+                      setTritonAmount((tritonAmount) => ({
+                        ...tritonAmount,
+                        breed: !tritonAmount.breed,
+                      }));
+                      await tamePet();
+                      await refresh();
+                    }}
                   >
                     Breed
                   </a>
@@ -678,6 +911,10 @@ const Home: NextPage = () => {
                     style={{ fontFamily: "Montserrat" }}
                     className="btn mt-6"
                     ref={modalRef}
+                    onClick={async () => {
+                      await tamePet();
+                      await refresh();
+                    }}
                   >
                     Tame
                   </a>
@@ -752,6 +989,14 @@ const Home: NextPage = () => {
                       borderColor: "#fd7cf6",
                     }}
                     onClick={() => {
+                      setTritonAmount((tritonAmount) => ({
+                        ...tritonAmount,
+                        breed: false,
+                      }));
+                      setTritonAmount((tritonAmount) => ({
+                        ...tritonAmount,
+                        tame: true,
+                      }));
                       setIsBreed(false);
                       breederRef.current.click();
                     }}
@@ -854,7 +1099,7 @@ const Home: NextPage = () => {
               <div className="border mockup-window border-base-200 mb-8">
                 {/* begin app windows */}
                 <div className="flex justify-center px-2 py-4 border-t border-base-200">
-                  {loadingStakes && wallet.connected && (
+                  {loadingBreeds && wallet.connected && (
                     <h1
                       className="text-lg font-400 animate-pulse"
                       style={{
@@ -877,46 +1122,93 @@ const Home: NextPage = () => {
                       Please connect your wallet above
                     </p>
                   )}
-                  {stakedMints.length > 0 && !loadingStakes && (
+                  {breeds.length > 0 && !loadingBreeds && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                      {stakedMints.map((nft, i) => {
-                        // console.log("mint nft", nft);
+                      {breeds.map((breed, i) => {
+                        console.log("breed", breed);
+                        console.log("breed id", breed.account.id.toString());
+                        console.log(
+                          "breed timestamp",
+                          breed.account.timestamp.toString()
+                        );
+                        console.log(
+                          "breed seed",
+                          breed.account.seed.toString()
+                        );
+                        console.log(
+                          "breed oracle done?",
+                          breed.account.oracle.toString()
+                        );
+                        console.log(
+                          "breed chance",
+                          breed.account.chance.toString()
+                        );
                         return (
-                          <NFTLoader
-                            key={i}
-                            isStaked={true}
-                            nft={nft}
-                            stakingRewards={stakingRewards}
-                            onRedeem={async () => {
-                              await redeemRewards(nft.nft_account.publicKey);
-                              await refresh();
-                            }}
-                            unStake={async () => {
-                              await redeemNFT(
-                                nft.nft_account.publicKey,
-                                nft.nft_account.account.mint
-                              );
-                              await refresh();
-                            }}
-                          />
+                          <div
+                            key={breed.account.id.toString() || Math.random()}
+                            className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
+                          >
+                            {/* <figure>
+                              <img
+                                src={`${breed.image}`}
+                                alt="sea shanties breed image"
+                              />
+                            </figure> */}
+                            <div className="card-body text-center items-center">
+                              <h2
+                                className="card-title"
+                                style={{
+                                  fontFamily: "Jangkuy",
+                                  fontSize: "1.2rem",
+                                }}
+                              >
+                                Breed Number: {breed.account.id.toString()}
+                              </h2>
+                              <p
+                                style={{
+                                  fontFamily: "Montserrat",
+                                  fontSize: "14px",
+                                }}
+                              >
+                                Done? : {breed.account.result.toString()}
+                              </p>
+                              <p
+                                className="badge badge-outline bg-ghost badge-sm text-white"
+                                style={{
+                                  fontFamily: "Montserrat",
+                                  fontSize: "10px",
+                                }}
+                              >
+                                {" "}
+                                items: {breed.account.items.toString()}
+                              </p>
+                              <button
+                                className="btn btn-secondary"
+                                onClick={async () => {
+                                  await redeemPet(breed);
+                                  await refresh();
+                                }}
+                              >
+                                <p>attempt</p>
+                              </button>
+                            </div>
+                          </div>
                         );
                       })}
                     </div>
                   )}
-                  {stakedMints.length == 0 &&
-                    !loadingStakes &&
-                    wallet.publicKey && (
-                      <p
-                        className="text-lg font-400"
-                        style={{
-                          fontFamily: "Scratchy",
-                          fontSize: "2.5rem",
-                          color: "#D5D3D2",
-                        }}
-                      >
-                        You don't have any Pets breeding or taming
-                      </p>
-                    )}
+                  {breeds.length == 0 && !loadingBreeds && wallet.publicKey && (
+                    <p
+                      className="text-lg font-400"
+                      style={{
+                        fontFamily: "Scratchy",
+                        fontSize: "2.5rem",
+                        color: "#D5D3D2",
+                      }}
+                    >
+                      You don't have any Pets breeding or taming
+                    </p>
+                  )}
                 </div>
               </div>
 

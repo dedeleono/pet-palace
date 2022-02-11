@@ -69,18 +69,13 @@
       "args": [
         {
           "name": "seed",
-          "type": "u64"
+          "type": "u32"
         }
       ]
     },
     {
       "name": "fundPet",
       "accounts": [
-        {
-          "name": "jollyranch",
-          "isMut": true,
-          "isSigner": false
-        },
         {
           "name": "authority",
           "isMut": false,
@@ -124,7 +119,7 @@
       ],
       "args": [
         {
-          "name": "bump",
+          "name": "petBump",
           "type": "u8"
         }
       ]
@@ -155,11 +150,6 @@
         {
           "name": "recieverNftAccount",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
           "isSigner": false
         },
         {
@@ -242,9 +232,7 @@
       "args": [
         {
           "name": "trtn",
-          "type": {
-            "defined": "f64"
-          }
+          "type": "u64"
         }
       ]
     },
@@ -295,9 +283,7 @@
       "args": [
         {
           "name": "trtn",
-          "type": {
-            "defined": "f64"
-          }
+          "type": "u64"
         }
       ]
     },
@@ -846,11 +832,16 @@
     },
     {
       "code": 6007,
+      "name": "OracleHasAlreadySpoken",
+      "msg": "the oracle already rolled"
+    },
+    {
+      "code": 6008,
       "name": "OracleHasNotSpoken",
       "msg": "the oracle still needs to seed your roll"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "OnlyOracleCanUpdate",
       "msg": "only the oracle can provide seeds"
     }
