@@ -1083,6 +1083,30 @@ describe("nft-staker", async () => {
 
   let jollyAccount;
 
+  const a = anchor.Provider.env().connection.onProgramAccountChange(
+    program.programId,
+    async (programAccount) => {
+      // console.log("programAccount", programAccount);
+      // console.log(
+      //   "programAccount accountId",
+      //   programAccount.accountId.toString()
+      // );
+      let breed = await program.account.breed.fetch(programAccount.accountId);
+      // console.log("breed", breed);
+      // console.log("breed", breed.oracle);
+      if (!breed.oracle) {
+        console.log("parsing breed:", breed.id.toString());
+        let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+        await program.rpc.oracle(seed, {
+          accounts: {
+            authority: program.provider.wallet.publicKey,
+            breed: breed[0].publicKey,
+          },
+        });
+      }
+    }
+  );
+
   it("JollyRanch Created!", async () => {
     // only run this if it's the first time you're running the test
     // await program.rpc.initialize(jollyBump, splBump, {
@@ -1115,57 +1139,57 @@ describe("nft-staker", async () => {
   });
 
   // it("Oracle Booted Up", async () => {
-  //   const a = anchor.Provider.env().connection.onProgramAccountChange(
-  //     program.programId,
-  //     async (programAccount) => {
-  //       // console.log("programAccount", programAccount);
-  //       // console.log(
-  //       //   "programAccount accountId",
-  //       //   programAccount.accountId.toString()
-  //       // );
-  //       let breed = await program.account.breed.fetch(programAccount.accountId);
-  //       // console.log("breed", breed);
-  //       // console.log("breed", breed.oracle);
-  //       if (!breed.oracle) {
-  //         console.log("parsing breed:", breed.id.toString());
-  //         let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
-  //         await program.rpc.oracle(seed, {
-  //           accounts: {
-  //             authority: program.provider.wallet.publicKey,
-  //             breed: breed[0].publicKey,
-  //           },
-  //         });
-  //       }
-  //     }
-  //   );
-  // });
-
-  // function to run if the server has errors
-  // it("Oracle Missed Accounts", async () => {
-  //   const missedBreeds = await program.account.breed.all([
-  //     {
-  //       memcmp: {
-  //         offset: 8 + 32 + 8 + 8 + 8 + 1 + 1,
-  //         // bytes: bs58.encode(wallet.publicKey.toBuffer()),
-  //         bytes: bs58.encode(new Uint8Array([0])),
-  //       },
-  //     },
-  //   ]);
-  //   console.log("missedBreeds", missedBreeds);
-  //   for (let i = 0; i < missedBreeds.length; i++) {
-  //     const breed = missedBreeds[i];
-  //     if (!breed.account.oracle) {
-  //       console.log("parsing missedbreed:", breed.account.id.toString());
+  // const a = anchor.Provider.env().connection.onProgramAccountChange(
+  //   program.programId,
+  //   async (programAccount) => {
+  //     // console.log("programAccount", programAccount);
+  //     // console.log(
+  //     //   "programAccount accountId",
+  //     //   programAccount.accountId.toString()
+  //     // );
+  //     let breed = await program.account.breed.fetch(programAccount.accountId);
+  //     // console.log("breed", breed);
+  //     // console.log("breed", breed.oracle);
+  //     if (!breed.oracle) {
+  //       console.log("parsing breed:", breed.id.toString());
   //       let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
   //       await program.rpc.oracle(seed, {
   //         accounts: {
   //           authority: program.provider.wallet.publicKey,
-  //           breed: breed.publicKey,
+  //           breed: breed[0].publicKey,
   //         },
   //       });
   //     }
   //   }
+  // );
   // });
+
+  // function to run if the server has errors
+  it("Oracle Missed Accounts", async () => {
+    const missedBreeds = await program.account.breed.all([
+      {
+        memcmp: {
+          offset: 8 + 32 + 8 + 8 + 8 + 1 + 1,
+          // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+          bytes: bs58.encode(new Uint8Array([0])),
+        },
+      },
+    ]);
+    console.log("missedBreeds", missedBreeds);
+    for (let i = 0; i < missedBreeds.length; i++) {
+      const breed = missedBreeds[i];
+      if (!breed.account.oracle) {
+        console.log("parsing missedbreed:", breed.account.id.toString());
+        let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+        await program.rpc.oracle(seed, {
+          accounts: {
+            authority: program.provider.wallet.publicKey,
+            breed: breed.publicKey,
+          },
+        });
+      }
+    }
+  });
 
   // test randomness
 
