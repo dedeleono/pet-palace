@@ -5,6 +5,7 @@ interface NFTLoaderProps {
   nft: NFT;
   isStaked: boolean;
   onStake?: any;
+  onBreed?: any;
   onRedeem?: any;
   unStake?: any;
   stakingRewards?: any;
@@ -22,6 +23,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
   nft,
   isStaked,
   onStake,
+  onBreed,
   onRedeem,
   unStake,
   stakingRewards,
@@ -73,6 +75,20 @@ const NFTLoader: FC<NFTLoaderProps> = ({
           </div>
           <div className="justify-center card-actions">
             <button
+              className="btn btn-secondary badge-outline mt-4"
+              onClick={onBreed}
+              style={{
+                fontFamily: "Scratchy",
+                fontSize: "1.3rem",
+                color: "#ffffff",
+                borderColor: "#3DB489",
+              }}
+            >
+              Breed
+            </button>
+          </div>
+          <div className="justify-center card-actions">
+            <button
               style={{
                 fontFamily: "Scratchy",
                 fontSize: "1.3rem",
@@ -112,7 +128,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
           >
             {nft.name}
           </h2>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2">
             <button
               className="btn btn-secondary badge-outline mt-4"
               onClick={onStake}
@@ -124,18 +140,6 @@ const NFTLoader: FC<NFTLoaderProps> = ({
               }}
             >
               Stake
-            </button>
-            <button
-              className="btn btn-secondary badge-outline mt-4"
-              onClick={onStake}
-              style={{
-                fontFamily: "Scratchy",
-                fontSize: "1.3rem",
-                color: "#ffffff",
-                borderColor: "#3DB489",
-              }}
-            >
-              Breed
             </button>
           </div>
         </div>

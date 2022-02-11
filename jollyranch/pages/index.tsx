@@ -511,7 +511,7 @@ const Home: NextPage = () => {
     }
     if (tritonAmount.tame) {
       triton += 150;
-      console.log("Pet Training Ran");
+      console.log("Pet training Ran");
       if (tritonAmount.bait) {
         triton += 225;
       }
@@ -1090,6 +1090,10 @@ const Home: NextPage = () => {
                                 nft.nft_account.publicKey,
                                 nft.nft_account.account.mint
                               );
+                              await refresh();
+                            }}
+                            onBreed={async () => {
+                              await tamePet(nft.nft_account.publicKey);
                               await refresh();
                             }}
                           />
