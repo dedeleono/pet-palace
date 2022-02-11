@@ -1174,7 +1174,7 @@ describe("nft-staker", async () => {
     const missedBreeds = await program.account.breed.all([
       {
         memcmp: {
-          offset: 8 + 32 + 8 + 8 + 8 + 1 + 1,
+          offset: 8 + 32 + 8 + 8 + 8 + 1 + 1 + 1,
           // bytes: bs58.encode(wallet.publicKey.toBuffer()),
           bytes: bs58.encode(new Uint8Array([0])),
         },
