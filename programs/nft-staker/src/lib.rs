@@ -256,6 +256,7 @@ pub mod nft_staker {
     }
 
     pub fn stake_nft(ctx: Context<StakeNFT>, spl_bumps: [u8; 4]) -> ProgramResult {
+        msg!("stakenft ran");
         let clock = Clock::get().unwrap();
         let stake = &mut ctx.accounts.stake;
         stake.authority = ctx.accounts.authority.key();
@@ -271,26 +272,29 @@ pub mod nft_staker {
         stake.amount_redeemed = 0;
         let mut amount_staked = 0;
         for (i, mint) in stake.mints.iter().enumerate() {
-            if mint.key().to_string() != "11111111111111111111111111111111" {
-                if i == 0 {
+            msg!("checking mint: {}", i);
+            if i == 0 {
+                anchor_spl::token::transfer(
+                    CpiContext::new(
+                        ctx.accounts.token_program.to_account_info(),
+                        anchor_spl::token::Transfer {
+                            from: ctx.accounts.sender_spl_account_0.to_account_info(),
+                            to: ctx.accounts.reciever_spl_account_0.to_account_info(),
+                            authority: ctx.accounts.authority.to_account_info(),
+                        },
+                    ),
+                    1,
+                )?;
+                amount_staked = amount_staked + 1;
+            }
+            if i > 0 && mint.to_string() != stake.mints[0].to_string() {
+                msg!("real mint sending token: {}", i);
+                if i == 1 {
                     anchor_spl::token::transfer(
                         CpiContext::new(
                             ctx.accounts.token_program.to_account_info(),
                             anchor_spl::token::Transfer {
-                                from: ctx.accounts.mint_0.to_account_info(),
-                                to: ctx.accounts.reciever_spl_account_0.to_account_info(),
-                                authority: ctx.accounts.authority.to_account_info(),
-                            },
-                        ),
-                        1,
-                    )?;
-                    amount_staked = amount_staked + 1;
-                } else if i == 1 {
-                    anchor_spl::token::transfer(
-                        CpiContext::new(
-                            ctx.accounts.token_program.to_account_info(),
-                            anchor_spl::token::Transfer {
-                                from: ctx.accounts.mint_1.to_account_info(),
+                                from: ctx.accounts.sender_spl_account_1.to_account_info(),
                                 to: ctx.accounts.reciever_spl_account_1.to_account_info(),
                                 authority: ctx.accounts.authority.to_account_info(),
                             },
@@ -303,7 +307,7 @@ pub mod nft_staker {
                         CpiContext::new(
                             ctx.accounts.token_program.to_account_info(),
                             anchor_spl::token::Transfer {
-                                from: ctx.accounts.mint_2.to_account_info(),
+                                from: ctx.accounts.sender_spl_account_2.to_account_info(),
                                 to: ctx.accounts.reciever_spl_account_2.to_account_info(),
                                 authority: ctx.accounts.authority.to_account_info(),
                             },
@@ -316,7 +320,7 @@ pub mod nft_staker {
                         CpiContext::new(
                             ctx.accounts.token_program.to_account_info(),
                             anchor_spl::token::Transfer {
-                                from: ctx.accounts.mint_3.to_account_info(),
+                                from: ctx.accounts.sender_spl_account_3.to_account_info(),
                                 to: ctx.accounts.reciever_spl_account_3.to_account_info(),
                                 authority: ctx.accounts.authority.to_account_info(),
                             },

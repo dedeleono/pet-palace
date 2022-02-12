@@ -149,13 +149,13 @@ const Home: NextPage = () => {
 
     if (stake_mints.length < 4) {
       for (let j = 0; j <= 5 - stake_mints.length; j++) {
-        stake_spls.push(TOKEN_PROGRAM_ID);
-        stake_bumps.push(TOKEN_PROGRAM_ID);
-        stake_mints.push(TOKEN_PROGRAM_ID);
-        wallet_nft_accounts.push(TOKEN_PROGRAM_ID);
+        stake_spls.push(stake_spls[0]);
+        stake_bumps.push(stake_bumps[0]);
+        stake_mints.push(stake_mints[0]);
+        wallet_nft_accounts.push(wallet_nft_accounts[0]);
       }
     }
-    console.log("stake_mints", stake_mints);
+    // console.log("stake_mints", stake_mints);
 
     // console.log("wallet_nft_account", wallet_nft_account.toString());
     await jollyState.program.rpc.stakeNft(stake_bumps, {
