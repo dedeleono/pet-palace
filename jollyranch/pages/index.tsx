@@ -362,7 +362,10 @@ const Home: NextPage = () => {
         // console.log("nft_account", nft_account);
         let [stake_spl, _stakeBump] =
           await anchor.web3.PublicKey.findProgramAddress(
-            [nft_account.publicKey.toBuffer()],
+            [
+              nft_account.publicKey.toBuffer(),
+              nft_account.account.mints[0].toBuffer(),
+            ],
             jollyState.program.programId
           );
         // console.log("stake_spl", stake_spl);
@@ -409,7 +412,7 @@ const Home: NextPage = () => {
     // console.log("allStakedMints", allStakedMints);
     allStakedMints.map((nft) => {
       if (nft) {
-        console.log("nft", nft);
+        // console.log("nft", nft);
         const mints = [
           "8jDN1VYpCtk6gYxuRrEww8vnjbaKiaZexy145CVNyEoM",
           "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
@@ -466,6 +469,7 @@ const Home: NextPage = () => {
     // }, 3000);
     // console.log("setStakedMints", allStakedMints);
     setLoadingStakes(false);
+    // console.log("allstaked mints:", allStakedMints);
     setStakedMints(allStakedMints.filter((e) => e));
   };
 
