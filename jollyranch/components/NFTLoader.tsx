@@ -8,6 +8,7 @@ interface NFTLoaderProps {
   onBreed?: any;
   onRedeem?: any;
   unStake?: any;
+  nftStakeArray?: any;
   stakingRewards?: any;
 }
 interface NFT {
@@ -26,6 +27,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
   onBreed,
   onRedeem,
   unStake,
+  nftStakeArray,
   stakingRewards,
 }) => {
   const [staked, setStaked] = useState(false);
@@ -128,7 +130,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
           >
             {nft.name}
           </h2>
-          {!staked && (
+          {!staked && nftStakeArray.length < 4 && (
             <div className="grid grid-cols-1 gap-2">
               <button
                 className="btn btn-secondary badge-outline mt-4"

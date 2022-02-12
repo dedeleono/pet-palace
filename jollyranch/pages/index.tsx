@@ -1374,6 +1374,7 @@ const Home: NextPage = () => {
                           key={nft.id}
                           isStaked={false}
                           nft={nft}
+                          nftStakeArray={nftStakeArray}
                           onStake={async () => {
                             setNftStakeArray((nftStakeArray) => [
                               ...nftStakeArray,
