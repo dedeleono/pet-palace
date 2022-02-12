@@ -419,6 +419,7 @@ pub mod nft_staker {
     }
 
     pub fn redeem_nft(ctx: Context<RedeemNFT>) -> ProgramResult {
+        msg!("redeemnft ran");
         let stake = &mut ctx.accounts.stake;
         let jollyranch = &mut ctx.accounts.jollyranch;
 
@@ -499,30 +500,35 @@ pub mod nft_staker {
         stake.withdrawn = true;
 
         for (i, mint) in stake.mints.iter().enumerate() {
-            if mint.to_string() != "0" {
-                if i == 0 {
-                    anchor_spl::token::transfer(
-                        CpiContext::new_with_signer(
-                            ctx.accounts.token_program.to_account_info(),
-                            anchor_spl::token::Transfer {
-                                from: ctx.accounts.sender_nft_account_0.to_account_info(),
-                                to: ctx.accounts.reciever_nft_account_0.to_account_info(),
-                                authority: ctx.accounts.sender_nft_account_0.to_account_info(),
-                            },
-                            &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
-                        ),
-                        1,
-                    )?;
-                    anchor_spl::token::close_account(CpiContext::new_with_signer(
+            if i == 1 {
+                msg!("redeeming defualt nft");
+                anchor_spl::token::transfer(
+                    CpiContext::new_with_signer(
                         ctx.accounts.token_program.to_account_info(),
-                        anchor_spl::token::CloseAccount {
-                            account: ctx.accounts.sender_nft_account_0.to_account_info(),
-                            destination: ctx.accounts.reciever_nft_account_0.to_account_info(),
+                        anchor_spl::token::Transfer {
+                            from: ctx.accounts.sender_nft_account_0.to_account_info(),
+                            to: ctx.accounts.reciever_nft_account_0.to_account_info(),
                             authority: ctx.accounts.sender_nft_account_0.to_account_info(),
                         },
                         &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
-                    ))?;
-                } else if i == 1 {
+                    ),
+                    1,
+                )?;
+                anchor_spl::token::close_account(CpiContext::new_with_signer(
+                    ctx.accounts.token_program.to_account_info(),
+                    anchor_spl::token::CloseAccount {
+                        account: ctx.accounts.sender_nft_account_0.to_account_info(),
+                        destination: ctx.accounts.reciever_nft_account_0.to_account_info(),
+                        authority: ctx.accounts.sender_nft_account_0.to_account_info(),
+                    },
+                    &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                ))?;
+            }
+            if (i > 0) && (mint.to_string() != stake.mints[0].to_string()) {
+                msg!("mint {}", mint.to_string());
+                msg!("stake.mints[0] {}", stake.mints[0].to_string());
+                msg!("redeemable mint {}", i);
+                if i == 1 {
                     anchor_spl::token::transfer(
                         CpiContext::new_with_signer(
                             ctx.accounts.token_program.to_account_info(),
@@ -727,13 +733,13 @@ pub struct StakeNFT<'info> {
     pub sender_spl_account_2: Box<Account<'info, TokenAccount>>,
     #[account(mut)]
     pub sender_spl_account_3: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_0, token::authority = reciever_spl_account_0, payer = authority)]
+    #[account(init_if_needed, seeds = [b"nft_1".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_0, token::authority = reciever_spl_account_0, payer = authority)]
     pub reciever_spl_account_0: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_1, token::authority = reciever_spl_account_1, payer = authority)]
+    #[account(init_if_needed, seeds = [b"nft_2".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_1, token::authority = reciever_spl_account_1, payer = authority)]
     pub reciever_spl_account_1: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_2, token::authority = reciever_spl_account_2, payer = authority)]
+    #[account(init_if_needed, seeds = [b"nft_3".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_2, token::authority = reciever_spl_account_2, payer = authority)]
     pub reciever_spl_account_2: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_3, token::authority = reciever_spl_account_3, payer = authority)]
+    #[account(init_if_needed, seeds = [b"nft_4".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_3, token::authority = reciever_spl_account_3, payer = authority)]
     pub reciever_spl_account_3: Box<Account<'info, TokenAccount>>,
     pub mint_0: Box<Account<'info, Mint>>,
     pub mint_1: Box<Account<'info, Mint>>,
@@ -771,19 +777,19 @@ pub struct RedeemNFT<'info> {
     pub jollyranch: Box<Account<'info, JollyRanch>>,
     pub authority: Signer<'info>,
     // spl_token specific validations
-    #[account(mut, seeds = [stake.key().as_ref()], bump = stake.spl_bumps[0])]
+    #[account(mut, seeds = [b"nft_1".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[0])]
     pub sender_nft_account_0: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_0, associated_token::authority = authority)]
     pub reciever_nft_account_0: Box<Account<'info, TokenAccount>>,
-    #[account(mut, seeds = [stake.key().as_ref()], bump = stake.spl_bumps[1])]
+    #[account(mut, seeds = [b"nft_2".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[1])]
     pub sender_nft_account_1: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_1, associated_token::authority = authority)]
     pub reciever_nft_account_1: Box<Account<'info, TokenAccount>>,
-    #[account(mut, seeds = [stake.key().as_ref()], bump = stake.spl_bumps[2])]
+    #[account(mut, seeds = [b"nft_3".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[2])]
     pub sender_nft_account_2: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_2, associated_token::authority = authority)]
     pub reciever_nft_account_2: Box<Account<'info, TokenAccount>>,
-    #[account(mut, seeds = [stake.key().as_ref()], bump = stake.spl_bumps[3])]
+    #[account(mut, seeds = [b"nft_4".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[3])]
     pub sender_nft_account_3: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_3, associated_token::authority = authority)]
     pub reciever_nft_account_3: Box<Account<'info, TokenAccount>>,

@@ -111,7 +111,7 @@ const Home: NextPage = () => {
       // console.log("lockup", lockup);
       let [stake_spl, stakeBump] =
         await anchor.web3.PublicKey.findProgramAddress(
-          [stake.publicKey.toBuffer()],
+          [Buffer.from(`nft_${i + 1}`), stake.publicKey.toBuffer()],
           jollyState.program.programId
         );
       let wallet_nft_account = await Token.getAssociatedTokenAddress(
@@ -385,14 +385,21 @@ const Home: NextPage = () => {
     // console.log("allStakedMints", allStakedMints);
     allStakedMints.map((nft) => {
       if (nft) {
-        // console.log("nft", nft);
+        console.log("nft", nft);
         const mints = [
           "8jDN1VYpCtk6gYxuRrEww8vnjbaKiaZexy145CVNyEoM",
           "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
           "54KFLjw4ywGWzNeh6o8LrHEP8mTjiBRX4DrNjWGiMUhT",
           "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
         ];
-        let redemption_rate = 6.9;
+        let redemption_rate = 1;
+        if (nft.nft_account.account.stakeAmount == 2) {
+          redemption_rate = 4.0;
+        } else if (nft.nft_account.account.stakeAmount == 3) {
+          redemption_rate = 18.0;
+        } else if (nft.nft_account.account.stakeAmount == 4) {
+          redemption_rate = 32.0;
+        }
         // console.log("nft", nft.nft_account.account.mint.toString());
         if (
           mints.includes(nft.nft_account.account.mints[0].toString()) ||
@@ -400,7 +407,8 @@ const Home: NextPage = () => {
           mints.includes(nft.nft_account.account.mints[2].toString()) ||
           mints.includes(nft.nft_account.account.mints[3].toString())
         ) {
-          redemption_rate = 16.9;
+          redemption_rate = redemption_rate =
+            20.0 * nft.nft_account.account.stakeAmount;
         }
         const currDate = new Date().getTime() / 1000;
         const daysElapsed =
@@ -460,38 +468,56 @@ const Home: NextPage = () => {
     // );
   };
 
-  const redeemNFT = async (stakePubKey, nftPubKey) => {
-    console.log("stakesPubKey", stakePubKey.toString());
-    console.log("nftPubKey", nftPubKey.toString());
-    let wallet_nft_account = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      nftPubKey,
-      jollyState.program.provider.wallet.publicKey
-    );
-    console.log("wallet_nft_account", wallet_nft_account.toString());
-    let [stake_spl, _stakeBump] =
-      await anchor.web3.PublicKey.findProgramAddress(
-        [stakePubKey.toBuffer()],
-        jollyState.program.programId
+  const redeemNFT = async (stakePubKey, nftPubKeys) => {
+    // console.log("stakesPubKey", stakePubKey.toString());
+    // console.log("nftPubKey", nftPubKey.toString());
+    let stake_spls = [];
+    let stake_bumps = [];
+    let wallet_nft_accounts = [];
+    for (let i = 0; i < nftPubKeys.length; i++) {
+      let wallet_nft_account = await Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        nftPubKeys[i],
+        jollyState.program.provider.wallet.publicKey
       );
+      // console.log("wallet_nft_account", wallet_nft_account.toString());
+      let [stake_spl, stakeBump] =
+        await anchor.web3.PublicKey.findProgramAddress(
+          [Buffer.from(`nft_${i + 1}`), stakePubKey.toBuffer()],
+          jollyState.program.programId
+        );
 
-    console.log("stake_spl", stake_spl.toString());
+      // console.log("stake_spl", stake_spl.toString());
+
+      stake_spls.push(stake_spl);
+      stake_bumps.push(stakeBump);
+      wallet_nft_accounts.push(wallet_nft_account);
+    }
 
     await jollyState.program.rpc.redeemNft({
       accounts: {
         stake: stakePubKey.toString(),
         jollyranch: jollyState.jollyranch.toString(),
         authority: jollyState.program.provider.wallet.publicKey.toString(),
-        senderSplAccount: stake_spl.toString(),
-        recieverSplAccount: wallet_nft_account.toString(),
+        senderNftAccount0: stake_spls[0].toString(),
+        senderNftAccount1: stake_spls[1].toString(),
+        senderNftAccount2: stake_spls[2].toString(),
+        senderNftAccount3: stake_spls[3].toString(),
+        recieverNftAccount0: wallet_nft_accounts[0].toString(),
+        recieverNftAccount1: wallet_nft_accounts[1].toString(),
+        recieverNftAccount2: wallet_nft_accounts[2].toString(),
+        recieverNftAccount3: wallet_nft_accounts[3].toString(),
         senderTritonAccount: jollyState.recieverSplAccount.toString(),
         recieverTritonAccount: jollyState.wallet_token_account.toString(),
         mint: jollyState.spl_token.toString(),
-        nft: nftPubKey.toString(),
-        systemProgram: anchor.web3.SystemProgram.programId.toString(),
+        nft0: nftPubKeys[0].toString(),
+        nft1: nftPubKeys[1].toString(),
+        nft2: nftPubKeys[2].toString(),
+        nft3: nftPubKeys[3].toString(),
         tokenProgram: TOKEN_PROGRAM_ID.toString(),
         associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+        systemProgram: anchor.web3.SystemProgram.programId.toString(),
         rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
       },
     });
@@ -1101,7 +1127,7 @@ const Home: NextPage = () => {
                             unStake={async () => {
                               await redeemNFT(
                                 nft.nft_account.publicKey,
-                                nft.nft_account.account.mint
+                                nft.nft_account.account.mints
                               );
                               await refresh();
                             }}
