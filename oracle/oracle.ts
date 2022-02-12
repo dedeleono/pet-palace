@@ -47,24 +47,28 @@ async function main(args: any) {
       //   "programAccount accountId",
       //   programAccount.accountId.toString()
       // );
-      let breed = await program.account.breed.fetch(programAccount.accountId);
-      // console.log("breed", breed);
-      // console.log("breed", breed.oracle);
-      if (!breed.oracle) {
-        console.log("trying to parse breed:", breed.id.toString());
-        let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
-        try {
-          await program.rpc.oracle(seed, {
-            accounts: {
-              authority: program.provider.wallet.publicKey,
-              breed: programAccount.accountId,
-            },
-          });
-          console.log("breed succesfully parsed");
-        } catch (e) {
-          console.log(e);
-          console.log("parsing breed failed run the failsafe");
+      try {
+        let breed = await program.account.breed.fetch(programAccount.accountId);
+        // console.log("breed", breed);
+        // console.log("breed", breed.oracle);
+        if (!breed.oracle) {
+          console.log("trying to parse breed:", breed.id.toString());
+          let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+          try {
+            await program.rpc.oracle(seed, {
+              accounts: {
+                authority: program.provider.wallet.publicKey,
+                breed: programAccount.accountId,
+              },
+            });
+            console.log("breed succesfully parsed");
+          } catch (e) {
+            console.log(e);
+            console.log("parsing breed failed run the failsafe");
+          }
         }
+      } catch {
+        console.log("not oracle account");
       }
     }
   );

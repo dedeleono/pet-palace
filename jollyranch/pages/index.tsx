@@ -51,6 +51,7 @@ const Home: NextPage = () => {
   const [refreshStateCounter, setRefreshStateCounter] = useState(0);
   const [totalRatsStaked, setTotaRatsStaked] = useState(0);
   const [isBreed, setIsBreed] = useState(true);
+  const [breedStake, setBreedStake] = useState(null);
   const [tritonAmount, setTritonAmount] = useState({
     breed: false,
     tame: false,
@@ -558,7 +559,7 @@ const Home: NextPage = () => {
         },
       },
     ]);
-    console.log("redeemablePets", redeemablePets);
+    // console.log("redeemablePets", redeemablePets);
     const selectedPet =
       redeemablePets[Math.floor(Math.random() * redeemablePets.length)];
 
@@ -663,16 +664,16 @@ const Home: NextPage = () => {
           jollyState.connection,
           wallet.publicKey
         );
-        const redeemablePets = await jollyState.program.account.pet.all([
-          {
-            memcmp: {
-              offset: 8 + 32 + 32 + 1, // Discriminator
-              // bytes: bs58.encode(wallet.publicKey.toBuffer()),
-              bytes: bs58.encode(new Buffer(0)),
-            },
-          },
-        ]);
-        console.log("redeemablePets", redeemablePets);
+        // const redeemablePets = await jollyState.program.account.pet.all([
+        //   {
+        //     memcmp: {
+        //       offset: 8 + 32 + 32 + 1, // Discriminator
+        //       // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+        //       bytes: bs58.encode(new Buffer(0)),
+        //     },
+        //   },
+        // ]);
+        // console.log("redeemablePets", redeemablePets);
         // console.log("nftsforowner", nftsForOwner);
         setBreeds(parsedBreeds as any);
         setNfts(nftsForOwner as any);
@@ -919,7 +920,7 @@ const Home: NextPage = () => {
                         ...tritonAmount,
                         breed: !tritonAmount.breed,
                       }));
-                      await tamePet();
+                      await tamePet(breedStake);
                       await refresh();
                     }}
                   >
@@ -1093,8 +1094,9 @@ const Home: NextPage = () => {
                               await refresh();
                             }}
                             onBreed={async () => {
-                              await tamePet(nft.nft_account.publicKey);
-                              await refresh();
+                              setIsBreed(true);
+                              setBreedStake(nft);
+                              breederRef.current.click();
                             }}
                           />
                         );
@@ -1183,38 +1185,39 @@ const Home: NextPage = () => {
                                 className="card-title"
                                 style={{
                                   fontFamily: "Jangkuy",
-                                  fontSize: "1.2rem",
+                                  fontSize: ".75rem",
                                 }}
                               >
                                 Breed Number: {breed.account.id.toString()}
                               </h2>
-                              <p
-                                style={{
-                                  fontFamily: "Montserrat",
-                                  fontSize: "14px",
-                                }}
-                              >
-                                Done? : {breed.account.result.toString()}
-                              </p>
-                              <p
-                                className="badge badge-outline bg-ghost badge-sm text-white"
-                                style={{
-                                  fontFamily: "Montserrat",
-                                  fontSize: "10px",
-                                }}
-                              >
-                                {" "}
-                                items: {breed.account.items.toString()}
-                              </p>
-                              <button
-                                className="btn btn-secondary"
-                                onClick={async () => {
-                                  await redeemPet(breed);
-                                  await refresh();
-                                }}
-                              >
-                                <p>attempt</p>
-                              </button>
+                              <div className="flex">
+                                {Object.keys(breed.account.items).map((key) => {
+                                  if (breed.account.items[key]) {
+                                    return (
+                                      <p
+                                        className="m-1 badge badge-outline bg-ghost badge-sm text-white"
+                                        style={{
+                                          fontFamily: "Montserrat",
+                                          fontSize: "10px",
+                                        }}
+                                      >
+                                        {key}
+                                      </p>
+                                    );
+                                  }
+                                })}
+                              </div>
+                              {breed.account.result > 0 && (
+                                <button
+                                  className="btn btn-secondary"
+                                  onClick={async () => {
+                                    await redeemPet(breed);
+                                    await refresh();
+                                  }}
+                                >
+                                  <p>Roll For Pet</p>
+                                </button>
+                              )}
                             </div>
                           </div>
                         );
