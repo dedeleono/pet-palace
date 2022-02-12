@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { useRef, useEffect } from "react";
+import { useState } from "react";
 
 interface NFTLoaderProps {
   nft: NFT;
@@ -28,7 +28,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
   unStake,
   stakingRewards,
 }) => {
-  // console.log("isStaked, nft", isStaked, nft);
+  const [staked, setStaked] = useState(false);
   if (isStaked) {
     return (
       <div
@@ -128,20 +128,25 @@ const NFTLoader: FC<NFTLoaderProps> = ({
           >
             {nft.name}
           </h2>
-          <div className="grid grid-cols-1 gap-2">
-            <button
-              className="btn btn-secondary badge-outline mt-4"
-              onClick={onStake}
-              style={{
-                fontFamily: "Scratchy",
-                fontSize: "1.3rem",
-                color: "#ffffff",
-                borderColor: "#3DB489",
-              }}
-            >
-              Stake
-            </button>
-          </div>
+          {!staked && (
+            <div className="grid grid-cols-1 gap-2">
+              <button
+                className="btn btn-secondary badge-outline mt-4"
+                onClick={async () => {
+                  setStaked(true);
+                  await onStake();
+                }}
+                style={{
+                  fontFamily: "Scratchy",
+                  fontSize: "1.3rem",
+                  color: "#ffffff",
+                  borderColor: "#3DB489",
+                }}
+              >
+                Stake
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

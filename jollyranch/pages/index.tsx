@@ -41,6 +41,7 @@ const Home: NextPage = () => {
   const wallet = useWallet();
   const [jollyState, setJollyState] = useState({} as jollyProgramState);
   const [breeds, setBreeds] = useState([]);
+  const [rolls, setRolls] = useState([]);
   const [stakedNFTs, setStakedNFTs] = useState([]);
   const [stakedMints, setStakedMints] = useState([]);
   const [nfts, setNfts] = useState([]);
@@ -51,7 +52,9 @@ const Home: NextPage = () => {
   const [refreshStateCounter, setRefreshStateCounter] = useState(0);
   const [totalRatsStaked, setTotaRatsStaked] = useState(0);
   const [isBreed, setIsBreed] = useState(true);
+  const [isRolls, setIsRolls] = useState(false);
   const [breedStake, setBreedStake] = useState(null);
+  const [nftStakeArray, setNftStakeArray] = useState([]);
   const [tritonAmount, setTritonAmount] = useState({
     breed: false,
     tame: false,
@@ -94,52 +97,83 @@ const Home: NextPage = () => {
 
   const idl = idl_type as anchor.Idl;
 
-  const stakeNFT = async (publicKey) => {
-    const nft = new anchor.web3.PublicKey(publicKey);
-    // console.log("nft", nft.toString());
-    // console.log("cheese", cheese);
-    // console.log("lockup", lockup);
+  const stakeNFT = async (publicKeys) => {
     const stake = anchor.web3.Keypair.generate();
-    let [stake_spl, stakeBump] = await anchor.web3.PublicKey.findProgramAddress(
-      [stake.publicKey.toBuffer()],
-      jollyState.program.programId
-    );
-    let wallet_nft_account = await Token.getAssociatedTokenAddress(
-      ASSOCIATED_TOKEN_PROGRAM_ID,
-      TOKEN_PROGRAM_ID,
-      nft,
-      wallet.publicKey
-    );
+    let stake_spls = [];
+    let stake_bumps = [];
+    let stake_mints = [];
+    let wallet_nft_accounts = [];
+    for (let i = 0; i < publicKeys.length; i++) {
+      const nft = new anchor.web3.PublicKey(publicKeys[i].mint.toString());
 
-    // check if token has an associated account
-    // if not send from the wallet account
-    const largestAccounts = await jollyState.connection.getTokenLargestAccounts(
-      nft
-    );
-    // console.log("largestAccounts", largestAccounts);
-    // const largestAccountInfo = await jollyState.connection.getParsedAccountInfo(
-    //   largestAccounts.value[0].address
-    // );
-    // console.log(
-    //   "largestAccounts.value[0].address",
-    //   largestAccounts.value[0].address.toString()
-    // );
-    // console.log(largestAccountInfo.value.data.parsed.info.owner);
-    const hasATA =
-      largestAccounts.value[0].address.toString() ===
-      wallet_nft_account.toString();
-    if (!hasATA) {
-      wallet_nft_account = largestAccounts.value[0].address;
+      // console.log("nft", nft.toString());
+      // console.log("cheese", cheese);
+      // console.log("lockup", lockup);
+      let [stake_spl, stakeBump] =
+        await anchor.web3.PublicKey.findProgramAddress(
+          [stake.publicKey.toBuffer()],
+          jollyState.program.programId
+        );
+      let wallet_nft_account = await Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        nft,
+        wallet.publicKey
+      );
+
+      // check if token has an associated account
+      // if not send from the wallet account
+      const largestAccounts =
+        await jollyState.connection.getTokenLargestAccounts(nft);
+      // console.log("largestAccounts", largestAccounts);
+      // const largestAccountInfo = await jollyState.connection.getParsedAccountInfo(
+      //   largestAccounts.value[0].address
+      // );
+      // console.log(
+      //   "largestAccounts.value[0].address",
+      //   largestAccounts.value[0].address.toString()
+      // );
+      // console.log(largestAccountInfo.value.data.parsed.info.owner);
+      const hasATA =
+        largestAccounts.value[0].address.toString() ===
+        wallet_nft_account.toString();
+      if (!hasATA) {
+        wallet_nft_account = largestAccounts.value[0].address;
+      }
+
+      stake_spls.push(stake_spl);
+      stake_bumps.push(stakeBump);
+      stake_mints.push(nft);
+      wallet_nft_accounts.push(wallet_nft_account);
     }
 
+    if (stake_mints.length < 4) {
+      for (let j = 0; j <= 5 - stake_mints.length; j++) {
+        stake_spls.push(TOKEN_PROGRAM_ID);
+        stake_bumps.push(TOKEN_PROGRAM_ID);
+        stake_mints.push(TOKEN_PROGRAM_ID);
+        wallet_nft_accounts.push(TOKEN_PROGRAM_ID);
+      }
+    }
+    console.log("stake_mints", stake_mints);
+
     // console.log("wallet_nft_account", wallet_nft_account.toString());
-    await jollyState.program.rpc.stakeNft(stakeBump, {
+    await jollyState.program.rpc.stakeNft(stake_bumps, {
       accounts: {
         authority: wallet.publicKey.toString(),
         stake: stake.publicKey.toString(),
-        senderSplAccount: wallet_nft_account.toString(),
-        recieverSplAccount: stake_spl.toString(),
-        mint: nft.toString(),
+        senderSplAccount0: wallet_nft_accounts[0].toString(),
+        senderSplAccount1: wallet_nft_accounts[1].toString(),
+        senderSplAccount2: wallet_nft_accounts[2].toString(),
+        senderSplAccount3: wallet_nft_accounts[3].toString(),
+        recieverSplAccount0: stake_spls[0].toString(),
+        recieverSplAccount1: stake_spls[1].toString(),
+        recieverSplAccount2: stake_spls[2].toString(),
+        recieverSplAccount3: stake_spls[3].toString(),
+        mint0: stake_mints[0].toString(),
+        mint1: stake_mints[1].toString(),
+        mint2: stake_mints[2].toString(),
+        mint3: stake_mints[3].toString(),
         systemProgram: anchor.web3.SystemProgram.programId.toString(),
         tokenProgram: TOKEN_PROGRAM_ID.toString(),
         rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
@@ -625,39 +659,13 @@ const Home: NextPage = () => {
             },
           ]
         );
-        const missedBreeds = await jollyState.program.account.breed.all([
-          {
-            memcmp: {
-              offset: 8 + 32 + 8 + 8 + 8 + 1 + 1,
-              // bytes: bs58.encode(wallet.publicKey.toBuffer()),
-              bytes: bs58.encode(new Uint8Array([1])),
-            },
-          },
-        ]);
-        // console.log("missedBreeds", missedBreeds);
-        missedBreeds.map((breed) => {
-          breed = breed.account;
-          console.log("breed.id", breed.id.toString());
-          console.log("breed.timestamp", breed.timestamp.toString());
-          console.log("breed.seed", breed.seed.toString());
-          console.log("breed.chance", breed.chance.toString());
-          console.log("breed.result", breed.result.toString());
-          if (
-            parseInt(breed.chance.toString()) >=
-            parseInt(breed.result.toString())
-          ) {
-            console.log("This breed won");
-          } else {
-            console.log("This breed lost");
-          }
-          const a = breed.id.add(breed.timestamp).add(breed.seed);
-          const b = a.mod(new BN(100)).add(new BN(1)).toString();
-          console.log("VRF: ((id + timestamp + seed) % 100) +1:", b);
-        });
         const parsedBreeds = [];
+        const parsedRolls = [];
         breedsforOwner.map((breed) => {
           if (!breed.account.withdrawn) {
             parsedBreeds.push(breed);
+          } else {
+            parsedRolls.push(breed);
           }
         });
         const nftsForOwner = await getNftsForOwner(
@@ -676,6 +684,7 @@ const Home: NextPage = () => {
         // console.log("redeemablePets", redeemablePets);
         // console.log("nftsforowner", nftsForOwner);
         setBreeds(parsedBreeds as any);
+        setRolls(parsedRolls as any);
         setNfts(nftsForOwner as any);
         setLoadingNfts(false);
         setLoadingBreeds(false);
@@ -1124,6 +1133,18 @@ const Home: NextPage = () => {
 
               <div className="border mockup-window border-base-200 mb-8">
                 {/* begin app windows */}
+                <div className="absolute top-0 right-0 w-36 flex items-center mt-2">
+                  <p>My Rolls</p>
+                  <input
+                    type="checkbox"
+                    checked={isRolls}
+                    onChange={() => {}}
+                    className="toggle toggle-lg ml-2"
+                    onClick={() => {
+                      setIsRolls((isRolls) => !isRolls);
+                    }}
+                  />
+                </div>
                 <div className="flex justify-center px-2 py-4 border-t border-base-200">
                   {loadingBreeds && wallet.connected && (
                     <h1
@@ -1150,78 +1171,125 @@ const Home: NextPage = () => {
                   )}
                   {breeds.length > 0 && !loadingBreeds && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                      {breeds.map((breed, i) => {
-                        console.log("breed", breed);
-                        console.log("breed id", breed.account.id.toString());
-                        console.log(
-                          "breed timestamp",
-                          breed.account.timestamp.toString()
-                        );
-                        console.log(
-                          "breed seed",
-                          breed.account.seed.toString()
-                        );
-                        console.log(
-                          "breed oracle done?",
-                          breed.account.oracle.toString()
-                        );
-                        console.log(
-                          "breed chance",
-                          breed.account.chance.toString()
-                        );
-                        return (
-                          <div
-                            key={breed.account.id.toString() || Math.random()}
-                            className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
-                          >
-                            {/* <figure>
+                      {!isRolls ? (
+                        <>
+                          {breeds.map((breed, i) => {
+                            return (
+                              <div
+                                key={
+                                  breed.account.id.toString() || Math.random()
+                                }
+                                className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
+                              >
+                                {/* <figure>
                               <img
                                 src={`${breed.image}`}
                                 alt="sea shanties breed image"
                               />
                             </figure> */}
-                            <div className="card-body text-center items-center">
-                              <h2
-                                className="card-title"
-                                style={{
-                                  fontFamily: "Jangkuy",
-                                  fontSize: ".75rem",
-                                }}
-                              >
-                                Breed Number: {breed.account.id.toString()}
-                              </h2>
-                              <div className="flex">
-                                {Object.keys(breed.account.items).map((key) => {
-                                  if (breed.account.items[key]) {
-                                    return (
-                                      <p
-                                        className="m-1 badge badge-outline bg-ghost badge-sm text-white"
-                                        style={{
-                                          fontFamily: "Montserrat",
-                                          fontSize: "10px",
-                                        }}
-                                      >
-                                        {key}
-                                      </p>
-                                    );
-                                  }
-                                })}
+                                <div className="card-body text-center items-center">
+                                  <h2
+                                    className="card-title"
+                                    style={{
+                                      fontFamily: "Jangkuy",
+                                      fontSize: ".75rem",
+                                    }}
+                                  >
+                                    Breed Number: {breed.account.id.toString()}
+                                  </h2>
+                                  <div className="flex">
+                                    {Object.keys(breed.account.items).map(
+                                      (key) => {
+                                        if (breed.account.items[key]) {
+                                          return (
+                                            <p
+                                              key={key}
+                                              className="m-1 badge badge-outline bg-ghost badge-sm text-white"
+                                              style={{
+                                                fontFamily: "Montserrat",
+                                                fontSize: "10px",
+                                              }}
+                                            >
+                                              {key}
+                                            </p>
+                                          );
+                                        }
+                                      }
+                                    )}
+                                  </div>
+                                  {breed.account.result > 0 ? (
+                                    <button
+                                      className="btn btn-secondary"
+                                      onClick={async () => {
+                                        await redeemPet(breed);
+                                        await refresh();
+                                      }}
+                                    >
+                                      <p>Roll For Pet</p>
+                                    </button>
+                                  ) : (
+                                    <button
+                                      disabled={true}
+                                      className="btn"
+                                      style={{
+                                        backgroundColor: "gray",
+                                        color: "#bfc0c6",
+                                      }}
+                                    >
+                                      <p>Waiting on oracle</p>
+                                    </button>
+                                  )}
+                                </div>
                               </div>
-                              {breed.account.result > 0 && (
-                                <button
-                                  className="btn btn-secondary"
-                                  onClick={async () => {
-                                    await redeemPet(breed);
-                                    await refresh();
-                                  }}
-                                >
-                                  <p>Roll For Pet</p>
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
+                            );
+                          })}
+                        </>
+                      ) : (
+                        <>
+                          {rolls.map((breed, i) => {
+                            breed = breed.account;
+                            let won = false;
+                            if (
+                              parseInt(breed.chance.toString()) >=
+                              parseInt(breed.result.toString())
+                            ) {
+                              won = true;
+                            }
+                            const a = breed.id
+                              .add(breed.timestamp)
+                              .add(breed.seed);
+                            const b = a
+                              .mod(new BN(100))
+                              .add(new BN(1))
+                              .toString();
+                            return (
+                              <div
+                                key={breed.id.toString() || Math.random()}
+                                className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
+                              >
+                                <div className="card-body text-center items-center">
+                                  <p>Breed Id: {breed.id.toString()}</p>
+                                  <p>
+                                    Breed Timestamp:{" "}
+                                    {breed.timestamp.toString()}
+                                  </p>
+                                  <p>Breed Seed: {breed.seed.toString()}</p>
+                                  <p>Breed Chance: {breed.chance.toString()}</p>
+                                  <p>Breed Result: {breed.result.toString()}</p>
+                                  {won ? (
+                                    <p>CONGRADULATIONS: You won a pet!</p>
+                                  ) : (
+                                    <p>You didn't win a pet. TRY AGAIN!</p>
+                                  )}
+                                  <p>
+                                    VRF: ((id + timestamp + seed) % 100) +1: {b}
+                                  </p>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </>
+                      )}
                     </div>
                   )}
                   {breeds.length == 0 && !loadingBreeds && wallet.publicKey && (
@@ -1242,6 +1310,25 @@ const Home: NextPage = () => {
               {/* Wallet nfts */}
 
               <div className="border mockup-window border-base-200 mb-8">
+                {nftStakeArray.length > 0 ? (
+                  <div className="absolute top-0 right-0 w-full -mx-24">
+                    <div className="grid grid-cols-1">
+                      <button
+                        className="btn btn-primary"
+                        onClick={async () => {
+                          await stakeNFT(nftStakeArray);
+                          await refresh();
+                        }}
+                      >
+                        <p className="mr-16">
+                          Submit {nftStakeArray.length} Pet(s) For Staking
+                        </p>
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <></>
+                )}
                 <div className="flex justify-center px-2 py-4 border-t border-base-200">
                   <div>
                     {loadingNfts && wallet.connected && (
@@ -1288,16 +1375,10 @@ const Home: NextPage = () => {
                           isStaked={false}
                           nft={nft}
                           onStake={async () => {
-                            // console.log(
-                            //   "mint, cheese, lockup: ",
-                            //   nft.mint,
-                            //   cheese,
-                            //   lockup
-                            // );
-                            setIsBreed(true);
-                            breederRef.current.click();
-                            // await stakeNFT(nft.mint);
-                            // await refresh();
+                            setNftStakeArray((nftStakeArray) => [
+                              ...nftStakeArray,
+                              nft,
+                            ]);
                           }}
                         />
                       );

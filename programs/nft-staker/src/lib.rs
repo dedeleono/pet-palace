@@ -271,7 +271,7 @@ pub mod nft_staker {
         stake.amount_redeemed = 0;
         let mut amount_staked = 0;
         for (i, mint) in stake.mints.iter().enumerate() {
-            if mint.to_string() != "0" {
+            if mint.key().to_string() != "11111111111111111111111111111111" {
                 if i == 0 {
                     anchor_spl::token::transfer(
                         CpiContext::new(
