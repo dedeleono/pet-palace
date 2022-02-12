@@ -33,11 +33,26 @@ a {
 * {
   box-sizing: border-box;
 }
-
 .item-box {
   width: 150px;
   height: 150px;
-  margin: 3rem auto 0;
+}
+
+.label-text {
+  margin-bottom: 2px;
+  margin-left: 5px;
+  margin-top: 15px;
+  color: "white";
+  font-size: 0.65rem;
+}
+
+.p-tag {
+  top: -3.5rem;
+}
+
+.price-tag {
+  margin-top: 7rem;
+  left: 2.7rem;
 }
 
 .item-label {
