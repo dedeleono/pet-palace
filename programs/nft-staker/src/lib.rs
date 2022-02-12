@@ -733,13 +733,13 @@ pub struct StakeNFT<'info> {
     pub sender_spl_account_2: Box<Account<'info, TokenAccount>>,
     #[account(mut)]
     pub sender_spl_account_3: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [b"nft_1".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_0, token::authority = reciever_spl_account_0, payer = authority)]
+    #[account(init_if_needed, seeds = [stake.key().as_ref(), mint_0.key().as_ref()], bump = spl_bumps[0], token::mint = mint_0, token::authority = reciever_spl_account_0, payer = authority)]
     pub reciever_spl_account_0: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [b"nft_2".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_1, token::authority = reciever_spl_account_1, payer = authority)]
+    #[account(init_if_needed, seeds = [stake.key().as_ref(), mint_1.key().as_ref()], bump = spl_bumps[1], token::mint = mint_1, token::authority = reciever_spl_account_1, payer = authority)]
     pub reciever_spl_account_1: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [b"nft_3".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_2, token::authority = reciever_spl_account_2, payer = authority)]
+    #[account(init_if_needed, seeds = [stake.key().as_ref(), mint_2.key().as_ref()], bump = spl_bumps[2], token::mint = mint_2, token::authority = reciever_spl_account_2, payer = authority)]
     pub reciever_spl_account_2: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, seeds = [b"nft_4".as_ref(), stake.key().as_ref()], bump = spl_bumps[0], token::mint = mint_3, token::authority = reciever_spl_account_3, payer = authority)]
+    #[account(init_if_needed, seeds = [stake.key().as_ref(), mint_3.key().as_ref()], bump = spl_bumps[3], token::mint = mint_3, token::authority = reciever_spl_account_3, payer = authority)]
     pub reciever_spl_account_3: Box<Account<'info, TokenAccount>>,
     pub mint_0: Box<Account<'info, Mint>>,
     pub mint_1: Box<Account<'info, Mint>>,
@@ -777,19 +777,19 @@ pub struct RedeemNFT<'info> {
     pub jollyranch: Box<Account<'info, JollyRanch>>,
     pub authority: Signer<'info>,
     // spl_token specific validations
-    #[account(mut, seeds = [b"nft_1".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[0])]
+    #[account(mut, seeds = [stake.key().as_ref(), nft_0.key().as_ref()], bump = stake.spl_bumps[0])]
     pub sender_nft_account_0: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_0, associated_token::authority = authority)]
     pub reciever_nft_account_0: Box<Account<'info, TokenAccount>>,
-    #[account(mut, seeds = [b"nft_2".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[1])]
+    #[account(mut, seeds = [stake.key().as_ref(), nft_1.key().as_ref()], bump = stake.spl_bumps[1])]
     pub sender_nft_account_1: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_1, associated_token::authority = authority)]
     pub reciever_nft_account_1: Box<Account<'info, TokenAccount>>,
-    #[account(mut, seeds = [b"nft_3".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[2])]
+    #[account(mut, seeds = [stake.key().as_ref(), nft_2.key().as_ref()], bump = stake.spl_bumps[2])]
     pub sender_nft_account_2: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_2, associated_token::authority = authority)]
     pub reciever_nft_account_2: Box<Account<'info, TokenAccount>>,
-    #[account(mut, seeds = [b"nft_4".as_ref(), stake.key().as_ref()], bump = stake.spl_bumps[3])]
+    #[account(mut, seeds = [stake.key().as_ref(), nft_3.key().as_ref()], bump = stake.spl_bumps[3])]
     pub sender_nft_account_3: Box<Account<'info, TokenAccount>>,
     #[account(init_if_needed, payer = authority, associated_token::mint = nft_3, associated_token::authority = authority)]
     pub reciever_nft_account_3: Box<Account<'info, TokenAccount>>,

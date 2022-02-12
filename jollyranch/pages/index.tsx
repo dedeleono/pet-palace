@@ -83,7 +83,7 @@ const Home: NextPage = () => {
   // console.log("test", test.publicKey.toString());
 
   const calculateCatch = (tritonAmount) => {
-    setSuccessCatch(10)
+    setSuccessCatch(10);
     let triton = 150;
     let percentage = 10;
     if (tritonAmount.bait) {
@@ -96,12 +96,11 @@ const Home: NextPage = () => {
     }
     if (tritonAmount.poseidonWhistle) {
       triton += 1000;
-      percentage += 50
+      percentage += 50;
     }
-    setSuccessCatch(percentage)
-    setCatchTotal(triton)
-  }
-
+    setSuccessCatch(percentage);
+    setCatchTotal(triton);
+  };
 
   const refresh = async () => {
     setLoader(0);
@@ -136,7 +135,7 @@ const Home: NextPage = () => {
       // console.log("lockup", lockup);
       let [stake_spl, stakeBump] =
         await anchor.web3.PublicKey.findProgramAddress(
-          [Buffer.from(`nft_${i + 1}`), stake.publicKey.toBuffer()],
+          [stake.publicKey.toBuffer(), nft.toBuffer()],
           jollyState.program.programId
         );
       let wallet_nft_account = await Token.getAssociatedTokenAddress(
@@ -509,7 +508,7 @@ const Home: NextPage = () => {
       // console.log("wallet_nft_account", wallet_nft_account.toString());
       let [stake_spl, stakeBump] =
         await anchor.web3.PublicKey.findProgramAddress(
-          [Buffer.from(`nft_${i + 1}`), stakePubKey.toBuffer()],
+          [stakePubKey.toBuffer(), nftPubKeys[0].toBuffer()],
           jollyState.program.programId
         );
 
@@ -887,100 +886,140 @@ const Home: NextPage = () => {
                 </div>
               ) : (
                 <div className="flex flex-wrap space-x-4">
-                    <div className="item-container">
-                      <span
-                        className="label-text block font-[Jangkuy]"
-                        style={{ color: "white" }}
-                      >
-                        Bait
-                      </span>
-                      <div className="card bordered bg-cover bg-center bg-[url('../items/bait.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
-                        <div className="form-control h-full">
-                          <label className="cursor-pointer relative label h-full checkbox-label">
-                            <span className="p-tag relative" style={{fontFamily: "Montserrat"}}>+15%</span>
-                            <input
-                              type="checkbox"
-                              className="checkbox checkbox-primary relative p-tag"
-                              onClick={() => {
-                                setTritonAmount((tritonAmount) => ({
-                                  ...tritonAmount,
-                                  bait: !tritonAmount.bait,
-                                }));
-                                console.log(tritonAmount)
-                                calculateCatch(tritonAmount)
-                              }}
-                            />
-                            <span className="absolute price-tag" style={{fontFamily: "Montserrat"}}>225 $TRTN</span>
-                          </label>
-                        </div>
+                  <div className="item-container">
+                    <span
+                      className="label-text block font-[Jangkuy]"
+                      style={{ color: "white" }}
+                    >
+                      Bait
+                    </span>
+                    <div
+                      className="card bordered bg-cover bg-center bg-[url('../items/bait.jpg')] item-box"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
+                      <div className="form-control h-full">
+                        <label className="cursor-pointer relative label h-full checkbox-label">
+                          <span
+                            className="p-tag relative"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            +15%
+                          </span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary relative p-tag"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                bait: !tritonAmount.bait,
+                              }));
+                              console.log(tritonAmount);
+                              calculateCatch(tritonAmount);
+                            }}
+                          />
+                          <span
+                            className="absolute price-tag"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            225 $TRTN
+                          </span>
+                        </label>
                       </div>
                     </div>
-
-                    <div className="item-container">
-                      <span
-                        className="label-text block font-[Jangkuy]"
-                        style={{ color: "white" }}
-                      >
-                        Hook
-                      </span>
-                      <div className="card bordered bg-cover bg-center bg-[url('../items/hook.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
-                        <div className="form-control h-full">
-                          <label className="cursor-pointer relative label h-full checkbox-label">
-                            <span className="p-tag relative" style={{fontFamily: "Montserrat"}}>+20%</span>
-                            <input
-                              type="checkbox"
-                              className="checkbox checkbox-primary relative p-tag"
-                              onClick={() => {
-                                setTritonAmount((tritonAmount) => ({
-                                  ...tritonAmount,
-                                  hook: !tritonAmount.hook,
-                                }));
-                                console.log(tritonAmount)
-                                calculateCatch(tritonAmount)
-                              }}
-                            />
-                            <span className="absolute price-tag" style={{fontFamily: "Montserrat"}}>300 $TRTN</span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                          
-                    <div className="item-container">
-                      <span
-                        className="label-text block font-[Jangkuy]"
-                        style={{ color: "white" }}
-                      >
-                        Poseidon Whistle
-                      </span>
-                      <div className="card bordered bg-cover bg-center bg-[url('../items/pw.jpg')] item-box" style={{borderColor: '#fd7cf6'}}>
-                        <div className="form-control h-full">
-                          <label className="cursor-pointer relative label h-full checkbox-label">
-                            <span className="p-tag relative" style={{fontFamily: "Montserrat"}}>+50%</span>
-                            <input
-                              type="checkbox"
-                              className="checkbox checkbox-primary relative p-tag"
-                              onClick={() => {
-                                setTritonAmount((tritonAmount) => ({
-                                  ...tritonAmount,
-                                  poseidonWhistle: !tritonAmount.poseidonWhistle,
-                                }));
-                                console.log(tritonAmount)
-                                calculateCatch(tritonAmount)
-                              }}
-                            />
-                            <span className="absolute price-tag" style={{fontFamily: "Montserrat"}}>1000 $TRTN</span>
-                          </label>
-                        </div>
-                      </div>
-                    </div> 
                   </div>
+
+                  <div className="item-container">
+                    <span
+                      className="label-text block font-[Jangkuy]"
+                      style={{ color: "white" }}
+                    >
+                      Hook
+                    </span>
+                    <div
+                      className="card bordered bg-cover bg-center bg-[url('../items/hook.jpg')] item-box"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
+                      <div className="form-control h-full">
+                        <label className="cursor-pointer relative label h-full checkbox-label">
+                          <span
+                            className="p-tag relative"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            +20%
+                          </span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary relative p-tag"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                hook: !tritonAmount.hook,
+                              }));
+                              console.log(tritonAmount);
+                              calculateCatch(tritonAmount);
+                            }}
+                          />
+                          <span
+                            className="absolute price-tag"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            300 $TRTN
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="item-container">
+                    <span
+                      className="label-text block font-[Jangkuy]"
+                      style={{ color: "white" }}
+                    >
+                      Poseidon Whistle
+                    </span>
+                    <div
+                      className="card bordered bg-cover bg-center bg-[url('../items/pw.jpg')] item-box"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
+                      <div className="form-control h-full">
+                        <label className="cursor-pointer relative label h-full checkbox-label">
+                          <span
+                            className="p-tag relative"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            +50%
+                          </span>
+                          <input
+                            type="checkbox"
+                            className="checkbox checkbox-primary relative p-tag"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                poseidonWhistle: !tritonAmount.poseidonWhistle,
+                              }));
+                              console.log(tritonAmount);
+                              calculateCatch(tritonAmount);
+                            }}
+                          />
+                          <span
+                            className="absolute price-tag"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            1000 $TRTN
+                          </span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
-              <span className="mt-4 block font-[Jangkuy]"
-                  style={{ color: "white" }}>
-                  Probability of success: {successCatch}%
-                </span>
+              <span
+                className="mt-4 block font-[Jangkuy]"
+                style={{ color: "white" }}
+              >
+                Probability of success: {successCatch}%
+              </span>
               <div className="stat-desc max-w-[100%]">
-                
                 <progress
                   value={successCatch}
                   max="100"
@@ -988,11 +1027,13 @@ const Home: NextPage = () => {
                 ></progress>
               </div>
 
-              <span className="mt-4 block font-[Jangkuy]"
-                  style={{ color: "white" }}>
-                  Total: <span className="underline">{catchTotal} $TRTN</span> 
+              <span
+                className="mt-4 block font-[Jangkuy]"
+                style={{ color: "white" }}
+              >
+                Total: <span className="underline">{catchTotal} $TRTN</span>
               </span>
-              
+
               <div className="grid grid-cols-2 gap-2">
                 <a
                   href="#"
