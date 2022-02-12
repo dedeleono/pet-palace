@@ -421,6 +421,10 @@ pub mod nft_staker {
     pub fn redeem_nft(ctx: Context<RedeemNFT>) -> ProgramResult {
         msg!("redeemnft ran");
         let stake = &mut ctx.accounts.stake;
+        let nft_0 = &mut ctx.accounts.nft_0;
+        let nft_1 = &mut ctx.accounts.nft_1;
+        let nft_2 = &mut ctx.accounts.nft_2;
+        let nft_3 = &mut ctx.accounts.nft_3;
         let jollyranch = &mut ctx.accounts.jollyranch;
 
         if jollyranch.amount_redeemed >= jollyranch.amount {
@@ -510,7 +514,11 @@ pub mod nft_staker {
                             to: ctx.accounts.reciever_nft_account_0.to_account_info(),
                             authority: ctx.accounts.sender_nft_account_0.to_account_info(),
                         },
-                        &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                        &[&[
+                            stake.key().as_ref(),
+                            nft_0.key().as_ref(),
+                            &[stake.spl_bumps[i]],
+                        ]],
                     ),
                     1,
                 )?;
@@ -521,7 +529,11 @@ pub mod nft_staker {
                         destination: ctx.accounts.reciever_nft_account_0.to_account_info(),
                         authority: ctx.accounts.sender_nft_account_0.to_account_info(),
                     },
-                    &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                    &[&[
+                        stake.key().as_ref(),
+                        nft_0.key().as_ref(),
+                        &[stake.spl_bumps[i]],
+                    ]],
                 ))?;
             }
             if (i > 0) && (mint.to_string() != stake.mints[0].to_string()) {
@@ -537,7 +549,11 @@ pub mod nft_staker {
                                 to: ctx.accounts.reciever_nft_account_1.to_account_info(),
                                 authority: ctx.accounts.sender_nft_account_1.to_account_info(),
                             },
-                            &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                            &[&[
+                                stake.key().as_ref(),
+                                nft_1.key().as_ref(),
+                                &[stake.spl_bumps[i]],
+                            ]],
                         ),
                         1,
                     )?;
@@ -548,7 +564,11 @@ pub mod nft_staker {
                             destination: ctx.accounts.reciever_nft_account_1.to_account_info(),
                             authority: ctx.accounts.sender_nft_account_1.to_account_info(),
                         },
-                        &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                        &[&[
+                            stake.key().as_ref(),
+                            nft_1.key().as_ref(),
+                            &[stake.spl_bumps[i]],
+                        ]],
                     ))?;
                 } else if i == 2 {
                     anchor_spl::token::transfer(
@@ -559,7 +579,11 @@ pub mod nft_staker {
                                 to: ctx.accounts.reciever_nft_account_2.to_account_info(),
                                 authority: ctx.accounts.sender_nft_account_2.to_account_info(),
                             },
-                            &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                            &[&[
+                                stake.key().as_ref(),
+                                nft_2.key().as_ref(),
+                                &[stake.spl_bumps[i]],
+                            ]],
                         ),
                         1,
                     )?;
@@ -570,7 +594,11 @@ pub mod nft_staker {
                             destination: ctx.accounts.reciever_nft_account_2.to_account_info(),
                             authority: ctx.accounts.sender_nft_account_2.to_account_info(),
                         },
-                        &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                        &[&[
+                            stake.key().as_ref(),
+                            nft_2.key().as_ref(),
+                            &[stake.spl_bumps[i]],
+                        ]],
                     ))?;
                 } else if i == 3 {
                     anchor_spl::token::transfer(
@@ -581,7 +609,11 @@ pub mod nft_staker {
                                 to: ctx.accounts.reciever_nft_account_3.to_account_info(),
                                 authority: ctx.accounts.sender_nft_account_3.to_account_info(),
                             },
-                            &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                            &[&[
+                                stake.key().as_ref(),
+                                nft_3.key().as_ref(),
+                                &[stake.spl_bumps[i]],
+                            ]],
                         ),
                         1,
                     )?;
@@ -592,7 +624,11 @@ pub mod nft_staker {
                             destination: ctx.accounts.reciever_nft_account_3.to_account_info(),
                             authority: ctx.accounts.sender_nft_account_3.to_account_info(),
                         },
-                        &[&[stake.key().as_ref(), &[stake.spl_bumps[i]]]],
+                        &[&[
+                            stake.key().as_ref(),
+                            nft_3.key().as_ref(),
+                            &[stake.spl_bumps[i]],
+                        ]],
                     ))?;
                 }
             }

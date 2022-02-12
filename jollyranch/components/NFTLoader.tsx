@@ -32,13 +32,13 @@ const NFTLoader: FC<NFTLoaderProps> = ({
 }) => {
   const [staked, setStaked] = useState(false);
   if (isStaked) {
-    console.log("nft", nft);
+    // console.log("nft", nft);
     let amount = [];
     nft.nft_account.account.mints.map((mint, i) => {
       if (i > 0) {
         if (mint.toString() != amount[0].toString()) {
-          console.log("amount[0].toString()", amount[0].toString());
-          console.log("mint.toString()", mint.toString());
+          // console.log("amount[0].toString()", amount[0].toString());
+          // console.log("mint.toString()", mint.toString());
           amount.push(mint);
         }
       } else {
