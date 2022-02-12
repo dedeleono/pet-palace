@@ -387,16 +387,19 @@ const Home: NextPage = () => {
       if (nft) {
         // console.log("nft", nft);
         const mints = [
-          "9Gd3CpPFgK5PbfRnEuhF2JmDSUFEyWkHPkB7GA4SfSdA",
-          "APA8t9faSRNdZvB1opJvB5DQ8h3aeCFyNxZiaCMSArTZ",
-          "FrLGhta8fHTcyFTqiTDUwiDiG59L5xnvnqJwS2ssVXu7",
-          "662zoahSfHgZYjQ9bzcS8MzqRfsF2H1h549uZUebC4e6",
-          "Fs9SpcHN8J7PN8gjmp7Xvhae8EA4Zwifa79eNCQHJNgW",
-          "4j99GW37LGL1Er7otAsqRdWgNDt9srZguim9n4rFCoDj",
+          "8jDN1VYpCtk6gYxuRrEww8vnjbaKiaZexy145CVNyEoM",
+          "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
+          "54KFLjw4ywGWzNeh6o8LrHEP8mTjiBRX4DrNjWGiMUhT",
+          "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
         ];
         let redemption_rate = 6.9;
         // console.log("nft", nft.nft_account.account.mint.toString());
-        if (mints.includes(nft.nft_account.account.mint.toString())) {
+        if (
+          mints.includes(nft.nft_account.account.mints[0].toString()) ||
+          mints.includes(nft.nft_account.account.mints[1].toString()) ||
+          mints.includes(nft.nft_account.account.mints[2].toString()) ||
+          mints.includes(nft.nft_account.account.mints[3].toString())
+        ) {
           redemption_rate = 16.9;
         }
         const currDate = new Date().getTime() / 1000;
@@ -529,14 +532,14 @@ const Home: NextPage = () => {
       if (tritonAmount.kingsCrown) {
         triton += 1000;
       }
-      await jollyState.program.breedPet(new BN(triton), {
+      await jollyState.program.rpc.breedPet(new BN(triton), {
         accounts: {
           authority: wallet.publicKey.toString(),
           breed: breed.publicKey.toString(),
-          stake: stake.publicKey.toString(),
+          stake: stake.nft_account.publicKey.toString(),
           jollyranch: jollyState.jollyranch.toString(),
-          trtn_account: jollyState.recieverSplAccount.toString(),
-          auth_trtn_account: jollyState.wallet_token_account.toString(),
+          trtnAccount: jollyState.recieverSplAccount.toString(),
+          authTrtnAccount: jollyState.wallet_token_account.toString(),
           slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY.toString(),
           tokenProgram: TOKEN_PROGRAM_ID.toString(),
           systemProgram: anchor.web3.SystemProgram.programId.toString(),
@@ -1105,6 +1108,14 @@ const Home: NextPage = () => {
                             onBreed={async () => {
                               setIsBreed(true);
                               setBreedStake(nft);
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                breed: true,
+                              }));
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                tame: false,
+                              }));
                               breederRef.current.click();
                             }}
                           />
