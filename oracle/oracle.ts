@@ -1,6 +1,7 @@
 import * as anchor from "@project-serum/anchor";
 import { Program, Provider, web3, Wallet } from "@project-serum/anchor";
 import * as idl_type from "../target/idl/nft_staker.json";
+import * as bs58 from "bs58";
 import {
   Token,
   TOKEN_PROGRAM_ID,
@@ -39,39 +40,36 @@ async function main(args: any) {
 
   console.log("oracle running");
   console.log("");
-  program.provider.connection.onProgramAccountChange(
-    program.programId,
-    async (programAccount) => {
-      // console.log("programAccount", programAccount);
-      // console.log(
-      //   "programAccount accountId",
-      //   programAccount.accountId.toString()
-      // );
-      try {
-        let breed = await program.account.breed.fetch(programAccount.accountId);
-        // console.log("breed", breed);
-        // console.log("breed", breed.oracle);
-        if (!breed.oracle) {
-          console.log("trying to parse breed:", breed.id.toString());
+  async function runOracle() {
+    while (true) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const missedBreeds = await program.account.breed.all([
+        {
+          memcmp: {
+            offset: 8 + 32 + 8 + 8 + 8 + 1 + 1 + 1,
+            // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+            bytes: bs58.encode(new Uint8Array([0])),
+          },
+        },
+      ]);
+      // console.log("missedBreeds", missedBreeds);
+      for (let i = 0; i < missedBreeds.length; i++) {
+        const breed = missedBreeds[i];
+        if (!breed.account.oracle) {
+          console.log("parsing breed:", breed.account.id.toString());
           let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
-          try {
-            await program.rpc.oracle(seed, {
-              accounts: {
-                authority: program.provider.wallet.publicKey,
-                breed: programAccount.accountId,
-              },
-            });
-            console.log("breed succesfully parsed");
-          } catch (e) {
-            console.log(e);
-            console.log("parsing breed failed run the failsafe");
-          }
+          await program.rpc.oracle(seed, {
+            accounts: {
+              authority: program.provider.wallet.publicKey,
+              breed: breed.publicKey,
+            },
+          });
         }
-      } catch {
-        console.log("not oracle account");
       }
     }
-  );
+  }
+
+  runOracle();
 }
 
 if (require.main) main(process.argv.slice(2)).catch(console.error);
