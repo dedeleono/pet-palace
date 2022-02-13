@@ -756,7 +756,6 @@ const Home: NextPage = () => {
             parsedRolls.push(breed);
           }
         });
-        console.log(parsedRolls)
         parsedRolls.sort(function(a, b){
           const n1 = parseInt(a.account.timestamp)
           const n2 = parseInt(b.account.timestamp) 
