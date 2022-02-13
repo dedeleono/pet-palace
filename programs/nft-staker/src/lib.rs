@@ -420,70 +420,7 @@ pub mod nft_staker {
 
     pub fn redeem_nft(ctx: Context<RedeemNFT>) -> ProgramResult {
         let stake = &mut ctx.accounts.stake;
-        let jollyranch = &mut ctx.accounts.jollyranch;
-
-        if jollyranch.amount_redeemed >= jollyranch.amount {
-            return Err(ErrorCode::OutOfFunds.into());
-        }
-
-        let clock_unix = Clock::get().unwrap().unix_timestamp;
-        // redemption rate for a token with 9 decimals
-        let mut redemption_rate = 1.0;
-        if stake.stake_amount == 2 {
-            redemption_rate = 4.0;
-        } else if stake.stake_amount == 3 {
-            redemption_rate = 18.0;
-        } else if stake.stake_amount == 4 {
-            redemption_rate = 32.0;
-        }
-
-        let mint_list: Vec<_> = vec![
-            "8jDN1VYpCtk6gYxuRrEww8vnjbaKiaZexy145CVNyEoM",
-            "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
-            "54KFLjw4ywGWzNeh6o8LrHEP8mTjiBRX4DrNjWGiMUhT",
-            "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
-        ]
-        .into_iter()
-        .map(String::from)
-        .collect();
-        if mint_list.contains(&stake.mints[0].to_string()) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
-        }
-        if mint_list.contains(&stake.mints[1].to_string()) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
-        }
-        if mint_list.contains(&stake.mints[2].to_string()) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
-        }
-        if mint_list.contains(&stake.mints[3].to_string()) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
-        }
-
-        let day_dif = (clock_unix - stake.start_date).abs() as f64;
-        let to_days = 60.0 * 60.0 * 24.0;
-        let days_elapsed: f64 = day_dif / to_days;
-        let amount_to_redeem = redemption_rate * days_elapsed;
-        let typed_amount = ((amount_to_redeem * 1e6) as u64) - stake.amount_redeemed;
-        stake.amount_redeemed += typed_amount;
-        jollyranch.amount_redeemed += typed_amount;
-        anchor_spl::token::transfer(
-            CpiContext::new_with_signer(
-                ctx.accounts.token_program.to_account_info(),
-                anchor_spl::token::Transfer {
-                    from: ctx.accounts.sender_triton_account.to_account_info(),
-                    to: ctx.accounts.reciever_triton_account.to_account_info(),
-                    authority: ctx.accounts.sender_triton_account.to_account_info(),
-                },
-                &[&[
-                    ctx.accounts.jollyranch.key().as_ref(),
-                    &[ctx.accounts.jollyranch.spl_bump],
-                ]],
-            ),
-            typed_amount,
-        )?;
         stake.withdrawn = true;
-        msg!("are stake mints right?");
-        msg!("redeeming nft 0");
         anchor_spl::token::transfer(
             CpiContext::new_with_signer(
                 ctx.accounts.token_program.to_account_info(),
@@ -500,9 +437,7 @@ pub mod nft_staker {
             ),
             1,
         )?;
-        msg!("nft 0 redeemed");
         if ctx.accounts.nft_1.key().to_string() != ctx.accounts.nft_0.key().to_string() {
-            msg!("redeeming nft 1");
             anchor_spl::token::transfer(
                 CpiContext::new_with_signer(
                     ctx.accounts.token_program.to_account_info(),
@@ -520,9 +455,7 @@ pub mod nft_staker {
                 1,
             )?;
         }
-        msg!("nft 1 redeemed");
         if ctx.accounts.nft_2.key().to_string() != ctx.accounts.nft_0.key().to_string() {
-            msg!("redeeming nft 2");
             anchor_spl::token::transfer(
                 CpiContext::new_with_signer(
                     ctx.accounts.token_program.to_account_info(),
@@ -540,9 +473,7 @@ pub mod nft_staker {
                 1,
             )?;
         }
-        msg!("nft 2 redeemed");
         if ctx.accounts.nft_3.key().to_string() != ctx.accounts.nft_0.key().to_string() {
-            msg!("redeeming nft 3");
             anchor_spl::token::transfer(
                 CpiContext::new_with_signer(
                     ctx.accounts.token_program.to_account_info(),
@@ -560,8 +491,6 @@ pub mod nft_staker {
                 1,
             )?;
         }
-        msg!("nft 3 redeemed");
-        msg!("finished. command should end now");
         Ok(())
     }
 }
