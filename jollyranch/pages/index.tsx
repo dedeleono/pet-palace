@@ -110,7 +110,7 @@ const Home: NextPage = () => {
         percentage += 50;
       }
     } else if (tritonAmount.breed) {
-      triton += 120
+      triton += 120;
       if (tritonAmount.freshHaircut) {
         triton += 42;
         percentage += 3;
@@ -801,8 +801,8 @@ const Home: NextPage = () => {
   }, [stakedNFTs]);
 
   useEffect(() => {
-    console.log(tritonAmount)
-    calculateCatch(tritonAmount)
+    console.log(tritonAmount);
+    calculateCatch(tritonAmount);
   }, [tritonAmount]);
 
   return (
@@ -846,7 +846,6 @@ const Home: NextPage = () => {
               </p>
               {isBreed ? (
                 <div className="flex flex-wrap gap-x-14 justify-around">
-
                   <div className="item-container">
                     <span
                       className="label-text block font-[Jangkuy]"
@@ -869,6 +868,7 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             checked={tritonAmount.freshHaircut}
+                            onChange={() => {}}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -887,7 +887,7 @@ const Home: NextPage = () => {
                       </div>
                     </div>
                   </div>
-                        
+
                   <div className="item-container">
                     <span
                       className="label-text block font-[Jangkuy]"
@@ -910,6 +910,7 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             checked={tritonAmount.bowTie}
+                            onChange={() => {}}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -951,6 +952,7 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             checked={tritonAmount.jewelry}
+                            onChange={() => {}}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -992,6 +994,7 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             checked={tritonAmount.kingsCrown}
+                            onChange={() => {}}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1035,6 +1038,7 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             checked={tritonAmount.bait}
+                            onChange={() => {}}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1078,6 +1082,7 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             checked={tritonAmount.hook}
+                            onChange={() => {}}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1121,6 +1126,7 @@ const Home: NextPage = () => {
                           <input
                             type="checkbox"
                             checked={tritonAmount.poseidonWhistle}
+                            onChange={() => {}}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1217,7 +1223,9 @@ const Home: NextPage = () => {
               <div className="stat-figure text-primary">
                 <button className="btn loading btn-circle btn-lg bg-base-content btn-ghost"></button>
               </div>
-              <p style={{ fontFamily: "Montserrat", color: 'white' }}>Loading...</p>
+              <p style={{ fontFamily: "Montserrat", color: "white" }}>
+                Loading...
+              </p>
               <div className="stat-desc max-w-[90%]">
                 <progress
                   value={loader}
@@ -1583,7 +1591,7 @@ const Home: NextPage = () => {
                           await refresh();
                         }}
                       >
-                        <p className="mr-16" style={{color: "white" }}>
+                        <p className="mr-16" style={{ color: "white" }}>
                           Submit {nftStakeArray.length} Pet(s) For Staking
                         </p>
                       </button>
