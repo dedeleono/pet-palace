@@ -67,6 +67,16 @@ const Home: NextPage = () => {
     poseidonWhistle: false,
   });
 
+  const [checkbox, setCheckBox] = useState({
+    freshHaircut: false,
+    bowTie: false,
+    jewelry: false,
+    kingsCrown: false,
+    bait: false,
+    hook: false,
+    poseidonWhistle: false,
+  });
+
   const [successCatch, setSuccessCatch] = useState(10);
   const [catchTotal, setCatchTotal] = useState(150);
 
@@ -858,6 +868,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.freshHaircut}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -898,6 +909,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.bowTie}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -938,6 +950,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.jewelry}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -978,6 +991,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.kingsCrown}
                             className="checkbox checkbox-primary p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1020,6 +1034,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.bait}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1062,6 +1077,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.hook}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1104,6 +1120,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.poseidonWhistle}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
