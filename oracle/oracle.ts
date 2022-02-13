@@ -56,14 +56,18 @@ async function main(args: any) {
       for (let i = 0; i < missedBreeds.length; i++) {
         const breed = missedBreeds[i];
         if (!breed.account.oracle) {
-          console.log("parsing breed:", breed.account.id.toString());
-          let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
-          await program.rpc.oracle(seed, {
-            accounts: {
-              authority: program.provider.wallet.publicKey,
-              breed: breed.publicKey,
-            },
-          });
+          try {
+            console.log("parsing breed:", breed.account.id.toString());
+            let seed = Math.floor(Math.random() * (4294967295 - 0 + 1)) + 0;
+            await program.rpc.oracle(seed, {
+              accounts: {
+                authority: program.provider.wallet.publicKey,
+                breed: breed.publicKey,
+              },
+            });
+          } catch (e) {
+            console.log("oracle failed:", e);
+          }
         }
       }
     }
