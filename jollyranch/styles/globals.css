@@ -48,6 +48,7 @@ a {
 
 .p-tag {
   top: -3.5rem;
+  position: relative;
 }
 
 .price-tag {
