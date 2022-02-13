@@ -20,6 +20,7 @@ import { getNftsForOwner } from "../lib/mint-one-token";
 import { programs } from "@metaplex/js";
 import NFTLoader from "../components/NFTLoader";
 import Bg from "../public/images/out.jpeg";
+import { sortBy } from "lodash";
 
 const {
   metadata: { Metadata },
@@ -759,6 +760,11 @@ const Home: NextPage = () => {
             parsedRolls.push(breed);
           }
         });
+        parsedRolls.sort(function(a, b){
+          const n1 = parseInt(a.account.timestamp)
+          const n2 = parseInt(b.account.timestamp) 
+          return n2-n1
+        })
         const nftsForOwner = await getNftsForOwner(
           jollyState.connection,
           wallet.publicKey
@@ -1472,7 +1478,7 @@ const Home: NextPage = () => {
                                       fontSize: ".75rem",
                                     }}
                                   >
-                                    Breed Number: {breed.account.id.toString()}
+                                    Pet Roll Number: {breed.account.id.toString()}
                                   </h2>
                                   <div className="flex">
                                     {Object.keys(breed.account.items).map(
@@ -1513,7 +1519,7 @@ const Home: NextPage = () => {
                                         color: "#bfc0c6",
                                       }}
                                     >
-                                      <p>Looking for a mate</p>
+                                      <p>Wen Pet?</p>
                                     </button>
                                   )}
                                 </div>
@@ -1524,6 +1530,7 @@ const Home: NextPage = () => {
                       ) : (
                         <>
                           {rolls.map((breed, i) => {
+                            console.log(rolls)
                             breed = breed.account;
                             let won = false;
                             if (
@@ -1539,20 +1546,21 @@ const Home: NextPage = () => {
                               .mod(new BN(100))
                               .add(new BN(1))
                               .toString();
+
                             return (
                               <div
                                 key={breed.id.toString() || Math.random()}
                                 className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
                               >
                                 <div className="card-body text-center items-center">
-                                  <p>Catch Id: {breed.id.toString()}</p>
+                                  <p>Pet Roll Id: {breed.id.toString()}</p>
                                   <p>
-                                    Breed Timestamp:{" "}
-                                    {breed.timestamp.toString()}
+                                    Roll Timestamp:{" "}
+                                    {breed.timestamp.toSrting()}
                                   </p>
-                                  <p>Breed Seed: {breed.seed.toString()}</p>
-                                  <p>Breed Chance: {breed.chance.toString()}</p>
-                                  <p>Breed Result: {breed.result.toString()}</p>
+                                  <p>Roll Seed: {breed.seed.toString()}</p>
+                                  <p>Roll Chance: {breed.chance.toString()}</p>
+                                  <p>Roll Result: {breed.result.toString()}</p>
                                   {won ? (
                                     <p>Congratulations, you won a pet!</p>
                                   ) : (
