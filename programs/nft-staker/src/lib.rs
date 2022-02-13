@@ -158,7 +158,7 @@ pub mod nft_staker {
             breed.chance += 15;
         }
         if total - 42 >= 0 {
-            breed.items.jewlrey = true;
+            breed.items.fresh_haircut = true;
             total = total - 42;
             breed.chance += 3;
         }
@@ -522,19 +522,6 @@ pub mod nft_staker {
                     ),
                     1,
                 )?;
-                anchor_spl::token::close_account(CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    anchor_spl::token::CloseAccount {
-                        account: ctx.accounts.sender_nft_account_0.to_account_info(),
-                        destination: ctx.accounts.reciever_nft_account_0.to_account_info(),
-                        authority: ctx.accounts.sender_nft_account_0.to_account_info(),
-                    },
-                    &[&[
-                        stake.key().as_ref(),
-                        nft_0.key().as_ref(),
-                        &[stake.spl_bumps[i]],
-                    ]],
-                ))?;
             }
             if (i > 0) && (mint.to_string() != stake.mints[0].to_string()) {
                 msg!("mint {}", mint.to_string());
@@ -557,19 +544,6 @@ pub mod nft_staker {
                         ),
                         1,
                     )?;
-                    anchor_spl::token::close_account(CpiContext::new_with_signer(
-                        ctx.accounts.token_program.to_account_info(),
-                        anchor_spl::token::CloseAccount {
-                            account: ctx.accounts.sender_nft_account_1.to_account_info(),
-                            destination: ctx.accounts.reciever_nft_account_1.to_account_info(),
-                            authority: ctx.accounts.sender_nft_account_1.to_account_info(),
-                        },
-                        &[&[
-                            stake.key().as_ref(),
-                            nft_1.key().as_ref(),
-                            &[stake.spl_bumps[i]],
-                        ]],
-                    ))?;
                 } else if i == 2 {
                     anchor_spl::token::transfer(
                         CpiContext::new_with_signer(
@@ -587,19 +561,6 @@ pub mod nft_staker {
                         ),
                         1,
                     )?;
-                    anchor_spl::token::close_account(CpiContext::new_with_signer(
-                        ctx.accounts.token_program.to_account_info(),
-                        anchor_spl::token::CloseAccount {
-                            account: ctx.accounts.sender_nft_account_2.to_account_info(),
-                            destination: ctx.accounts.reciever_nft_account_2.to_account_info(),
-                            authority: ctx.accounts.sender_nft_account_2.to_account_info(),
-                        },
-                        &[&[
-                            stake.key().as_ref(),
-                            nft_2.key().as_ref(),
-                            &[stake.spl_bumps[i]],
-                        ]],
-                    ))?;
                 } else if i == 3 {
                     anchor_spl::token::transfer(
                         CpiContext::new_with_signer(
@@ -617,19 +578,6 @@ pub mod nft_staker {
                         ),
                         1,
                     )?;
-                    anchor_spl::token::close_account(CpiContext::new_with_signer(
-                        ctx.accounts.token_program.to_account_info(),
-                        anchor_spl::token::CloseAccount {
-                            account: ctx.accounts.sender_nft_account_3.to_account_info(),
-                            destination: ctx.accounts.reciever_nft_account_3.to_account_info(),
-                            authority: ctx.accounts.sender_nft_account_3.to_account_info(),
-                        },
-                        &[&[
-                            stake.key().as_ref(),
-                            nft_3.key().as_ref(),
-                            &[stake.spl_bumps[i]],
-                        ]],
-                    ))?;
                 }
             }
         }

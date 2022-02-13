@@ -801,7 +801,7 @@ const Home: NextPage = () => {
   }, [stakedNFTs]);
 
   useEffect(() => {
-    console.log(tritonAmount);
+    // console.log(tritonAmount);
     calculateCatch(tritonAmount);
   }, [tritonAmount]);
 
@@ -1045,7 +1045,7 @@ const Home: NextPage = () => {
                                 ...tritonAmount,
                                 bait: !tritonAmount.bait,
                               }));
-                              console.log(tritonAmount);
+                              // console.log(tritonAmount);
                               calculateCatch(tritonAmount);
                             }}
                           />
@@ -1089,7 +1089,7 @@ const Home: NextPage = () => {
                                 ...tritonAmount,
                                 hook: !tritonAmount.hook,
                               }));
-                              console.log(tritonAmount);
+                              // console.log(tritonAmount);
                               calculateCatch(tritonAmount);
                             }}
                           />
@@ -1133,7 +1133,7 @@ const Home: NextPage = () => {
                                 ...tritonAmount,
                                 poseidonWhistle: !tritonAmount.poseidonWhistle,
                               }));
-                              console.log(tritonAmount);
+                              // console.log(tritonAmount);
                               calculateCatch(tritonAmount);
                             }}
                           />
@@ -1231,7 +1231,7 @@ const Home: NextPage = () => {
                   value={loader}
                   max="5000"
                   className="progress progress-accent"
-                  style={{backgroundColor: 'white', color: '#541ff1'}}
+                  style={{ backgroundColor: "white", color: "#541ff1" }}
                 ></progress>
               </div>
               <a
@@ -1446,6 +1446,8 @@ const Home: NextPage = () => {
                       {!isRolls ? (
                         <>
                           {breeds.map((breed, i) => {
+                            // console.log("breed", breed);
+                            // console.log(breed.account.items);
                             return (
                               <div
                                 key={
