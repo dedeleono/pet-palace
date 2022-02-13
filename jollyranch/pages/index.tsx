@@ -1215,14 +1215,14 @@ const Home: NextPage = () => {
           <div id="loader" className="modal">
             <div className="modal-box stat">
               <div className="stat-figure text-primary">
-                <button className="btn loading btn-circle btn-lg bg-base-200 btn-ghost"></button>
+                <button className="btn loading btn-circle btn-lg bg-base-content btn-ghost"></button>
               </div>
-              <p style={{ fontFamily: "Montserrat" }}>Loading...</p>
+              <p style={{ fontFamily: "Montserrat", color: 'white' }}>Loading...</p>
               <div className="stat-desc max-w-[90%]">
                 <progress
                   value={loader}
                   max="5000"
-                  className="progress progress-black"
+                  className="progress progress-white"
                 ></progress>
               </div>
               <a
