@@ -42,7 +42,7 @@ async function main(args: any) {
   console.log("");
   async function runOracle() {
     while (true) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 60 * 1000));
       const missedBreeds = await program.account.breed.all([
         {
           memcmp: {
