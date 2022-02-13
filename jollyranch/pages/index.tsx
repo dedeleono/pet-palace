@@ -1385,7 +1385,7 @@ const Home: NextPage = () => {
                     type="checkbox"
                     checked={isRolls}
                     onChange={() => {}}
-                    className="toggle toggle-lg ml-2"
+                    className="toggle toggle-lg ml-2 bg-[#541FF2] checked:bg-[#51DBF6] checked:border-[#51DBF6]"
                     onClick={() => {
                       setIsRolls((isRolls) => !isRolls);
                     }}
@@ -1482,7 +1482,7 @@ const Home: NextPage = () => {
                                         color: "#bfc0c6",
                                       }}
                                     >
-                                      <p>Waiting on oracle</p>
+                                      <p>Looking for a mate</p>
                                     </button>
                                   )}
                                 </div>
@@ -1514,7 +1514,7 @@ const Home: NextPage = () => {
                                 className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
                               >
                                 <div className="card-body text-center items-center">
-                                  <p>Breed Id: {breed.id.toString()}</p>
+                                  <p>Catch Id: {breed.id.toString()}</p>
                                   <p>
                                     Breed Timestamp:{" "}
                                     {breed.timestamp.toString()}
@@ -1523,13 +1523,13 @@ const Home: NextPage = () => {
                                   <p>Breed Chance: {breed.chance.toString()}</p>
                                   <p>Breed Result: {breed.result.toString()}</p>
                                   {won ? (
-                                    <p>CONGRADULATIONS: You won a pet!</p>
+                                    <p>Congratulations, you won a pet!</p>
                                   ) : (
                                     <p>You didn't win a pet. TRY AGAIN!</p>
                                   )}
-                                  <p>
+                                  {/*<p>
                                     VRF: ((id + timestamp + seed) % 100) +1: {b}
-                                  </p>
+                                  </p>*/}
                                 </div>
                               </div>
                             );
