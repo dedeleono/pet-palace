@@ -1222,7 +1222,8 @@ const Home: NextPage = () => {
                 <progress
                   value={loader}
                   max="5000"
-                  className="progress progress-white"
+                  className="progress progress-accent"
+                  style={{backgroundColor: 'white', color: '#541ff1'}}
                 ></progress>
               </div>
               <a
