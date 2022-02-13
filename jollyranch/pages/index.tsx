@@ -529,7 +529,10 @@ const Home: NextPage = () => {
 
   const redeemNFT = async (stakePubKey, nftPubKeys) => {
     console.log("stakesPubKey", stakePubKey.toString());
-    console.log("nftPubKeys", nftPubKeys);
+    console.log("nftPubKeys", nftPubKeys[0].toString());
+    console.log("nftPubKeys", nftPubKeys[1].toString());
+    console.log("nftPubKeys", nftPubKeys[2].toString());
+    console.log("nftPubKeys", nftPubKeys[3].toString());
     let stake_spls = [];
     let stake_bumps = [];
     let wallet_nft_accounts = [];
@@ -1441,7 +1444,7 @@ const Home: NextPage = () => {
                       Please connect your wallet above
                     </p>
                   )}
-                  {rolls.length > 0 && !loadingBreeds && (
+                  {!loadingBreeds && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                       {!isRolls ? (
                         <>
