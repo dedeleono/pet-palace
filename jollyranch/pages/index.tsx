@@ -756,6 +756,12 @@ const Home: NextPage = () => {
             parsedRolls.push(breed);
           }
         });
+        console.log(parsedRolls)
+        parsedRolls.sort(function(a, b){
+          const n1 = parseInt(a.account.timestamp)
+          const n2 = parseInt(b.account.timestamp) 
+          return n2-n1
+        })
         const nftsForOwner = await getNftsForOwner(
           jollyState.connection,
           wallet.publicKey
@@ -1521,6 +1527,7 @@ const Home: NextPage = () => {
                       ) : (
                         <>
                           {rolls.map((breed, i) => {
+                            console.log(rolls)
                             breed = breed.account;
                             let won = false;
                             if (
