@@ -757,6 +757,11 @@ const Home: NextPage = () => {
             parsedRolls.push(breed);
           }
         });
+        parsedRolls.sort(function(a, b){
+          const n1 = parseInt(a.account.timestamp)
+          const n2 = parseInt(b.account.timestamp) 
+          return n2-n1
+        })
         const nftsForOwner = await getNftsForOwner(
           jollyState.connection,
           wallet.publicKey
@@ -1522,6 +1527,7 @@ const Home: NextPage = () => {
                       ) : (
                         <>
                           {rolls.map((breed, i) => {
+                            console.log(rolls)
                             breed = breed.account;
                             let won = false;
                             if (
@@ -1547,8 +1553,7 @@ const Home: NextPage = () => {
                                   <p>Pet Roll Id: {breed.id.toString()}</p>
                                   <p>
                                     Roll Timestamp:{" "}
-                                    {date.toDateString()}
-                                    {console.log(date)}
+                                    {breed.timestamp.toSrting()}
                                   </p>
                                   <p>Roll Seed: {breed.seed.toString()}</p>
                                   <p>Roll Chance: {breed.chance.toString()}</p>
