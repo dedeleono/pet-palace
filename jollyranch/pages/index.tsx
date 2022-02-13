@@ -1469,7 +1469,7 @@ const Home: NextPage = () => {
                                       fontSize: ".75rem",
                                     }}
                                   >
-                                    Breed Number: {breed.account.id.toString()}
+                                    Pet Roll Number: {breed.account.id.toString()}
                                   </h2>
                                   <div className="flex">
                                     {Object.keys(breed.account.items).map(
