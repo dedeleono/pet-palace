@@ -1510,7 +1510,7 @@ const Home: NextPage = () => {
                                         color: "#bfc0c6",
                                       }}
                                     >
-                                      <p>Looking for a mate</p>
+                                      <p>Wen Pet?</p>
                                     </button>
                                   )}
                                 </div>
