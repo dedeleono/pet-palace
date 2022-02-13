@@ -67,9 +67,18 @@ const Home: NextPage = () => {
     poseidonWhistle: false,
   });
 
+  const [checkbox, setCheckBox] = useState({
+    freshHaircut: false,
+    bowTie: false,
+    jewelry: false,
+    kingsCrown: false,
+    bait: false,
+    hook: false,
+    poseidonWhistle: false,
+  });
+
   const [successCatch, setSuccessCatch] = useState(10);
   const [catchTotal, setCatchTotal] = useState(150);
-  const [successBreed, setSucesssBreed] = useState(10);
 
   const breederRef = useRef(null);
   const loaderRef = useRef(null);
@@ -84,20 +93,42 @@ const Home: NextPage = () => {
 
   const calculateCatch = (tritonAmount) => {
     setSuccessCatch(10);
-    let triton = 150;
+    let triton = 0;
     let percentage = 10;
-    if (tritonAmount.bait) {
-      triton += 225;
-      percentage += 15;
+    if (tritonAmount.tame) {
+      triton += 150;
+      if (tritonAmount.bait) {
+        triton += 225;
+        percentage += 15;
+      }
+      if (tritonAmount.hook) {
+        triton += 300;
+        percentage += 20;
+      }
+      if (tritonAmount.poseidonWhistle) {
+        triton += 1000;
+        percentage += 50;
+      }
+    } else if (tritonAmount.breed) {
+      triton += 120
+      if (tritonAmount.freshHaircut) {
+        triton += 42;
+        percentage += 3;
+      }
+      if (tritonAmount.bowTie) {
+        triton += 210;
+        percentage += 15;
+      }
+      if (tritonAmount.jewelry) {
+        triton += 270;
+        percentage += 20;
+      }
+      if (tritonAmount.kingsCrown) {
+        triton += 1000;
+        percentage += 50;
+      }
     }
-    if (tritonAmount.hook) {
-      triton += 300;
-      percentage += 20;
-    }
-    if (tritonAmount.poseidonWhistle) {
-      triton += 1000;
-      percentage += 50;
-    }
+
     setSuccessCatch(percentage);
     setCatchTotal(triton);
   };
@@ -769,6 +800,11 @@ const Home: NextPage = () => {
     }
   }, [stakedNFTs]);
 
+  useEffect(() => {
+    console.log(tritonAmount)
+    calculateCatch(tritonAmount)
+  }, [tritonAmount]);
+
   return (
     <>
       <Head>
@@ -809,82 +845,169 @@ const Home: NextPage = () => {
                 Choose Items
               </p>
               {isBreed ? (
-                <div className="flex flex-wrap gap-x-14">
-                  <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/haircut.jpg')] item-box">
-                    <div className="form-control">
-                      <label className="cursor-pointer label">
-                        <span className="label-text font-[Jangkuy]">
-                          Fresh Haircut
-                        </span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                          onClick={() => {
-                            setTritonAmount((tritonAmount) => ({
-                              ...tritonAmount,
-                              freshHaircut: !tritonAmount.freshHaircut,
-                            }));
-                          }}
-                        />
-                      </label>
+                <div className="flex flex-wrap gap-x-14 justify-around">
+
+                  <div className="item-container">
+                    <span
+                      className="label-text block font-[Jangkuy]"
+                      style={{ color: "white" }}
+                    >
+                      Fresh Haircut
+                    </span>
+                    <div
+                      className="card bordered bg-cover bg-center bg-[url('../items/haircut.jpg')] item-box"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
+                      <div className="form-control h-full">
+                        <label className="cursor-pointer relative label h-full checkbox-label">
+                          <span
+                            className="p-tag relative"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            +3%
+                          </span>
+                          <input
+                            type="checkbox"
+                            checked={tritonAmount.freshHaircut}
+                            className="checkbox checkbox-primary p-tag"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                freshHaircut: !tritonAmount.freshHaircut,
+                              }));
+                            }}
+                          />
+                          <span
+                            className="absolute price-tag"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            42 $TRTN
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  <div className="m-2 card bordered bg-cover bg-center bg-cover bg-center bg-[url('../items/bowtie.jpg')] item-box">
-                    <div className="form-control">
-                      <label className="cursor-pointer label">
-                        <span className="label-text font-[Jangkuy]">
-                          Bow Tie
-                        </span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                          onClick={() => {
-                            setTritonAmount((tritonAmount) => ({
-                              ...tritonAmount,
-                              bowTie: !tritonAmount.bowTie,
-                            }));
-                          }}
-                        />
-                      </label>
+                        
+                  <div className="item-container">
+                    <span
+                      className="label-text block font-[Jangkuy]"
+                      style={{ color: "white" }}
+                    >
+                      Bow Tie
+                    </span>
+                    <div
+                      className="card bordered bg-cover bg-center bg-[url('../items/bowtie.jpg')] item-box"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
+                      <div className="form-control h-full">
+                        <label className="cursor-pointer relative label h-full checkbox-label">
+                          <span
+                            className="p-tag relative"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            +15%
+                          </span>
+                          <input
+                            type="checkbox"
+                            checked={tritonAmount.bowTie}
+                            className="checkbox checkbox-primary p-tag"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                bowTie: !tritonAmount.bowTie,
+                              }));
+                            }}
+                          />
+                          <span
+                            className="absolute price-tag"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            210 $TRTN
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/jewel.jpg')] item-box">
-                    <div className="form-control">
-                      <label className="cursor-pointer label">
-                        <span className="label-text font-[Jangkuy]">
-                          Jewelry
-                        </span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                          onClick={() => {
-                            setTritonAmount((tritonAmount) => ({
-                              ...tritonAmount,
-                              jewelry: !tritonAmount.jewelry,
-                            }));
-                          }}
-                        />
-                      </label>
+                  <div className="item-container">
+                    <span
+                      className="label-text block font-[Jangkuy]"
+                      style={{ color: "white" }}
+                    >
+                      Jewelry
+                    </span>
+                    <div
+                      className="card bordered bg-cover bg-center bg-[url('../items/jewel.jpg')] item-box"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
+                      <div className="form-control h-full">
+                        <label className="cursor-pointer relative label h-full checkbox-label">
+                          <span
+                            className="p-tag relative"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            +20%
+                          </span>
+                          <input
+                            type="checkbox"
+                            checked={tritonAmount.jewelry}
+                            className="checkbox checkbox-primary p-tag"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                jewelry: !tritonAmount.jewelry,
+                              }));
+                            }}
+                          />
+                          <span
+                            className="absolute price-tag"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            270 $TRTN
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
-                  <div className="m-2 card bordered bg-cover bg-center bg-[url('../items/crown.jpg')] item-box">
-                    <div className="form-control">
-                      <label className="cursor-pointer label p-6">
-                        <span className="label-text font-[Jangkuy]">
-                          King's Crown
-                        </span>
-                        <input
-                          type="checkbox"
-                          className="checkbox checkbox-primary"
-                          onClick={() => {
-                            setTritonAmount((tritonAmount) => ({
-                              ...tritonAmount,
-                              kingsCrown: !tritonAmount.kingsCrown,
-                            }));
-                          }}
-                        />
-                      </label>
+
+                  <div className="item-container">
+                    <span
+                      className="label-text block font-[Jangkuy]"
+                      style={{ color: "white" }}
+                    >
+                      King's Crown
+                    </span>
+                    <div
+                      className="card bordered bg-cover bg-center bg-[url('../items/crown.jpg')] item-box"
+                      style={{ borderColor: "#fd7cf6" }}
+                    >
+                      <div className="form-control h-full">
+                        <label className="cursor-pointer relative label h-full checkbox-label">
+                          <span
+                            className="p-tag relative"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            +50%
+                          </span>
+                          <input
+                            type="checkbox"
+                            checked={tritonAmount.kingsCrown}
+                            className="checkbox checkbox-primary p-tag"
+                            onClick={() => {
+                              setTritonAmount((tritonAmount) => ({
+                                ...tritonAmount,
+                                kingsCrown: !tritonAmount.kingsCrown,
+                              }));
+                            }}
+                          />
+                          <span
+                            className="absolute price-tag"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            1000 $TRTN
+                          </span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -911,6 +1034,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.bait}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -953,6 +1077,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.hook}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -995,6 +1120,7 @@ const Home: NextPage = () => {
                           </span>
                           <input
                             type="checkbox"
+                            checked={tritonAmount.poseidonWhistle}
                             className="checkbox checkbox-primary relative p-tag"
                             onClick={() => {
                               setTritonAmount((tritonAmount) => ({
@@ -1075,7 +1201,7 @@ const Home: NextPage = () => {
                       await refresh();
                     }}
                   >
-                    Tame
+                    Catch
                   </a>
                 )}
               </div>
@@ -1089,14 +1215,14 @@ const Home: NextPage = () => {
           <div id="loader" className="modal">
             <div className="modal-box stat">
               <div className="stat-figure text-primary">
-                <button className="btn loading btn-circle btn-lg bg-base-200 btn-ghost"></button>
+                <button className="btn loading btn-circle btn-lg bg-base-content btn-ghost"></button>
               </div>
-              <p style={{ fontFamily: "Montserrat" }}>Loading...</p>
+              <p style={{ fontFamily: "Montserrat", color: 'white' }}>Loading...</p>
               <div className="stat-desc max-w-[90%]">
                 <progress
                   value={loader}
                   max="5000"
-                  className="progress progress-black"
+                  className="progress progress-white"
                 ></progress>
               </div>
               <a
@@ -1276,7 +1402,7 @@ const Home: NextPage = () => {
                     type="checkbox"
                     checked={isRolls}
                     onChange={() => {}}
-                    className="toggle toggle-lg ml-2"
+                    className="toggle toggle-lg ml-2 bg-[#541FF2] checked:bg-[#51DBF6] checked:border-[#51DBF6]"
                     onClick={() => {
                       setIsRolls((isRolls) => !isRolls);
                     }}
@@ -1373,7 +1499,7 @@ const Home: NextPage = () => {
                                         color: "#bfc0c6",
                                       }}
                                     >
-                                      <p>Waiting on oracle</p>
+                                      <p>Looking for a mate</p>
                                     </button>
                                   )}
                                 </div>
@@ -1405,7 +1531,7 @@ const Home: NextPage = () => {
                                 className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
                               >
                                 <div className="card-body text-center items-center">
-                                  <p>Breed Id: {breed.id.toString()}</p>
+                                  <p>Catch Id: {breed.id.toString()}</p>
                                   <p>
                                     Breed Timestamp:{" "}
                                     {breed.timestamp.toString()}
@@ -1414,13 +1540,13 @@ const Home: NextPage = () => {
                                   <p>Breed Chance: {breed.chance.toString()}</p>
                                   <p>Breed Result: {breed.result.toString()}</p>
                                   {won ? (
-                                    <p>CONGRADULATIONS: You won a pet!</p>
+                                    <p>Congratulations, you won a pet!</p>
                                   ) : (
                                     <p>You didn't win a pet. TRY AGAIN!</p>
                                   )}
-                                  <p>
+                                  {/*<p>
                                     VRF: ((id + timestamp + seed) % 100) +1: {b}
-                                  </p>
+                                  </p>*/}
                                 </div>
                               </div>
                             );
@@ -1457,7 +1583,7 @@ const Home: NextPage = () => {
                           await refresh();
                         }}
                       >
-                        <p className="mr-16">
+                        <p className="mr-16" style={{color: "white" }}>
                           Submit {nftStakeArray.length} Pet(s) For Staking
                         </p>
                       </button>
