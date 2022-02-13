@@ -153,7 +153,7 @@ pub mod nft_staker {
             breed.chance += 20;
         }
         if total - 210 >= 0 {
-            breed.items.jewlrey = true;
+            breed.items.bow_tie = true;
             total = total - 210;
             breed.chance += 15;
         }
