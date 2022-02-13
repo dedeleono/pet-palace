@@ -20,6 +20,7 @@ import { getNftsForOwner } from "../lib/mint-one-token";
 import { programs } from "@metaplex/js";
 import NFTLoader from "../components/NFTLoader";
 import Bg from "../public/images/out.jpeg";
+import { sortBy } from "lodash";
 
 const {
   metadata: { Metadata },
@@ -1536,6 +1537,7 @@ const Home: NextPage = () => {
                               .mod(new BN(100))
                               .add(new BN(1))
                               .toString();
+
                             return (
                               <div
                                 key={breed.id.toString() || Math.random()}
@@ -1545,7 +1547,8 @@ const Home: NextPage = () => {
                                   <p>Pet Roll Id: {breed.id.toString()}</p>
                                   <p>
                                     Roll Timestamp:{" "}
-                                    {breed.timestamp.toString()}
+                                    {date.toDateString()}
+                                    {console.log(date)}
                                   </p>
                                   <p>Roll Seed: {breed.seed.toString()}</p>
                                   <p>Roll Chance: {breed.chance.toString()}</p>
