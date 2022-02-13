@@ -1566,7 +1566,7 @@ const Home: NextPage = () => {
                           await refresh();
                         }}
                       >
-                        <p className="mr-16">
+                        <p className="mr-16" style={{color: "white" }}>
                           Submit {nftStakeArray.length} Pet(s) For Staking
                         </p>
                       </button>
