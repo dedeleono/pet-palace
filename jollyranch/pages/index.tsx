@@ -1542,14 +1542,14 @@ const Home: NextPage = () => {
                                 className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
                               >
                                 <div className="card-body text-center items-center">
-                                  <p>Catch Id: {breed.id.toString()}</p>
+                                  <p>Pet Roll Id: {breed.id.toString()}</p>
                                   <p>
-                                    Breed Timestamp:{" "}
+                                    Roll Timestamp:{" "}
                                     {breed.timestamp.toString()}
                                   </p>
-                                  <p>Breed Seed: {breed.seed.toString()}</p>
-                                  <p>Breed Chance: {breed.chance.toString()}</p>
-                                  <p>Breed Result: {breed.result.toString()}</p>
+                                  <p>Roll Seed: {breed.seed.toString()}</p>
+                                  <p>Roll Chance: {breed.chance.toString()}</p>
+                                  <p>Roll Result: {breed.result.toString()}</p>
                                   {won ? (
                                     <p>Congratulations, you won a pet!</p>
                                   ) : (
