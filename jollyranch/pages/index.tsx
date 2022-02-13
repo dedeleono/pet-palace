@@ -1556,7 +1556,7 @@ const Home: NextPage = () => {
                                   <p>Pet Roll Id: {breed.id.toString()}</p>
                                   <p>
                                     Roll Timestamp:{" "}
-                                    {breed.timestamp.toSrting()}
+                                    {breed.timestamp.toString()}
                                   </p>
                                   <p>Roll Seed: {breed.seed.toString()}</p>
                                   <p>Roll Chance: {breed.chance.toString()}</p>
