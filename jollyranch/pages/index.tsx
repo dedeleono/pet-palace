@@ -81,6 +81,8 @@ const Home: NextPage = () => {
   const [successCatch, setSuccessCatch] = useState(10);
   const [catchTotal, setCatchTotal] = useState(150);
 
+  const [petsLeft, setPetsLeft] = useState([]);
+
   const breederRef = useRef(null);
   const loaderRef = useRef(null);
   const modalRef = useRef(null);
@@ -675,6 +677,20 @@ const Home: NextPage = () => {
     });
   };
 
+  const getPetsLeft = async () => {
+    const redeemablePets = await jollyState.program.account.pet.all([
+      {
+        memcmp: {
+          offset: 8 + 32 + 32 + 1, // Discriminator
+          // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+          bytes: bs58.encode(new Uint8Array([0])),
+        },
+      },
+    ]);
+    console.log("redeemablePets", redeemablePets);
+    setPetsLeft(redeemablePets);
+  };
+
   const redeemPet = async (breed) => {
     const redeemablePets = await jollyState.program.account.pet.all([
       {
@@ -738,6 +754,7 @@ const Home: NextPage = () => {
     // console.log("jollyState refreshed");
     if (jollyState["program"] && wallet.publicKey) {
       (async () => {
+        await getPetsLeft();
         setLoadingNfts(true);
         setLoadingBreeds(true);
         const breedsforOwner = await await jollyState.program.account.breed.all(
@@ -760,11 +777,11 @@ const Home: NextPage = () => {
             parsedRolls.push(breed);
           }
         });
-        parsedRolls.sort(function(a, b){
-          const n1 = parseInt(a.account.timestamp)
-          const n2 = parseInt(b.account.timestamp) 
-          return n2-n1
-        })
+        parsedRolls.sort(function (a, b) {
+          const n1 = parseInt(a.account.timestamp);
+          const n2 = parseInt(b.account.timestamp);
+          return n2 - n1;
+        });
         const nftsForOwner = await getNftsForOwner(
           jollyState.connection,
           wallet.publicKey
@@ -1275,29 +1292,31 @@ const Home: NextPage = () => {
                       </div>
                     )}
                   </div> */}
-                  <button
-                    className="btn btn-secondary badge-outline w-32 h-20"
-                    style={{
-                      fontFamily: "Jangkuy",
-                      fontSize: "1rem",
-                      color: "#ffffff",
-                      borderColor: "#fd7cf6",
-                    }}
-                    onClick={() => {
-                      setTritonAmount((tritonAmount) => ({
-                        ...tritonAmount,
-                        breed: false,
-                      }));
-                      setTritonAmount((tritonAmount) => ({
-                        ...tritonAmount,
-                        tame: true,
-                      }));
-                      setIsBreed(false);
-                      breederRef.current.click();
-                    }}
-                  >
-                    <p>CATCH A PET</p>
-                  </button>
+                  {petsLeft.length > 0 && (
+                    <button
+                      className="btn btn-secondary badge-outline w-32 h-20"
+                      style={{
+                        fontFamily: "Jangkuy",
+                        fontSize: "1rem",
+                        color: "#ffffff",
+                        borderColor: "#fd7cf6",
+                      }}
+                      onClick={() => {
+                        setTritonAmount((tritonAmount) => ({
+                          ...tritonAmount,
+                          breed: false,
+                        }));
+                        setTritonAmount((tritonAmount) => ({
+                          ...tritonAmount,
+                          tame: true,
+                        }));
+                        setIsBreed(false);
+                        breederRef.current.click();
+                      }}
+                    >
+                      <p>CATCH A PET</p>
+                    </button>
+                  )}
                 </div>
                 <div className="px-2 mx-2 navbar-center">
                   <span
@@ -1478,7 +1497,8 @@ const Home: NextPage = () => {
                                       fontSize: ".75rem",
                                     }}
                                   >
-                                    Pet Roll Number: {breed.account.id.toString()}
+                                    Pet Roll Number:{" "}
+                                    {breed.account.id.toString()}
                                   </h2>
                                   <div className="flex">
                                     {Object.keys(breed.account.items).map(
@@ -1530,7 +1550,7 @@ const Home: NextPage = () => {
                       ) : (
                         <>
                           {rolls.map((breed, i) => {
-                            console.log(rolls)
+                            console.log(rolls);
                             breed = breed.account;
                             let won = false;
                             if (
@@ -1555,8 +1575,7 @@ const Home: NextPage = () => {
                                 <div className="card-body text-center items-center">
                                   <p>Pet Roll Id: {breed.id.toString()}</p>
                                   <p>
-                                    Roll Timestamp:{" "}
-                                    {breed.timestamp.toString()}
+                                    Roll Timestamp: {breed.timestamp.toString()}
                                   </p>
                                   <p>Roll Seed: {breed.seed.toString()}</p>
                                   <p>Roll Chance: {breed.chance.toString()}</p>

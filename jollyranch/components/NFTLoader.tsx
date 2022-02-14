@@ -8,6 +8,7 @@ interface NFTLoaderProps {
   onBreed?: any;
   onRedeem?: any;
   unStake?: any;
+  petsLeft?: any;
   nftStakeArray?: any;
   stakingRewards?: any;
 }
@@ -27,6 +28,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
   onBreed,
   onRedeem,
   unStake,
+  petsLeft,
   nftStakeArray,
   stakingRewards,
 }) => {
@@ -96,20 +98,22 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                 : "Loading..."}
             </p>
           </div>
-          <div className="justify-center card-actions">
-            <button
-              className="btn btn-secondary badge-outline mt-4"
-              onClick={onBreed}
-              style={{
-                fontFamily: "Scratchy",
-                fontSize: "1.3rem",
-                color: "#ffffff",
-                borderColor: "#fd7cf6",
-              }}
-            >
-              Breed
-            </button>
-          </div>
+          {petsLeft.length > 0 && (
+            <div className="justify-center card-actions">
+              <button
+                className="btn btn-secondary badge-outline mt-4"
+                onClick={onBreed}
+                style={{
+                  fontFamily: "Scratchy",
+                  fontSize: "1.3rem",
+                  color: "#ffffff",
+                  borderColor: "#fd7cf6",
+                }}
+              >
+                Breed
+              </button>
+            </div>
+          )}
           <div className="justify-center card-actions">
             <button
               style={{

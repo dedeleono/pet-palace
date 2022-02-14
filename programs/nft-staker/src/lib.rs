@@ -106,7 +106,7 @@ pub mod nft_staker {
         } else {
             msg!("Sorry! You were unable to breed/train a pet. TRY AGAIN");
         }
-        // pet.withdrawn = true;
+        pet.withdrawn = true;
         breed.withdrawn = true;
         Ok(())
     }
