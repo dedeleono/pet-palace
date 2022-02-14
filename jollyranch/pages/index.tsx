@@ -560,7 +560,22 @@ const Home: NextPage = () => {
       wallet_nft_accounts.push(wallet_nft_account);
     }
 
-    await jollyState.program.rpc.redeemNft({
+    const tx = new anchor.web3.Transaction();
+    let redeemRewards_ix = await jollyState.program.instruction.redeemRewards({
+      accounts: {
+        stake: stakePubKey.toString(),
+        jollyranch: jollyState.jollyranch.toString(),
+        authority: jollyState.program.provider.wallet.publicKey.toString(),
+        senderSplAccount: jollyState.recieverSplAccount.toString(),
+        recieverSplAccount: jollyState.wallet_token_account.toString(),
+        mint: jollyState.spl_token.toString(),
+        systemProgram: anchor.web3.SystemProgram.programId.toString(),
+        tokenProgram: TOKEN_PROGRAM_ID.toString(),
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
+      },
+    });
+    let redeemNft_ix = await jollyState.program.instruction.redeemNft({
       accounts: {
         stake: stakePubKey.toString(),
         jollyranch: jollyState.jollyranch.toString(),
@@ -586,6 +601,16 @@ const Home: NextPage = () => {
         rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
       },
     });
+
+    tx.add(redeemRewards_ix);
+    tx.add(redeemNft_ix);
+
+    try {
+      console.log("sendingTx");
+      await jollyState.program.provider.send(tx);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const getTotalStakedRats = async () => {
@@ -683,11 +708,11 @@ const Home: NextPage = () => {
         memcmp: {
           offset: 8 + 32 + 32 + 1, // Discriminator
           // bytes: bs58.encode(wallet.publicKey.toBuffer()),
-          bytes: bs58.encode(new Uint8Array([0])),
+          bytes: bs58.encode(new Buffer(0)),
         },
       },
     ]);
-    console.log("redeemablePets", redeemablePets);
+    // console.log("redeemablePets", redeemablePets);
     setPetsLeft(redeemablePets);
   };
 
@@ -1383,6 +1408,7 @@ const Home: NextPage = () => {
                             isStaked={true}
                             nft={nft}
                             stakingRewards={stakingRewards}
+                            petsLeft={petsLeft}
                             onRedeem={async () => {
                               await redeemRewards(nft.nft_account.publicKey);
                               await refresh();
