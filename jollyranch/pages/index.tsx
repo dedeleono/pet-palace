@@ -1347,6 +1347,19 @@ const Home: NextPage = () => {
                       <p>CATCH A PET</p>
                     </button>
                   )}
+
+                    <a
+                      className="btn btn-secondary badge-outline w-32 h-20 ml-4"
+                      href="https://lp.shill-city.com/#" target="_blank"
+                      style={{
+                        fontFamily: "Jangkuy",
+                        fontSize: "1rem",
+                        color: "#ffffff",
+                        borderColor: "#fd7cf6",
+                      }}
+                    >
+                      <p>Buy $TRTN</p>
+                    </a>
                 </div>
                 <div className="px-2 mx-2 navbar-center">
                   <span
@@ -1357,24 +1370,28 @@ const Home: NextPage = () => {
                   </span>
                 </div>
                 <div className="navbar-end">
-                  <div
-                    className="btn btn-primary z-50"
-                    style={{ color: "#fff" }}
-                  >
-                    <WalletMultiButton
-                      style={{
-                        all: "unset",
-                        height: "100%",
-                        width: "100%",
-                        zIndex: "10",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontFamily: "Montserrat",
-                        fontSize: "0.8rem",
-                      }}
-                    />
-                  </div>
+                    <label 
+                        className="mr-4"
+                        style={{ fontFamily: "Jangkuy", color: "#FFFFFF" }}
+                    >Pets left: {petsLeft.length}</label>
+                    <div
+                        className="btn btn-primary z-50"
+                        style={{ color: "#fff" }}
+                    >
+                        <WalletMultiButton
+                        style={{
+                            all: "unset",
+                            height: "100%",
+                            width: "100%",
+                            zIndex: "10",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontFamily: "Montserrat",
+                            fontSize: "0.8rem",
+                        }}
+                        />
+                    </div>
                 </div>
               </div>
               <div className="border mockup-window border-base-200 mb-8">
