@@ -1389,6 +1389,41 @@ describe("nft-staker", async () => {
   //   );
   // });
 
+  // fix fucked pets
+
+  it("fix fucked pets", async () => {
+    const redeemablePets = await program.account.pet.all([
+      {
+        memcmp: {
+          offset: 8 + 32 + 32 + 1, // Discriminator
+          // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+          bytes: bs58.encode(new Uint8Array([0])),
+        },
+      },
+    ]);
+    redeemablePets.map(async (pet) => {
+      let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
+        [pet.publicKey.toBuffer()],
+        program.programId
+      );
+      const petBalance =
+        await program.provider.connection.getTokenAccountBalance(pet_spl);
+      if (petBalance.value.uiAmount == 0) {
+        console.log("fixing pet: ", pet.publicKey.toString());
+        try {
+          await program.rpc.fixPet({
+            accounts: {
+              authority: program.provider.wallet.publicKey,
+              pet: pet.publicKey,
+            },
+          });
+        } catch (e) {
+          console.log("error", e);
+        }
+      }
+    });
+  });
+
   // get my pets/nfts
 
   // it("get my pets", async () => {

@@ -708,11 +708,16 @@ const Home: NextPage = () => {
         memcmp: {
           offset: 8 + 32 + 32 + 1, // Discriminator
           // bytes: bs58.encode(wallet.publicKey.toBuffer()),
-          bytes: bs58.encode(new Buffer(0)),
+          bytes: bs58.encode(new Uint8Array([0])),
         },
       },
     ]);
     // console.log("redeemablePets", redeemablePets);
+    redeemablePets.map((pet) => {
+      if (pet.account.withdrawn === true) {
+        console.log("found withdrawn pet");
+      }
+    });
     setPetsLeft(redeemablePets);
   };
 
@@ -722,7 +727,7 @@ const Home: NextPage = () => {
         memcmp: {
           offset: 8 + 32 + 32 + 1, // Discriminator
           // bytes: bs58.encode(wallet.publicKey.toBuffer()),
-          bytes: bs58.encode(new Buffer(0)),
+          bytes: bs58.encode(new Uint8Array([0])),
         },
       },
     ]);

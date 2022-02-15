@@ -125,6 +125,22 @@
       ]
     },
     {
+      "name": "fixPet",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "pet",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "redeemPet",
       "accounts": [
         {
@@ -844,6 +860,11 @@
       "code": 6009,
       "name": "OnlyOracleCanUpdate",
       "msg": "only the oracle can provide seeds"
+    },
+    {
+      "code": 6010,
+      "name": "OnlyGodCanDoThis",
+      "msg": "God Only"
     }
   ]
 }

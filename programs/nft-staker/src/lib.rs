@@ -60,6 +60,17 @@ pub mod nft_staker {
         Ok(())
     }
 
+    pub fn fix_pet(ctx: Context<FixPet>) -> ProgramResult {
+        if ctx.accounts.authority.key().to_string()
+            != "6r7aWsBVkS78CerWgYTQweCniigZwWwRuqGr4zivr6nJ"
+        {
+            return Err(ErrorCode::OnlyGodCanDoThis.into());
+        }
+        let pet = &mut ctx.accounts.pet;
+        pet.withdrawn = true;
+        Ok(())
+    }
+
     pub fn redeem_pet(ctx: Context<RedeemPet>) -> ProgramResult {
         let pet = &mut ctx.accounts.pet;
         let breed = &mut ctx.accounts.breed;
@@ -612,6 +623,13 @@ pub struct FundPet<'info> {
 }
 
 #[derive(Accounts)]
+pub struct FixPet<'info> {
+    pub authority: Signer<'info>,
+    #[account(mut)]
+    pub pet: Account<'info, Pet>,
+}
+
+#[derive(Accounts)]
 #[instruction(spl_bumps: [u8;4])]
 pub struct StakeNFT<'info> {
     #[account(mut)]
@@ -816,4 +834,6 @@ pub enum ErrorCode {
     OracleHasNotSpoken,
     #[msg("only the oracle can provide seeds")]
     OnlyOracleCanUpdate,
+    #[msg("God Only")]
+    OnlyGodCanDoThis,
 }
