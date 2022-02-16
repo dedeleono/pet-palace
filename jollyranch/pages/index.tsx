@@ -575,6 +575,23 @@ const Home: NextPage = () => {
         rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
       },
     });
+    let initAtas_ix = await jollyState.program.instruction.initAtas({
+      accounts: {
+        authority: jollyState.program.provider.wallet.publicKey.toString(),
+        recieverNftAccount0: wallet_nft_accounts[0].toString(),
+        recieverNftAccount1: wallet_nft_accounts[1].toString(),
+        recieverNftAccount2: wallet_nft_accounts[2].toString(),
+        recieverNftAccount3: wallet_nft_accounts[3].toString(),
+        nft0: nftPubKeys[0].toString(),
+        nft1: nftPubKeys[1].toString(),
+        nft2: nftPubKeys[2].toString(),
+        nft3: nftPubKeys[3].toString(),
+        tokenProgram: TOKEN_PROGRAM_ID.toString(),
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+        systemProgram: anchor.web3.SystemProgram.programId.toString(),
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
+      },
+    });
     let redeemNft_ix = await jollyState.program.instruction.redeemNft({
       accounts: {
         stake: stakePubKey.toString(),
@@ -603,6 +620,7 @@ const Home: NextPage = () => {
     });
 
     tx.add(redeemRewards_ix);
+    tx.add(initAtas_ix);
     tx.add(redeemNft_ix);
 
     try {
@@ -1348,18 +1366,19 @@ const Home: NextPage = () => {
                     </button>
                   )}
 
-                    <a
-                      className="btn btn-secondary badge-outline w-32 h-20 ml-4"
-                      href="https://lp.shill-city.com/#" target="_blank"
-                      style={{
-                        fontFamily: "Jangkuy",
-                        fontSize: "1rem",
-                        color: "#ffffff",
-                        borderColor: "#fd7cf6",
-                      }}
-                    >
-                      <p>Buy $TRTN</p>
-                    </a>
+                  <a
+                    className="btn btn-secondary badge-outline w-32 h-20 ml-4"
+                    href="https://lp.shill-city.com/#"
+                    target="_blank"
+                    style={{
+                      fontFamily: "Jangkuy",
+                      fontSize: "1rem",
+                      color: "#ffffff",
+                      borderColor: "#fd7cf6",
+                    }}
+                  >
+                    <p>Buy $TRTN</p>
+                  </a>
                 </div>
                 <div className="px-2 mx-2 navbar-center">
                   <span
@@ -1370,28 +1389,30 @@ const Home: NextPage = () => {
                   </span>
                 </div>
                 <div className="navbar-end">
-                    <label 
-                        className="mr-4"
-                        style={{ fontFamily: "Jangkuy", color: "#FFFFFF" }}
-                    >Pets left: {petsLeft.length}</label>
-                    <div
-                        className="btn btn-primary z-50"
-                        style={{ color: "#fff" }}
-                    >
-                        <WalletMultiButton
-                        style={{
-                            all: "unset",
-                            height: "100%",
-                            width: "100%",
-                            zIndex: "10",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontFamily: "Montserrat",
-                            fontSize: "0.8rem",
-                        }}
-                        />
-                    </div>
+                  <label
+                    className="mr-4"
+                    style={{ fontFamily: "Jangkuy", color: "#FFFFFF" }}
+                  >
+                    Pets left: {petsLeft.length}
+                  </label>
+                  <div
+                    className="btn btn-primary z-50"
+                    style={{ color: "#fff" }}
+                  >
+                    <WalletMultiButton
+                      style={{
+                        all: "unset",
+                        height: "100%",
+                        width: "100%",
+                        zIndex: "10",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        fontFamily: "Montserrat",
+                        fontSize: "0.8rem",
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <div className="border mockup-window border-base-200 mb-8">

@@ -502,6 +502,77 @@
       "args": []
     },
     {
+      "name": "initAtas",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "recieverNftAccount0",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount1",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount2",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount3",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft0",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft1",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft2",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft3",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "redeemNft",
       "accounts": [
         {

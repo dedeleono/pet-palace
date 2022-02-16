@@ -429,6 +429,9 @@ pub mod nft_staker {
         Ok(())
     }
 
+    pub fn init_atas(_ctx: Context<InitiAtas>) -> ProgramResult {
+        Ok(())
+    }
     pub fn redeem_nft(ctx: Context<RedeemNFT>) -> ProgramResult {
         let stake = &mut ctx.accounts.stake;
         stake.withdrawn = true;
@@ -690,19 +693,19 @@ pub struct RedeemNFT<'info> {
     // spl_token specific validations
     #[account(mut, seeds = [stake.key().as_ref(), nft_0.key().as_ref()], bump = stake.spl_bumps[0])]
     pub sender_nft_account_0: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, payer = authority, associated_token::mint = nft_0, associated_token::authority = authority)]
+    #[account(mut)]
     pub reciever_nft_account_0: Box<Account<'info, TokenAccount>>,
     #[account(mut, seeds = [stake.key().as_ref(), nft_1.key().as_ref()], bump = stake.spl_bumps[1])]
     pub sender_nft_account_1: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, payer = authority, associated_token::mint = nft_1, associated_token::authority = authority)]
+    #[account(mut)]
     pub reciever_nft_account_1: Box<Account<'info, TokenAccount>>,
     #[account(mut, seeds = [stake.key().as_ref(), nft_2.key().as_ref()], bump = stake.spl_bumps[2])]
     pub sender_nft_account_2: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, payer = authority, associated_token::mint = nft_2, associated_token::authority = authority)]
+    #[account(mut)]
     pub reciever_nft_account_2: Box<Account<'info, TokenAccount>>,
     #[account(mut, seeds = [stake.key().as_ref(), nft_3.key().as_ref()], bump = stake.spl_bumps[3])]
     pub sender_nft_account_3: Box<Account<'info, TokenAccount>>,
-    #[account(init_if_needed, payer = authority, associated_token::mint = nft_3, associated_token::authority = authority)]
+    #[account(mut)]
     pub reciever_nft_account_3: Box<Account<'info, TokenAccount>>,
     // extra accounts for leftover funds
     #[account(mut, seeds = [jollyranch.key().as_ref()], bump = jollyranch.spl_bump)]
@@ -710,6 +713,26 @@ pub struct RedeemNFT<'info> {
     #[account(init_if_needed, payer = authority, associated_token::mint = mint, associated_token::authority = authority)]
     pub reciever_triton_account: Box<Account<'info, TokenAccount>>,
     pub mint: Box<Account<'info, Mint>>,
+    pub nft_0: Box<Account<'info, Mint>>,
+    pub nft_1: Box<Account<'info, Mint>>,
+    pub nft_2: Box<Account<'info, Mint>>,
+    pub nft_3: Box<Account<'info, Mint>>,
+    pub token_program: Program<'info, Token>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
+    pub system_program: Program<'info, System>,
+    pub rent: Sysvar<'info, Rent>,
+}
+#[derive(Accounts)]
+pub struct InitiAtas<'info> {
+    pub authority: Signer<'info>,
+    #[account(init_if_needed, payer = authority, associated_token::mint = nft_0, associated_token::authority = authority)]
+    pub reciever_nft_account_0: Box<Account<'info, TokenAccount>>,
+    #[account(init_if_needed, payer = authority, associated_token::mint = nft_1, associated_token::authority = authority)]
+    pub reciever_nft_account_1: Box<Account<'info, TokenAccount>>,
+    #[account(init_if_needed, payer = authority, associated_token::mint = nft_2, associated_token::authority = authority)]
+    pub reciever_nft_account_2: Box<Account<'info, TokenAccount>>,
+    #[account(init_if_needed, payer = authority, associated_token::mint = nft_3, associated_token::authority = authority)]
+    pub reciever_nft_account_3: Box<Account<'info, TokenAccount>>,
     pub nft_0: Box<Account<'info, Mint>>,
     pub nft_1: Box<Account<'info, Mint>>,
     pub nft_2: Box<Account<'info, Mint>>,
