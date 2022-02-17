@@ -4,7 +4,15 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        yellow: "#FEFF05",
+      },
+      fontFamily: {
+        scratchy: ['Scratchy', 'serif'],
+        jangkuy: ['Jangkuy', 'serif'],
+      },
+    },
   },
   plugins: [require("daisyui")],
   daisyui: {
@@ -14,7 +22,7 @@ module.exports = {
           primary: "#541FF3",
           "primary-focus": "#541FF3",
           "primary-content": "#181830",
-          secondary: "##fd7cf6",
+          secondary: "#fd7cf6",
           "secondary-focus": "#fd7cf6",
           "secondary-content": "#ffffff",
           accent: "#541ff2",
