@@ -141,6 +141,22 @@
       "args": []
     },
     {
+      "name": "fixPetTwo",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "pet",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "redeemPet",
       "accounts": [
         {

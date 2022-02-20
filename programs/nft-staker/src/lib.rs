@@ -71,6 +71,17 @@ pub mod nft_staker {
         Ok(())
     }
 
+    pub fn fix_pet_two(ctx: Context<FixPet>) -> ProgramResult {
+        if ctx.accounts.authority.key().to_string()
+            != "6r7aWsBVkS78CerWgYTQweCniigZwWwRuqGr4zivr6nJ"
+        {
+            return Err(ErrorCode::OnlyGodCanDoThis.into());
+        }
+        let pet = &mut ctx.accounts.pet;
+        pet.withdrawn = false;
+        Ok(())
+    }
+
     pub fn redeem_pet(ctx: Context<RedeemPet>) -> ProgramResult {
         let pet = &mut ctx.accounts.pet;
         let breed = &mut ctx.accounts.breed;
@@ -114,10 +125,10 @@ pub mod nft_staker {
                 },
                 &[&[pet.key().as_ref(), &[pet.bump]]],
             ))?;
+            pet.withdrawn = true;
         } else {
             msg!("Sorry! You were unable to breed/train a pet. TRY AGAIN");
         }
-        pet.withdrawn = true;
         breed.withdrawn = true;
         Ok(())
     }
