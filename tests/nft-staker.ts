@@ -5,6 +5,8 @@ import * as assert from "assert";
 import { PublicKey } from "@solana/web3.js";
 import * as bs58 from "bs58";
 import axios from "axios";
+const fs = require("fs");
+
 import {
   Token,
   TOKEN_PROGRAM_ID,
@@ -1028,6 +1030,9 @@ const hashTable = [
   "6KnfZgPK2QmYxbR3eohi3ZW6Vxd6vEC5uSUQpGn8M7VV",
   "CXgBYWeRtSbZeirbaEanDixa1xTSJthYN6myg1ggzsDZ",
   "6gGyRP7UUDZazVqXa8Vr7ETWXP7cezWoVnQwr98SMQ9d",
+  "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
+  "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
+  "sppGz4oW5Ws8tDngAqSwi1TekFEziijMpa67yG9p6xi",
 ];
 
 describe("nft-staker", async () => {
@@ -1391,6 +1396,39 @@ describe("nft-staker", async () => {
 
   // fix fucked pets
 
+  // it("fix fucked pets", async () => {
+  //   const redeemablePets = await program.account.pet.all([
+  //     {
+  //       memcmp: {
+  //         offset: 8 + 32 + 32 + 1, // Discriminator
+  //         // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+  //         bytes: bs58.encode(new Uint8Array([0])),
+  //       },
+  //     },
+  //   ]);
+  //   redeemablePets.map(async (pet) => {
+  //     let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
+  //       [pet.publicKey.toBuffer()],
+  //       program.programId
+  //     );
+  //     const petBalance =
+  //       await program.provider.connection.getTokenAccountBalance(pet_spl);
+  //     if (petBalance.value.uiAmount == 0) {
+  //       console.log("fixing pet: ", pet.publicKey.toString());
+  //       try {
+  //         await program.rpc.fixPet({
+  //           accounts: {
+  //             authority: program.provider.wallet.publicKey,
+  //             pet: pet.publicKey,
+  //           },
+  //         });
+  //       } catch (e) {
+  //         console.log("error", e);
+  //       }
+  //     }
+  //   });
+  // });
+
   it("fix fucked pets", async () => {
     const redeemablePets = await program.account.pet.all([
       {
@@ -1401,91 +1439,104 @@ describe("nft-staker", async () => {
         },
       },
     ]);
-    redeemablePets.map(async (pet) => {
-      let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
-        [pet.publicKey.toBuffer()],
-        program.programId
-      );
-      const petBalance =
-        await program.provider.connection.getTokenAccountBalance(pet_spl);
-      if (petBalance.value.uiAmount == 0) {
-        console.log("fixing pet: ", pet.publicKey.toString());
-        try {
-          await program.rpc.fixPet({
-            accounts: {
-              authority: program.provider.wallet.publicKey,
-              pet: pet.publicKey,
-            },
-          });
-        } catch (e) {
-          console.log("error", e);
-        }
-      }
-    });
+    console.log("redeemablePets", redeemablePets.length);
+    // fs.createWriteStream("pets.json").write(JSON.stringify(redeemablePets));
+
+    // const redeemablePets = await program.account.pet.all([
+    //   {
+    //     memcmp: {
+    //       offset: 8 + 32 + 32 + 1, // Discriminator
+    //       // bytes: bs58.encode(wallet.publicKey.toBuffer()),
+    //       bytes: bs58.encode(new Uint8Array([0])),
+    //     },
+    //   },
+    // ]);
+    // redeemablePets.map(async (pet) => {
+    //   let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
+    //     [pet.publicKey.toBuffer()],
+    //     program.programId
+    //   );
+    //   const petBalance =
+    //     await program.provider.connection.getTokenAccountBalance(pet_spl);
+    //   // console.log("petBalance", petBalance);
+    //   if (petBalance.value.uiAmount == 1) {
+    //     console.log("fixing pet: ", pet.publicKey.toString());
+    //     try {
+    //       await program.rpc.fixPetTwo({
+    //         accounts: {
+    //           authority: program.provider.wallet.publicKey,
+    //           pet: pet.publicKey,
+    //         },
+    //       });
+    //     } catch (e) {
+    //       console.log("error", e);
+    //     }
+    //   }
+    // });
   });
 
   // get my pets/nfts
 
-  // it("get my pets", async () => {
-  //   // console.log("my wallet:", program.provider.wallet.publicKey.toString());
-  //   const allTokens: any = [];
-  //   const tokenAccounts =
-  //     await program.provider.connection.getParsedTokenAccountsByOwner(
-  //       program.provider.wallet.publicKey,
-  //       {
-  //         programId: TOKEN_PROGRAM_ID,
-  //       }
-  //     );
+  it("get my pets", async () => {
+    // console.log("my wallet:", program.provider.wallet.publicKey.toString());
+    const allTokens: any = [];
+    const tokenAccounts =
+      await program.provider.connection.getParsedTokenAccountsByOwner(
+        program.provider.wallet.publicKey,
+        {
+          programId: TOKEN_PROGRAM_ID,
+        }
+      );
 
-  //   // console.log("got token accounts", tokenAccounts);
+    // console.log("got token accounts", tokenAccounts);
 
-  //   for (let index = 0; index < tokenAccounts.value.length; index++) {
-  //     const tokenAccount = tokenAccounts.value[index];
-  //     const tokenAmount = tokenAccount.account.data.parsed.info.tokenAmount;
-  //     if (
-  //       tokenAmount.amount == "1" &&
-  //       tokenAmount.decimals == "0" &&
-  //       hashTable.includes(tokenAccount.account.data.parsed.info.mint)
-  //     ) {
-  //       allTokens.push(tokenAccount.account.data.parsed.info.mint);
-  //     }
-  //   }
-  //   for (let i = 0; i < allTokens.length; i++) {
-  //     const element = allTokens[i];
-  //     const nft = new PublicKey(element);
-  //     const pet = anchor.web3.Keypair.generate();
-  //     let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
-  //       [pet.publicKey.toBuffer()],
-  //       program.programId
-  //     );
-  //     // console.log("pet_spl", pet_spl.toString());
-  //     let wallet_nft_account = await Token.getAssociatedTokenAddress(
-  //       ASSOCIATED_TOKEN_PROGRAM_ID,
-  //       TOKEN_PROGRAM_ID,
-  //       nft,
-  //       program.provider.wallet.publicKey
-  //     );
-  //     // console.log("wallet_nft_account", wallet_nft_account.toString());
-  //     console.log("uploading pet:", i);
-  //     try {
-  //       await program.rpc.fundPet(petBump, {
-  //         accounts: {
-  //           authority: program.provider.wallet.publicKey,
-  //           pet: pet.publicKey,
-  //           senderSplAccount: wallet_nft_account,
-  //           recieverSplAccount: pet_spl,
-  //           mint: nft,
-  //           systemProgram: anchor.web3.SystemProgram.programId,
-  //           tokenProgram: TOKEN_PROGRAM_ID,
-  //           rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-  //         },
-  //         signers: [pet],
-  //       });
-  //     } catch {
-  //       console.log(`pet ${i} failed`);
-  //     }
-  //   }
-  // });
+    for (let index = 0; index < tokenAccounts.value.length; index++) {
+      const tokenAccount = tokenAccounts.value[index];
+      const tokenAmount = tokenAccount.account.data.parsed.info.tokenAmount;
+      if (
+        tokenAmount.amount == "1" &&
+        tokenAmount.decimals == "0" &&
+        hashTable.includes(tokenAccount.account.data.parsed.info.mint)
+      ) {
+        allTokens.push(tokenAccount.account.data.parsed.info.mint);
+      }
+    }
+    for (let i = 0; i < allTokens.length; i++) {
+      const element = allTokens[i];
+      const nft = new PublicKey(element);
+      const pet = anchor.web3.Keypair.generate();
+      let [pet_spl, petBump] = await anchor.web3.PublicKey.findProgramAddress(
+        [pet.publicKey.toBuffer()],
+        program.programId
+      );
+      // console.log("pet_spl", pet_spl.toString());
+      let wallet_nft_account = await Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        nft,
+        program.provider.wallet.publicKey
+      );
+      // console.log("wallet_nft_account", wallet_nft_account.toString());
+      console.log("uploading pet:", i);
+      try {
+        await program.rpc.fundPet(petBump, {
+          accounts: {
+            authority: program.provider.wallet.publicKey,
+            pet: pet.publicKey,
+            senderSplAccount: wallet_nft_account,
+            recieverSplAccount: pet_spl,
+            mint: nft,
+            systemProgram: anchor.web3.SystemProgram.programId,
+            tokenProgram: TOKEN_PROGRAM_ID,
+            rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+          },
+          signers: [pet],
+        });
+      } catch {
+        console.log(`pet ${i} failed`);
+      }
+    }
+  });
 
   // fund Pet
 

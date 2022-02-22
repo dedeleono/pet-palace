@@ -459,7 +459,7 @@ const Home: NextPage = () => {
         if (nft.nft_account.account.stakeAmount == 2) {
           redemption_rate = 4.0;
         } else if (nft.nft_account.account.stakeAmount == 3) {
-          redemption_rate = 18.0;
+          redemption_rate = 12.0;
         } else if (nft.nft_account.account.stakeAmount == 4) {
           redemption_rate = 32.0;
         }
@@ -470,8 +470,15 @@ const Home: NextPage = () => {
           mints.includes(nft.nft_account.account.mints[2].toString()) ||
           mints.includes(nft.nft_account.account.mints[3].toString())
         ) {
-          redemption_rate = redemption_rate =
-            20.0 * nft.nft_account.account.stakeAmount;
+          if (nft.nft_account.account.stakeAmount == 1) {
+            redemption_rate = 10.0;
+          } else if (nft.nft_account.account.stakeAmount == 2) {
+            redemption_rate = 22.0;
+          } else if (nft.nft_account.account.stakeAmount == 3) {
+            redemption_rate = 48.0;
+          } else if (nft.nft_account.account.stakeAmount == 4) {
+            redemption_rate = 104.0;
+          }
         }
         const currDate = new Date().getTime() / 1000;
         const daysElapsed =
@@ -577,6 +584,23 @@ const Home: NextPage = () => {
         rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
       },
     });
+    let initAtas_ix = await jollyState.program.instruction.initAtas({
+      accounts: {
+        authority: jollyState.program.provider.wallet.publicKey.toString(),
+        recieverNftAccount0: wallet_nft_accounts[0].toString(),
+        recieverNftAccount1: wallet_nft_accounts[1].toString(),
+        recieverNftAccount2: wallet_nft_accounts[2].toString(),
+        recieverNftAccount3: wallet_nft_accounts[3].toString(),
+        nft0: nftPubKeys[0].toString(),
+        nft1: nftPubKeys[1].toString(),
+        nft2: nftPubKeys[2].toString(),
+        nft3: nftPubKeys[3].toString(),
+        tokenProgram: TOKEN_PROGRAM_ID.toString(),
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+        systemProgram: anchor.web3.SystemProgram.programId.toString(),
+        rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
+      },
+    });
     let redeemNft_ix = await jollyState.program.instruction.redeemNft({
       accounts: {
         stake: stakePubKey.toString(),
@@ -605,6 +629,7 @@ const Home: NextPage = () => {
     });
 
     tx.add(redeemRewards_ix);
+    tx.add(initAtas_ix);
     tx.add(redeemNft_ix);
 
     try {
@@ -1348,7 +1373,7 @@ const Home: NextPage = () => {
                       </span>
                     </button>
                   )}
-                  {wallet.connected && (
+
                       <a
                           className="btn btn-outline btn-secondary font-jangkuy"
                           href="https://lp.shill-city.com/#" target="_blank"
@@ -1358,7 +1383,6 @@ const Home: NextPage = () => {
                         $TRTN
                       </span>
                       </a>
-                  )}
                 </div>
                 <div className="navbar-end">
                   {wallet.connected && (
