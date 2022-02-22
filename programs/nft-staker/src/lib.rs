@@ -373,7 +373,7 @@ pub mod nft_staker {
         if stake.stake_amount == 2 {
             redemption_rate = 4.0;
         } else if stake.stake_amount == 3 {
-            redemption_rate = 18.0;
+            redemption_rate = 12.0;
         } else if stake.stake_amount == 4 {
             redemption_rate = 32.0;
         }
@@ -387,36 +387,61 @@ pub mod nft_staker {
             "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
             "54KFLjw4ywGWzNeh6o8LrHEP8mTjiBRX4DrNjWGiMUhT",
             "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
+            "57LZHdfcb4G5unkLaJKWqSUy4mpWAoCtCXj4hB6cZHgF",
+            "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
+            "sppGz4oW5Ws8tDngAqSwi1TekFEziijMpa67yG9p6xi",
         ]
         .into_iter()
         .map(String::from)
         .collect();
-        if mint_list.contains(&mint_0) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
-        }
-        if mint_list.contains(&mint_1) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
-        }
-        if mint_list.contains(&mint_2) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
-        }
-        if mint_list.contains(&mint_3) {
-            redemption_rate = 20.0 * (stake.stake_amount as f64);
+
+        // let mint_list_dragon: Vec<_> = vec!["sppGz4oW5Ws8tDngAqSwi1TekFEziijMpa67yG9p6xi"]
+        //     .into_iter()
+        //     .map(String::from)
+        //     .collect();
+
+        // if mint_list_dragon.contains(&mint_0) {
+        //     redemption_rate = 12.5 * (stake.stake_amount as f64);
+        // }
+        // if mint_list_dragon.contains(&mint_1) {
+        //     redemption_rate = 12.5 * (stake.stake_amount as f64);
+        // }
+        // if mint_list_dragon.contains(&mint_2) {
+        //     redemption_rate = 12.5 * (stake.stake_amount as f64);
+        // }
+        // if mint_list_dragon.contains(&mint_3) {
+        //     redemption_rate = 12.5 * (stake.stake_amount as f64);
+        // }
+
+        if mint_list.contains(&mint_0)
+            || mint_list.contains(&mint_1)
+            || mint_list.contains(&mint_2)
+            || mint_list.contains(&mint_3)
+        {
+            if stake.stake_amount == 1 {
+                redemption_rate = 10.0;
+            } else if stake.stake_amount == 2 {
+                redemption_rate = 22.0;
+            } else if stake.stake_amount == 3 {
+                redemption_rate = 48.0;
+            } else if stake.stake_amount == 4 {
+                redemption_rate = 104.0;
+            }
         }
 
-        // msg!("redemption_rate {}", redemption_rate);
-        // msg!("clock_unix {}", clock_unix);
-        // msg!("stake.start_date {}", stake.start_date);
+        msg!("redemption_rate {}", redemption_rate);
+        msg!("clock_unix {}", clock_unix);
+        msg!("stake.start_date {}", stake.start_date);
         let day_dif = (clock_unix - stake.start_date).abs() as f64;
-        // msg!("day_dif {}", day_dif);
+        msg!("day_dif {}", day_dif);
         let to_days = 60.0 * 60.0 * 24.0;
-        // msg!("to_days {}", to_days);
+        msg!("to_days {}", to_days);
         let days_elapsed: f64 = day_dif / to_days;
-        // msg!("days elapsed {}", days_elapsed);
+        msg!("days elapsed {}", days_elapsed);
         let amount_to_redeem = redemption_rate * days_elapsed;
-        // msg!("Amount in token to redeem {}", amount_to_redeem);
+        msg!("Amount in token to redeem {}", amount_to_redeem);
         let typed_amount = ((amount_to_redeem * 1e6) as u64) - stake.amount_redeemed;
-        // msg!("typed_amount {}", typed_amount);
+        msg!("typed_amount {}", typed_amount);
         stake.amount_redeemed += typed_amount;
         jollyranch.amount_redeemed += typed_amount;
         // new hotness is borken

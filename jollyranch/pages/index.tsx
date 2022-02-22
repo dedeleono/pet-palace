@@ -457,7 +457,7 @@ const Home: NextPage = () => {
         if (nft.nft_account.account.stakeAmount == 2) {
           redemption_rate = 4.0;
         } else if (nft.nft_account.account.stakeAmount == 3) {
-          redemption_rate = 18.0;
+          redemption_rate = 12.0;
         } else if (nft.nft_account.account.stakeAmount == 4) {
           redemption_rate = 32.0;
         }
@@ -468,8 +468,15 @@ const Home: NextPage = () => {
           mints.includes(nft.nft_account.account.mints[2].toString()) ||
           mints.includes(nft.nft_account.account.mints[3].toString())
         ) {
-          redemption_rate = redemption_rate =
-            20.0 * nft.nft_account.account.stakeAmount;
+          if (nft.nft_account.account.stakeAmount == 1) {
+            redemption_rate = 10.0;
+          } else if (nft.nft_account.account.stakeAmount == 2) {
+            redemption_rate = 22.0;
+          } else if (nft.nft_account.account.stakeAmount == 3) {
+            redemption_rate = 48.0;
+          } else if (nft.nft_account.account.stakeAmount == 4) {
+            redemption_rate = 104.0;
+          }
         }
         const currDate = new Date().getTime() / 1000;
         const daysElapsed =
