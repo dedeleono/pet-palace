@@ -912,7 +912,7 @@ const Home: NextPage = () => {
         className="w-screen"
       >
         <Navigation activeId="pet-palace" />
-        <div className="p-4 md:p-8 container mx-auto max-w-screen-xl text-neutral-content bg-center pt-16 md:pt-20">
+        <div className="p-4 md:p-8 container mx-auto max-w-screen-xl min-h-screen text-neutral-content bg-center pt-16 md:pt-20">
           {/* Breeding Modal */}
           <a
             href="#breeder"
