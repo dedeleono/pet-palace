@@ -1,4 +1,5 @@
 import {FC} from "react";
+import WalletMultiButtonStyled from "./shared/WalletMultiButtonStyled";
 
 const navigationItems = [
     {
@@ -27,45 +28,36 @@ const Navigation: FC<NavigationProps>  = ({activeId}) => {
 
     return (
         <div
-            className="bg-neutral/60 block lg:fixed z-200 inset-0 lg:top lg:left lg:right-auto lg:w-[17.5rem] lg:overflow-y-auto">
-            <div className="flex items-center">
-                <div className="p-2 lg:p-4">
-                    <img alt="Sea Shanties" src="/logo.png" className="w-8 lg:w-16 " />
+            className="bg-neutral/80 pl-4 block fixed flex z-100 inset-0 bottom-auto md:h-20 backdrop-blur-sm"
+            style={{zIndex:998}}
+        >
+            <div className="flex lg:basis-1/4 items-center">
+                <div className="py-2 md:py-0 pr-4">
+                    <img alt="Sea Shanties" src="/logo.png" className="w-8 md:w-12 lg:w-10 xl:w-14 " />
                 </div>
-                <div className="font-jangkuy text-xs lg:text-xl flex-auto text-secondary-content">
+                <div className="font-jangkuy text-xs lg:text-sm xl:text-xl flex-auto text-secondary-content pr-4 leading-none hidden lg:flex" style={{lineHeight:'initial'}}>
                     Sea<br/>
                     Shanties
                 </div>
-                <div className="grow lg:hidden text-right p-2 pt-1 pb-1">
-                    <div className="dropdown dropdown-sm dropdown-end">
-                        <label tabIndex={0} className="btn btn-circle btn-ghost text-secondary-content">
-                            <svg className="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="25" height="25"
-                                 viewBox="0 0 512 512">
-                                <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/>
-                            </svg>
-                        </label>
-                        <ul tabIndex={0} className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52">
-                            {navigationItems.map((item) => (
-                                <a
-                                    key={item.id}
-                                    href={item.href}
-                                    className={`text-secondary-content ${activeId === item.id ? 'text-yellow' : ''}`}>
-                                    {item.title}
-                                </a>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
             </div>
-            <div className="hidden lg:block ">
+            <div className="flex sm:flex-grow md:basis-1/2 gap-3 md:gap-6 xl:gap-12 items-center md:flex-grow lg:place-content-center">
                 {navigationItems.map((item) => (
                     <a
                         key={item.id}
                         href={item.href}
-                        className={`relative font-scratchy text-5xl p-4 block ${activeId === item.id ? 'text-yellow border-l-4 border-yellow' : 'border-l-4 border-transparent text-secondary-content  hover:text-yellow'}`}>
+                        className={`relative flex items-center h-full font-scratchy text-2xl md:text-4xl ${activeId === item.id ? 'text-yellow border-b-4 border-yellow' : 'text-secondary-content  hover:text-yellow'}`}>
                         {item.title}
                     </a>
                 ))}
+            </div>
+            <div className="lg:basis-1/4  items-center place-content-end pr-4 hidden sm:flex">
+                <a href="https://discord.com/invite/AA66Ayk5Dz" target="_blank" rel="noopener noreferrer">
+                    <img src="/images/discord.svg" className="w-4 md:w-6 m-1 md:m-2" />
+                </a>
+                <a href="https://twitter.com/SeaShantiesSol" target="_blank" rel="noopener noreferrer">
+                    <img src="/images/twitter.svg" className="w-4 md:w-6 m-1 md:m-2" />
+                </a>
+                <WalletMultiButtonStyled className="!btn-xs !w-[130px] ml-2 md:!btn-md md:!w-[170px]" />
             </div>
         </div>
     );

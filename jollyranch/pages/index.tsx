@@ -22,7 +22,6 @@ import NFTLoader from "../components/NFTLoader";
 import Navigation from "../components/Navigation";
 import Bg from "../public/images/out.jpeg";
 import { sortBy } from "lodash";
-import Header from "../components/Header";
 
 const {
   metadata: { Metadata },
@@ -683,6 +682,7 @@ const Home: NextPage = () => {
           jollyranch: jollyState.jollyranch.toString(),
           trtnAccount: jollyState.recieverSplAccount.toString(),
           authTrtnAccount: jollyState.wallet_token_account.toString(),
+          /* @ts-ignore */
           slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY.toString(),
           tokenProgram: TOKEN_PROGRAM_ID.toString(),
           systemProgram: anchor.web3.SystemProgram.programId.toString(),
@@ -709,6 +709,7 @@ const Home: NextPage = () => {
           jollyranch: jollyState.jollyranch.toString(),
           trtnAccount: jollyState.recieverSplAccount.toString(),
           authTrtnAccount: jollyState.wallet_token_account.toString(),
+          /* @ts-ignore */
           slotHashes: anchor.web3.SYSVAR_SLOT_HASHES_PUBKEY.toString(),
           tokenProgram: TOKEN_PROGRAM_ID.toString(),
           systemProgram: anchor.web3.SystemProgram.programId.toString(),
@@ -911,7 +912,7 @@ const Home: NextPage = () => {
         className="w-screen"
       >
         <Navigation activeId="pet-palace" />
-        <div className="p-2 pt-4 md:p-8 lg:pl-[19.5rem] min-h-screen text-neutral-content bg-center">
+        <div className="p-4 md:p-8 container mx-auto max-w-screen-xl text-neutral-content bg-center pt-16 md:pt-20">
           {/* Breeding Modal */}
           <a
             href="#breeder"
@@ -1328,7 +1329,17 @@ const Home: NextPage = () => {
               </a>
             </div>
           </div>
-          <Header activeId="pet-palace" />
+          <div className="md:flex items-center pt-8 pb-6">
+            <img src="/logo-pet-palace.png" className="w-32 lg:w-48 pr-6" />
+            <div className="flex-grow pt-4 md:pt-0">
+              <div className="font-jangkuy text-xs lg:text-2xl flex-auto text-secondary-content">
+                Catch, breed and stake your pets
+              </div>
+              <p className="max-w-4xl text-sm md:text-base">
+                The pet palace is a popular place for the citizens of Shill City to take their pets for some R&R. It's a place full of beauty and wonderful sights. The area is overpopulated with strange creatures looking to breed with the pets. We need your help to capture them all before they start causing trouble.
+              </p>
+            </div>
+          </div>
           <div className="text-center col-span-1">
             <div className="grid-cols-3">
               {/* Navbar Section */}

@@ -67,3 +67,10 @@ a {
   max-height: calc(100vh - 3em);
   max-width: 540px;
 }
+.wallet-adapter-button{
+  justify-content: center !important;
+}
+
+.wallet-adapter-button .wallet-adapter-button-start-icon {
+  margin-right: 5px;
+}
