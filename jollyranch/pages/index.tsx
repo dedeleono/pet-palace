@@ -19,8 +19,10 @@ import idl_type from "../../target/idl/nft_staker.json";
 import { getNftsForOwner } from "../lib/mint-one-token";
 import { programs } from "@metaplex/js";
 import NFTLoader from "../components/NFTLoader";
+import Navigation from "../components/Navigation";
 import Bg from "../public/images/out.jpeg";
 import { sortBy } from "lodash";
+import Header from "../components/Header";
 
 const {
   metadata: { Metadata },
@@ -896,7 +898,6 @@ const Home: NextPage = () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main
         style={{
           backgroundImage: `url(${Bg.src})`,
@@ -907,8 +908,10 @@ const Home: NextPage = () => {
           display: "absolute",
           backgroundSize: "cover",
         }}
+        className="w-screen"
       >
-        <div className="grid grid-cols-1 min-h-screen text-neutral-content p-16 bg-center">
+        <Navigation activeId="pet-palace" />
+        <div className="p-2 pt-4 md:p-8 lg:pl-[19.5rem] min-h-screen text-neutral-content bg-center">
           {/* Breeding Modal */}
           <a
             href="#breeder"
@@ -1325,11 +1328,12 @@ const Home: NextPage = () => {
               </a>
             </div>
           </div>
+          <Header activeId="pet-palace" />
           <div className="text-center col-span-1">
             <div className="grid-cols-3">
               {/* Navbar Section */}
               <div className="navbar mb-8 shadow-[10px_1px_15px_0px_#000000] text-neutral-content rounded-box bg-[#264880]">
-                <div className="hidden px-2 mx-2 navbar-start sm:flex">
+                <div className=" px-2 mx-2 navbar-start sm:flex btn-group">
                   {/* <div className="flex items-stretch">
                     {wallet.publicKey && (
                       <div className="w-full mt-2 border stats border-base-100 m-2.5">
@@ -1349,13 +1353,7 @@ const Home: NextPage = () => {
                   </div> */}
                   {petsLeft.length > 0 && (
                     <button
-                      className="btn btn-secondary badge-outline w-32 h-20"
-                      style={{
-                        fontFamily: "Jangkuy",
-                        fontSize: "1rem",
-                        color: "#ffffff",
-                        borderColor: "#fd7cf6",
-                      }}
+                      className="btn btn-outline btn-secondary font-jangkuy"
                       onClick={() => {
                         setTritonAmount((tritonAmount) => ({
                           ...tritonAmount,
@@ -1369,57 +1367,48 @@ const Home: NextPage = () => {
                         breederRef.current.click();
                       }}
                     >
-                      <p>CATCH A PET</p>
+                      <span className="text-accent-content">
+                        CATCH<br />
+                        A PET
+                      </span>
                     </button>
                   )}
 
-                  <a
-                    className="btn btn-secondary badge-outline w-32 h-20 ml-4"
-                    href="https://lp.shill-city.com/#"
-                    target="_blank"
-                    style={{
-                      fontFamily: "Jangkuy",
-                      fontSize: "1rem",
-                      color: "#ffffff",
-                      borderColor: "#fd7cf6",
-                    }}
-                  >
-                    <p>Buy $TRTN</p>
-                  </a>
-                </div>
-                <div className="px-2 mx-2 navbar-center">
-                  <span
-                    className="text-5xl font-bold"
-                    style={{ fontFamily: "Jangkuy", color: "#52dbf7" }}
-                  >
-                    Pet Palace
-                  </span>
+                      <a
+                          className="btn btn-outline btn-secondary font-jangkuy"
+                          href="https://lp.shill-city.com/#" target="_blank"
+                      >
+                      <span className="text-accent-content">
+                        Buy<br />
+                        $TRTN
+                      </span>
+                      </a>
                 </div>
                 <div className="navbar-end">
-                  <label
-                    className="mr-4"
-                    style={{ fontFamily: "Jangkuy", color: "#FFFFFF" }}
-                  >
-                    Pets left: {petsLeft.length}
-                  </label>
-                  <div
-                    className="btn btn-primary z-50"
-                    style={{ color: "#fff" }}
-                  >
-                    <WalletMultiButton
-                      style={{
-                        all: "unset",
-                        height: "100%",
-                        width: "100%",
-                        zIndex: "10",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontFamily: "Montserrat",
-                        fontSize: "0.8rem",
-                      }}
-                    />
-                  </div>
+                  {wallet.connected && (
+                      <label
+                          className="mr-4"
+                          style={{ fontFamily: "Jangkuy", color: "#FFFFFF" }}
+                      >Pets left: {petsLeft.length}</label>
+                  )}
+                    <div
+                        className="btn btn-primary z-50"
+                        style={{ color: "#fff" }}
+                    >
+                        <WalletMultiButton
+                        style={{
+                            all: "unset",
+                            height: "100%",
+                            width: "100%",
+                            zIndex: "10",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            fontFamily: "Montserrat",
+                            fontSize: "0.8rem",
+                        }}
+                        />
+                    </div>
                 </div>
               </div>
               <div className="border mockup-window border-base-200 mb-8">
