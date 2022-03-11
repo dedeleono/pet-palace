@@ -107,7 +107,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                   fontFamily: "Scratchy",
                   fontSize: "1.3rem",
                   color: "#ffffff",
-                  borderColor: "#fd7cf6",
+                  borderColor: "#3DB489",
                 }}
               >
                 Breed
@@ -120,7 +120,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                 fontFamily: "Scratchy",
                 fontSize: "1.3rem",
                 color: "#ffffff",
-                borderColor: "#fd7cf6",
+                borderColor: "#3DB489",
               }}
               className="btn btn-secondary badge-outline"
               onClick={onRedeem}
@@ -167,7 +167,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                   fontFamily: "Scratchy",
                   fontSize: "1.3rem",
                   color: "#ffffff",
-                  borderColor: "#fd7cf6",
+                  borderColor: "#3DB489",
                 }}
               >
                 Stake

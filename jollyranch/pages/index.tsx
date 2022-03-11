@@ -538,6 +538,32 @@ const Home: NextPage = () => {
     // );
   };
 
+  const redeemAllRewards = async () => {
+    const tx = new anchor.web3.Transaction();
+    for (let i = 0; i < stakedMints.length; i++) {
+      const tests = await jollyState.program.instruction.redeemRewards({
+        accounts: {
+          stake: stakedMints[i].nft_account.publicKey.toString(),
+          jollyranch: jollyState.jollyranch.toString(),
+          authority: jollyState.program.provider.wallet.publicKey.toString(),
+          senderSplAccount: jollyState.recieverSplAccount.toString(),
+          recieverSplAccount: jollyState.wallet_token_account.toString(),
+          mint: jollyState.spl_token.toString(),
+          systemProgram: anchor.web3.SystemProgram.programId.toString(),
+          tokenProgram: TOKEN_PROGRAM_ID.toString(),
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+          rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
+        },
+      });
+      tx.add(tests);
+    }
+    try {
+      await jollyState.program.provider.send(tx);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   const redeemNFT = async (stakePubKey, nftPubKeys) => {
     console.log("stakesPubKey", stakePubKey.toString());
     console.log("nftPubKeys", nftPubKeys[0].toString());
@@ -1450,6 +1476,26 @@ const Home: NextPage = () => {
                   )}
                   {stakedMints.length > 0 && !loadingStakes && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      {stakedMints.length > 1 && (
+                          <div
+                              className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
+                          >
+                            <button
+                                className="btn h-full btn-secondary font-jangkuy"
+                                onClick={async () => {
+                                  await redeemAllRewards();
+                                  await refresh();
+                                }}
+                            >
+                          <span className="flex p-4 flex-col items-center">
+                            <span className="block text-lg pb-2">Redeem all</span>
+                            <span className="block w-1/2">
+                              <img src="/images/trtn.png"/>
+                            </span>
+                          </span>
+                            </button>
+                          </div>
+                      )}
                       {stakedMints.map((nft, i) => {
                         // console.log("mint nft", nft);
                         return (
