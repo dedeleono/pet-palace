@@ -1448,6 +1448,50 @@ const Home: NextPage = () => {
                     </div>
                 </div>
               </div>
+
+              <div>
+                {(jollyState["program"] && wallet.connected && wallet.publicKey && !loadingStakes && !loadingNfts && nfts.length === 0 && stakedMints.length === 0) && (
+                    <div>
+                      <div className="w-full flex justify-center justify-items-center text-center">
+                        <div className="max-w-md">
+                          <h1 className="text-4xl font-bold" style={{ fontFamily: "Jangkuy" }}>You don&apos;t have any pets 😥</h1>
+                          <div className="mt-5 mb-8">
+                            {petsLeft.length > 0 && (
+                                <button
+                                    className="btn btn-lg btn-secondary mr-2"
+                                    onClick={() => {
+                                      setTritonAmount((tritonAmount) => ({
+                                        ...tritonAmount,
+                                        breed: false,
+                                      }));
+                                      setTritonAmount((tritonAmount) => ({
+                                        ...tritonAmount,
+                                        tame: true,
+                                      }));
+                                      setIsBreed(false);
+                                      breederRef.current.click();
+                                    }}
+                                >
+                                  <span className="text-accent-content">
+                                    Catch a pet
+                                  </span>
+                                </button>
+                            )}
+                            <a
+                                href="https://magiceden.io/marketplace/sea_shanties_pets_genesis"
+                                rel="noreferrer noopener"
+                                target="_blank"
+                                className="btn btn-lg btn-secondary">
+                              Buy on Magic Eden
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                )}
+              </div>
+
+
               <div className="border mockup-window border-base-200 mb-8">
                 {/* begin app windows */}
                 <div className="flex justify-center px-2 py-4 border-t border-base-200">
