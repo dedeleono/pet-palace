@@ -50,7 +50,7 @@ const Navigation: FC<NavigationProps>  = ({activeId}) => {
                 {navigationItems.map((item) => {
                     if(item.tbr) {
                         return (
-                            <div className="tooltip cursor-default z-50 tooltip-bottom" data-tip={item.tbrMessage}>
+                            <div className="tooltip cursor-default z-50 tooltip-bottom" >
                                 <div className="relative flex text-secondary-content/50 items-center h-full font-scratchy text-2xl md:text-4xl">
                                     {item.title}
                                 </div>
