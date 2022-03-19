@@ -15,9 +15,7 @@ const navigationItems = [
     {
         id: "shill-city-citizen",
         title: "Citizens",
-        href: "",
-        tbr: true,
-        tbrMessage: "Citizen staking launching soon 🔱"
+        href: "https://citizens.shill-city.com/",
     },
     {
         id: "poseidon-lp",
