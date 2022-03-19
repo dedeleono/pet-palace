@@ -14,6 +14,7 @@ const navigationItems = [
     },
     {
         id: "shill-city-citizen",
+        tbr: false,
         title: "Citizens",
         href: "https://citizens.shill-city.com/",
     },
