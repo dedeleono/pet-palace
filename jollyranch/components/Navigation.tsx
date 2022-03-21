@@ -14,7 +14,6 @@ const navigationItems = [
     },
     {
         id: "shill-city-citizen",
-        tbr: false,
         title: "Citizens",
         href: "https://citizens.shill-city.com/",
     },
@@ -48,15 +47,6 @@ const Navigation: FC<NavigationProps>  = ({activeId}) => {
             </div>
             <div className="flex sm:flex-grow md:basis-1/2 gap-3 md:gap-6 xl:gap-12 items-center md:flex-grow lg:place-content-center">
                 {navigationItems.map((item) => {
-                    if(item.tbr) {
-                        return (
-                            <div className="tooltip cursor-default z-50 tooltip-bottom" >
-                                <div className="relative flex text-secondary-content/50 items-center h-full font-scratchy text-2xl md:text-4xl">
-                                    {item.title}
-                                </div>
-                            </div>
-                        )
-                    }
                     return (
                         <a
                             key={item.id}
