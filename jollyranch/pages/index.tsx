@@ -1431,13 +1431,26 @@ const Home: NextPage = () => {
                       </span>
                       </a>
                 </div>
+                <div className="hidden px-2 mx-2 navbar-center sm:flex">
+                  <div className="flex items-stretch">
+                    {wallet.publicKey && (
+                      <div className="w-full">
+                        <div className="stat bg-transparent">
+                          <div className="stat-value text-white py-2">
+                            {totalRatsStaked.toLocaleString("en-US")}/1,000
+                          </div>
+                          <div
+                            className="stat-title text-white"
+                            style={{ fontFamily: "Montserrat" }}
+                          >
+                            {((totalRatsStaked/1000)*100).toFixed(2)}% Pets Staked
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
                 <div className="navbar-end">
-                  {wallet.connected && (
-                      <label
-                          className="mr-4"
-                          style={{ fontFamily: "Jangkuy", color: "#FFFFFF" }}
-                      >Pets left: {petsLeft.length}</label>
-                  )}
                     <div
                         className="btn btn-primary z-50"
                         style={{ color: "#fff" }}
