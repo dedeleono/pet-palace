@@ -1492,9 +1492,9 @@ const Home: NextPage = () => {
               </div>
 
 
-              <div className="border mockup-window border-base-200 mb-8">
+              <div className="card bg-info bg-opacity-10 mb-8 md:backdrop-blur-sm">
                 {/* begin app windows */}
-                <div className="flex justify-center px-2 py-4 border-t border-base-200">
+                <div className="flex justify-center px-2 py-4 border-base-200">
                   {loadingStakes && wallet.connected && (
                     <h1
                       className="text-lg font-400 animate-pulse"
