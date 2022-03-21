@@ -685,7 +685,9 @@ const Home: NextPage = () => {
     // }
     await totalStaked.map((stake) => {
       if (stake.account.withdrawn === false) {
-        totalStillStaked++;
+        for (let index = 0; index < stake.account.stakeAmount ; index++) {
+          totalStillStaked++;
+        }
       }
     });
     setTotaRatsStaked(totalStillStaked);
