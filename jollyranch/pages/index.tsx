@@ -1538,7 +1538,7 @@ const Home: NextPage = () => {
               </div>
 
               <div className="card rounded-md w-[75%] mx-auto bg-neutral bg-opacity-60 mb-8 md:backdrop-blur-sm">
-                <h4 className="font-bold py-2 font-[Scratchy] text-[2rem] text-[#feff04] tracking-widest">Staking Rewards</h4>
+                <h4 className="font-bold py-2 font-[Scratchy] text-[2rem] text-[#feff04] tracking-widest">Daily Staking Rewards</h4>
                 <div className="py-2 md:flex md:flex-row block items-center justify-center"><span className='font-[Jangkuy] text-[0.9rem] md:flex block items-center md:py-0 py-1'>1 Pet = 1 $TRTN<span className="mx-4 text-[#feff04] text-[1.5rem] md:flex hidden">|</span></span><span className='font-[Jangkuy] text-[0.9rem] md:flex items-center block md:py-0 py-1'>2 Pet(s) = 4 $TRTN<span className="mx-4 text-[1.5rem] text-[#feff04] md:flex hidden">|</span></span><span className='font-[Jangkuy] text-[0.9rem] md:flex items-center block md:py-0 py-1'>3 Pet(s) = 12 $TRTN<span className="mx-4 text-[1.5rem] text-[#feff04] md:flex hidden">|</span></span><span className='font-[Jangkuy] text-[0.9rem] md:flex items-center block md:py-0 py-1'>4 Pet(s) = 32 $TRTN</span></div>
               </div>
               <div className="card bg-info bg-opacity-10 mb-8 md:backdrop-blur-sm">
