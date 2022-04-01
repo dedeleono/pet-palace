@@ -1367,8 +1367,7 @@ const Home: NextPage = () => {
               </a>
             </div>
           </div>
-          <div className="md:flex items-center pt-8 pb-6">
-            <img src="/logo-pet-palace.png" className="w-32 lg:w-48 pr-6" />
+{/*          <div className="md:flex items-center pt-8 pb-6">
             <div className="flex-grow pt-4 md:pt-0">
               <div className="font-jangkuy text-xs lg:text-2xl flex-auto text-secondary-content">
                 Catch, breed and stake your pets
@@ -1377,12 +1376,13 @@ const Home: NextPage = () => {
                 The pet palace is a popular place for the citizens of Shill City to take their pets for some R&R. It's a place full of beauty and wonderful sights. The area is overpopulated with strange creatures looking to breed with the pets. We need your help to capture them all before they start causing trouble.
               </p>
             </div>
-          </div>
-          <div className="text-center col-span-1">
+                  </div>*/}
+          <div className="text-center col-span-1 md:mt-[5rem] mt-[3rem]">
             <div className="grid-cols-3">
               {/* Navbar Section */}
-              <div className="navbar mb-8 shadow-[10px_1px_15px_0px_#000000] text-neutral-content rounded-box bg-[#264880]">
-                <div className=" px-2 mx-2 navbar-start sm:flex btn-group">
+              <div className="navbar mb-8 shadow-[10px_1px_15px_0px_#000000] text-neutral-content rounded-box bg-[#1e314d]">
+                <div className="px-1 mx-2 navbar-start sm:flex btn-group">
+                <img src="/logo-pet-palace.png" className="w-32 h-auto object-fill scale-125 md:ml-[3rem] ml-[2rem] lg:w-48 pr-6 absolute" />
                   {/* <div className="flex items-stretch">
                     {wallet.publicKey && (
                       <div className="w-full mt-2 border stats border-base-100 m-2.5">
@@ -1423,7 +1423,7 @@ const Home: NextPage = () => {
                     </button>
                   )}
 
-                      <a
+{/*                      <a
                           className="btn btn-outline btn-secondary font-jangkuy"
                           href="https://lp.shill-city.com/#" target="_blank"
                       >
@@ -1431,7 +1431,7 @@ const Home: NextPage = () => {
                         Buy<br />
                         $TRTN
                       </span>
-                      </a>
+                    </a>*/}
                 </div>
                 <div className="hidden px-2 mx-2 navbar-center sm:flex">
                   <div className="flex items-stretch">
@@ -1453,24 +1453,45 @@ const Home: NextPage = () => {
                   </div>
                 </div>
                 <div className="navbar-end">
-                    <div
-                        className="btn btn-primary z-50"
-                        style={{ color: "#fff" }}
-                    >
-                        <WalletMultiButton
-                        style={{
-                            all: "unset",
-                            height: "100%",
-                            width: "100%",
-                            zIndex: "10",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            fontFamily: "Montserrat",
-                            fontSize: "0.8rem",
+                <div className="mr-4 justify-center align-center">
+                    {totalRatsStaked > 1 && (
+                      <button
+                        className="btn h-full btn-secondary mt-4 font-jangkuy"
+                        onClick={async () => {
+                          await redeemAllRewards();
+                          await refresh();
                         }}
+                      >
+                        Redeem All
+                      </button>
+                    )}
+                    {stakedMints.length > redeemAllChunk && (
+                      <span className="text-[0.8rem] font-[Montserrat] leading-normal mt-2 block opacity-50">
+                        {Math.ceil(stakedMints.length / redeemAllChunk)}{" "}
+                        transactions will be prompted
+                      </span>
+                    )}
+                    {!wallet.publicKey && (
+                        <div
+                            className="btn btn-primary z-50"
+                            style={{ color: "#fff" }}
+                        >
+                        <WalletMultiButton
+                            style={{
+                              all: "unset",
+                              height: "100%",
+                              width: "100%",
+                              zIndex: "10",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontFamily: "Montserrat",
+                              fontSize: "0.8rem",
+                            }}
                         />
-                    </div>
+                        </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -1516,7 +1537,10 @@ const Home: NextPage = () => {
                 )}
               </div>
 
-
+              <div className="card rounded-md w-[75%] mx-auto bg-neutral bg-opacity-60 mb-8 md:backdrop-blur-sm">
+                <h4 className="font-bold py-2 font-[Scratchy] text-[2rem] text-[#feff04] tracking-widest">Staking Rewards</h4>
+                <div className="py-2 md:flex md:flex-row block items-center justify-center"><span className='font-[Jangkuy] text-[0.9rem] md:flex block items-center md:py-0 py-1'>1 Pet = 1 $TRTN<span className="mx-4 text-[#feff04] text-[1.5rem] md:flex hidden">|</span></span><span className='font-[Jangkuy] text-[0.9rem] md:flex items-center block md:py-0 py-1'>2 Pet(s) = 4 $TRTN<span className="mx-4 text-[1.5rem] text-[#feff04] md:flex hidden">|</span></span><span className='font-[Jangkuy] text-[0.9rem] md:flex items-center block md:py-0 py-1'>3 Pet(s) = 12 $TRTN<span className="mx-4 text-[1.5rem] text-[#feff04] md:flex hidden">|</span></span><span className='font-[Jangkuy] text-[0.9rem] md:flex items-center block md:py-0 py-1'>4 Pet(s) = 32 $TRTN</span></div>
+              </div>
               <div className="card bg-info bg-opacity-10 mb-8 md:backdrop-blur-sm">
                 {/* begin app windows */}
                 <div className="flex justify-center px-2 py-4 border-base-200">

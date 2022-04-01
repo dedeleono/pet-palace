@@ -115,25 +115,18 @@ const NFTLoader: FC<NFTLoaderProps> = ({
             </div>
           )}
           <div className="justify-center card-actions">
-            <button
-              style={{
-                fontFamily: "Scratchy",
-                fontSize: "1.3rem",
-                color: "#ffffff",
-                borderColor: "#3DB489",
-              }}
-              className="btn btn-secondary badge-outline"
-              onClick={onRedeem}
-            >
-              redeem
-            </button>
-            <button
-              className="btn btn-ghost"
-              onClick={unStake}
-              style={{ fontFamily: "Scratchy", fontSize: "1.3rem" }}
-            >
-              unstake
-            </button>
+          <button
+                    className="btn rounded-md btn-sm btn-secondary font-[Jangkuy] text-[0.8rem]"
+                    onClick={onRedeem}
+                >
+                  redeem
+                </button>
+                <button
+                    className="btn rounded-md btn-sm font-[Jangkuy] text-[0.8rem]"
+                    onClick={unStake}
+                >
+                  unstake
+                </button>
           </div>
         </div>
       </div>
