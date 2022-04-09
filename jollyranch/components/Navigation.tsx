@@ -9,13 +9,18 @@ const navigationItems = [
     },
     {
         id: "pet-palace",
-        title: "Pet Palace",
+        title: "Pets",
         href: "https://pets.shill-city.com/"
     },
     {
         id: "shill-city-citizen",
         title: "Citizens",
         href: "https://citizens.shill-city.com/",
+    },
+    {
+        id: "old-atlantis",
+        title: "Old Atlantis",
+        href: "https://game.shill-city.com/",
     },
     {
         id: "poseidon-lp",
