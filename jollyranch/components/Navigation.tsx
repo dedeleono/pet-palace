@@ -1,5 +1,6 @@
 import React, {FC} from "react";
 import WalletMultiButtonStyled from "./shared/WalletMultiButtonStyled";
+import { BiChevronDown } from "react-icons/bi";
 
 const navigationItems = [
     {
@@ -13,14 +14,21 @@ const navigationItems = [
         href: "https://staking.shill-city.com/"
     },
     {
-        id: "pet-palace",
-        title: "Pets",
-        href: "https://pets.shill-city.com/"
-    },
-    {
-        id: "shill-city-citizen",
-        title: "Citizens",
-        href: "https://citizens.shill-city.com/"
+        id: "inhabitants",
+        title: "Inhabitants",
+        href: "https://citizens.shill-city.com/",
+        children: [
+            {
+                id: "pet-palace",
+                title: "Pets",
+                href: "https://pets.shill-city.com/"
+            },
+            {
+                id: "shill-city-citizen",
+                title: "Citizens",
+                href: "https://citizens.shill-city.com/"
+            },
+        ],
     },
     {
         id: "old-atlantis",
@@ -29,8 +37,13 @@ const navigationItems = [
     },
     {
         id: "poseidon-lp",
-        title: "Poseidon LP",
+        title: "Poseidon",
         href: "https://lp.shill-city.com/"
+    },
+    {
+        id: "raffle",
+        title: "Raffles",
+        href: "https://raffle.shill-city.com/"
     }
 ];
 interface NavigationProps {
@@ -61,14 +74,42 @@ const Navigation: FC<NavigationProps>  = ({activeId}) => {
                 </a>
             </div>
             <div className="flex sm:flex-grow md:basis-1/2 gap-3 md:gap-6 xl:gap-10 items-center md:flex-grow lg:place-content-center">
-                {navigationItems.map((item) => (
-                    <a
-                        key={item.id}
-                        href={item.href}
-                        className={`relative indicator whitespace-nowrap flex items-center h-full font-scratchy text-2xl md:text-4xl ${activeId === item.id ? 'text-yellow border-b-4 border-yellow' : 'text-secondary-content  hover:text-yellow'}`}>
-                        {item.title}
-                    </a>
-                ))}
+                {navigationItems.map((item, index) => {
+                    if(item.children) {
+                        const isActive = !!item.children.find(child => child.id === activeId);
+                        return (
+                            <div className="dropdown">
+                                <label
+                                    tabIndex={index}
+                                    className={`relative indicator cursor-pointer whitespace-nowrap flex items-center h-full font-scratchy text-2xl md:text-4xl ${isActive ? 'text-yellow border-b-4 border-yellow' : 'text-secondary-content  hover:text-yellow'}`}
+                                >
+                                    {item.title}<BiChevronDown className="inline text-sm" />
+                                </label>
+                                <ul tabIndex={index}
+                                    className="dropdown-content menu p-2 shadow bg-neutral rounded-box w-52">
+                                    {item.children.map(child => (
+                                        <li key={child.id}>
+                                            <a
+                                                href={child.href}
+                                                className={`font-scratchy text-3xl ${activeId === child.id && 'text-yellow' }`}
+                                            >
+                                                {child.title}
+                                            </a>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )
+                    }
+                    return (
+                        <a
+                            key={item.id}
+                            href={item.href}
+                            className={`relative indicator whitespace-nowrap flex items-center h-full font-scratchy text-2xl md:text-4xl ${activeId === item.id ? 'text-yellow border-b-4 border-yellow' : 'text-secondary-content  hover:text-yellow'}`}>
+                            {item.title}
+                        </a>
+                    )
+                })}
             </div>
             <div className="lg:basis-1/4  items-center place-content-end pr-4 hidden sm:flex">
                 <a href="https://discord.com/invite/AA66Ayk5Dz" target="_blank" rel="noopener noreferrer">
