@@ -44,6 +44,11 @@ const navigationItems = [
         id: "raffle",
         title: "Raffles",
         href: "https://raffle.shill-city.com/"
+    },
+    {
+        id: "mutation",
+        title: "Tarnished",
+        href: "https://mutate.shill-city.com/"
     }
 ];
 interface NavigationProps {
