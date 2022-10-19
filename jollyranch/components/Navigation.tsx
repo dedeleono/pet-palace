@@ -48,7 +48,7 @@ const navigationItems = [
     {
         id: "mutation",
         title: "Tarnished",
-        href: "https://mutate.shill-city.com/"
+        href: "https://tarnish.shill-city.com/ "
     }
 ];
 interface NavigationProps {
