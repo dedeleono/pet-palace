@@ -28,6 +28,11 @@ const navigationItems = [
                 title: "Citizens",
                 href: "https://citizens.shill-city.com/"
             },
+            {
+                id: "tarnishedCitizens",
+                title: "Tarnished",
+                href: "https://missions.shill-city.com/"
+            },
         ],
     },
     {
