@@ -457,12 +457,13 @@ const Home: NextPage = () => {
           "GvQF2vpWKWhv2LEyEurP5koNRFrA6s7Hx66zsv536KeC",
         ];
         let redemption_rate = 1;
+        let estimateRewards = 0;
         if (nft.nft_account.account.stakeAmount == 2) {
-          redemption_rate = 4.0;
+          redemption_rate = 2.0;
         } else if (nft.nft_account.account.stakeAmount == 3) {
-          redemption_rate = 12.0;
+          redemption_rate = 6.0;
         } else if (nft.nft_account.account.stakeAmount == 4) {
-          redemption_rate = 32.0;
+          redemption_rate = 16.0;
         }
         // console.log("nft", nft.nft_account.account.mint.toString());
         if (
@@ -472,26 +473,47 @@ const Home: NextPage = () => {
           mints.includes(nft.nft_account.account.mints[3].toString())
         ) {
           if (nft.nft_account.account.stakeAmount == 1) {
-            redemption_rate = 10.0;
+            redemption_rate = 5.0;
           } else if (nft.nft_account.account.stakeAmount == 2) {
-            redemption_rate = 22.0;
+            redemption_rate = 11.0;
           } else if (nft.nft_account.account.stakeAmount == 3) {
-            redemption_rate = 48.0;
+            redemption_rate = 24.0;
           } else if (nft.nft_account.account.stakeAmount == 4) {
-            redemption_rate = 104.0;
+            redemption_rate = 52.0;
           }
         }
+        const stakeAccount = nft.nft_account.account;
+        console.log('stakeAccount', nft.nft_account.account)
+
+        let halvening1_start_time = 167000000;
+
+        let to_days = 60 * 60 * 24;
+
         const currDate = new Date().getTime() / 1000;
-        const daysElapsed =
-          Math.abs(currDate - nft.nft_account.account.startDate) /
-          (60 * 60 * 24);
-        const amountRedeemed =
-          nft.nft_account.account.amountRedeemed.toNumber() / 1e6;
-        // console.log(
-        //   "amountRedeemed",
-        //   nft.nft_account.account.amountRedeemed.toNumber() / 1e6
-        // );
-        let estimateRewards = redemption_rate * daysElapsed - amountRedeemed;
+
+    if (stakeAccount.startDate > halvening1_start_time) {
+        let day_dif = (currDate - stakeAccount.startDate);
+        let days_elapsed = day_dif / to_days;
+        estimateRewards = (redemption_rate / 2) * days_elapsed;
+    } else {
+        let day_dif_after_halvening = (currDate - halvening1_start_time);
+        let day_dif_before_halvening = (halvening1_start_time - stakeAccount.startDate);
+        let days_elapsed_after_halvening = day_dif_after_halvening / to_days;
+        let days_elapsed_before_halvening = day_dif_before_halvening / to_days;
+        estimateRewards = (redemption_rate * days_elapsed_before_halvening) + ((redemption_rate / 2) * days_elapsed_after_halvening);
+    }
+
+
+        // const daysElapsed =
+        //   Math.abs(currDate - nft.nft_account.account.startDate) /
+        //   (60 * 60 * 24);
+        // const amountRedeemed =
+        //   nft.nft_account.account.amountRedeemed.toNumber() / 1e6;
+        // // console.log(
+        // //   "amountRedeemed",
+        // //   nft.nft_account.account.amountRedeemed.toNumber() / 1e6
+        // // );
+        // let estimateRewards = redemption_rate * daysElapsed - amountRedeemed;
         stakingRewards[nft.nft_account.id.toString()] = estimateRewards;
       }
     });
